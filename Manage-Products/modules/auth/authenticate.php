@@ -16,12 +16,6 @@ require_once(INCLUDE_PATH . "/finascop_User.php");
 //Declare Globals
 global $db;
 
-function authJsonResponse(array $payload): void
-{
-    header('Content-Type: application/json; charset=UTF-8');
-    echo json_encode($payload);
-}
-
 $captcha_entered = $_POST['loginCaptcha'] ?? '';
 $loginUsername = $_POST['loginUsername'] ?? '';
 $loginPassword = $_POST['loginPassword'] ?? '';
@@ -42,7 +36,7 @@ if ($mf !== false && $ak !== false) {
     if (($loginUsername == "" || $loginPassword == "") || $captcha_entered == "") {
         authJsonResponse(['errors' => ['reason' => 'Username,Password and Captcha cannot be blank.']]);
         return;
-    } else if ($captcha_entered != $_SESSION['rand_code']) {
+    } else if ((string)$captcha_entered !== (string)($_SESSION['rand_code'] ?? '')) {
         authJsonResponse(['errors' => ['reason' => 'The answer you have entered is not correct.']]);
         $_SESSION['auth_failures'] = (!empty($_SESSION['auth_failures']) ? $_SESSION['auth_failures'] : 0) + 1;
         return;
@@ -54,7 +48,7 @@ $query = "select UserId, Passwd, IsActive from " . FINASCOP_DB . "finascop_usr_m
 $rd = $db->getFromSafe($query, "s", [$loginUsername], TRUE);
 
 
-if (count($rd) == 0) {
+if ($rd === false || empty($rd)) {
     authJsonResponse(['errors' => ['reason' => USER_NOT_FOUND]]);
 } else {
     //$rd = $db->fetch_array($rs); // fetch the data from result
@@ -75,7 +69,7 @@ if (count($rd) == 0) {
         $query = "SELECT * FROM " . FINASCOP_DB . "finascop_usr_master a, " . FINASCOP_DB . "finascop_usr_profile b WHERE a.UserId = b.UserId AND a.UserId = " . $rd['UserId'];
         //$rs 		= $db->query($query);
         $rs = $db->getFromDB($query, TRUE);
-        if (count($rs) == 0)
+        if ($rs === false || empty($rs))
             authJsonResponse(['errors' => ['reason' => LOGIN_FAIL]]);
         else {
 

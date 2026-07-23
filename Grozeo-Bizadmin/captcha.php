@@ -3,6 +3,9 @@
 require_once __DIR__ . '/includes/session_init.php';
 grozeoStartSession(false);
 
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
 $num1 = rand(1, 9);
 $num2 = rand(1, 9);
 $captcha_total = $num1 + $num2;

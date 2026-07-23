@@ -33,9 +33,21 @@ Login = function () {
             },
             success: function (res) {
 
-                var tmp = JSON.parse(res.responseText);
+                var tmp;
+                try {
+                    tmp = JSON.parse(res.responseText);
+                } catch (e) {
+                    Ext.MessageBox.show({
+                        title: 'Error!',
+                        msg: 'Unexpected server response. Please try again.',
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR,
+                        width: 325
+                    });
+                    return;
+                }
 
-                if (tmp.success !== undefined && tmp.success === true) {
+                if (tmp.success === true) {
                     window.location = success_url;
                 }
                 else {
@@ -46,7 +58,7 @@ Login = function () {
                     }, 10);
                     Ext.MessageBox.show({
                         title: 'Error!',
-                        msg: tmp.errors.reason,
+                        msg: (tmp.errors && tmp.errors.reason) ? tmp.errors.reason : 'Login failed. Please try again.',
                         buttons: Ext.MessageBox.OK,
                         icon: Ext.MessageBox.ERROR,
                         width: 325

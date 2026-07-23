@@ -1,5 +1,11 @@
 <?php
 
+function authJsonResponse(array $payload): void
+{
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode($payload);
+}
+
 function getClasses($class_name) {
     if (file_exists(ROOT . '/classes/' . $class_name . '.php'))
         include ROOT . '/classes/' . $class_name . '.php';

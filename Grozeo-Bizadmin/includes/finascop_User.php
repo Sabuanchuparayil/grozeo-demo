@@ -457,7 +457,7 @@ class User {
         $SESSION->Finascop_UserId = $user_id;
         $SESSION->finascop_typId = $this->getFinascopUserType($typid);
         if (!$this->validateSession($SESSION)) {
-            echo "{success:false,errors: { reason:'FINASCOPE:Fatal Error, Please check User type' }}";
+            authJsonResponse(['success' => false, 'errors' => ['reason' => 'FINASCOPE:Fatal Error, Please check User type']]);
             exit(1);
         }
 
@@ -476,7 +476,7 @@ class User {
         $rs = $db->getFromDB($query, TRUE);
         //echo 'finascop_user_details' . $rs;
 
-        if (count($rs) != 0) {
+        if (is_array($rs) && !empty($rs)) {
             // $rs = (object) $rs;
             foreach ($rs as $k => $v) {
                 $SESSION->$k = $v;

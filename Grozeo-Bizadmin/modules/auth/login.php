@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-$captcha_image = "./captcha.php";
+$captcha_image = "./captcha.php?v=" . time();
 ?>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">

@@ -16,25 +16,31 @@ require_once(INCLUDE_PATH . "/finascop_User.php");
 //Declare Globals
 global $db;
 
+function authJsonResponse(array $payload): void
+{
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode($payload);
+}
+
 $IsAppLogin = false;
 $captcha_entered = $_POST['loginCaptcha'];
 if ($mf !== false && $ak !== false) {
 
     if (validateMachineFinger($mf) == false) {
-        echo "{errors: { reason: 'Sorry, you are not an authorised user.' }}";
+        authJsonResponse(['errors' => ['reason' => 'Sorry, you are not an authorised user.']]);
         return;
     }
     if (validateAuthKey($ak) == false) {
-        echo "{errors: { reason: 'Invalid Time line, check your system clock' }}";
+        authJsonResponse(['errors' => ['reason' => 'Invalid Time line, check your system clock']]);
         return;
     }
     $IsAppLogin = true;
 } else {
     if ($loginUsername == "" && $loginPassword == "" || $captcha_entered == "") {
-        echo "{errors: { reason: 'Username,Password and Captcha cannot be blank.' }}";
+        authJsonResponse(['errors' => ['reason' => 'Username,Password and Captcha cannot be blank.']]);
         return;
     } else if ($captcha_entered != $_SESSION['rand_code']) {
-        echo "{errors: { reason: 'The answer you have entered is not correct.'}}";
+        authJsonResponse(['errors' => ['reason' => 'The answer you have entered is not correct.']]);
         $_SESSION['auth_failures'] = (!empty($_SESSION['auth_failures']) ? $_SESSION['auth_failures'] : 0) + 1;
         return;
     }
@@ -46,7 +52,7 @@ $rd = $db->getFromDB($query, TRUE);
 
 
 if (count($rd) == 0 && $IsAppLogin == false) {
-    echo "{errors: { reason: '" . USER_NOT_FOUND . "' }}";
+    authJsonResponse(['errors' => ['reason' => USER_NOT_FOUND]]);
 } else {
     //$rd = $db->fetch_array($rs); // fetch the data from result
     /* compare the passwords .. */
@@ -54,7 +60,7 @@ if (count($rd) == 0 && $IsAppLogin == false) {
     if ($IsAppLogin == false && empty($rememberLogin)) {
         if (password_verify($loginPassword, $rd['Passwd'])) {
             $passwordValid = true;
-        } elseif (strlen($rd['Passwd']) === 32 && md5($loginPassword) === $rd['Passwd']) {
+        } elseif (strlen($rd['Passwd']) === 32 && ($loginPassword === $rd['Passwd'] || md5($loginPassword) === $rd['Passwd'])) {
             $passwordValid = true;
             $db->perform(FINASCOP_DB . "finascop_usr_master", array('Passwd' => password_hash($loginPassword, PASSWORD_DEFAULT)), 'update', "UserId = " . intval($rd['UserId']));
         }
@@ -72,7 +78,7 @@ if (count($rd) == 0 && $IsAppLogin == false) {
         //$rs 		= $db->query($query);
         $rs = $db->getFromDB($query, TRUE);
         if (count($rs) == 0)
-            echo "{errors: { reason: '" . LOGIN_FAIL . "' }}";
+            authJsonResponse(['errors' => ['reason' => LOGIN_FAIL]]);
         else {
 
             $rs = (object) $rs;
@@ -194,7 +200,7 @@ if (count($rd) == 0 && $IsAppLogin == false) {
                 } else {
                     $TMPSESSION['admin']->IsApplicationLogin = 0;
                     $_SESSION = $TMPSESSION;
-                    echo "{success: true}";
+                    authJsonResponse(['success' => true]);
                 }
             }
         }
@@ -202,8 +208,8 @@ if (count($rd) == 0 && $IsAppLogin == false) {
         /* password is wrong or deactive user came */
         //echo "{errors: { reason: '".(($rd['IsActive']=='Yes')?PASSWORD_INCORRECT1 . $loginUsername . PASSWORD_INCORRECT2:DEACTIVE_USER)."' }}";
         if ($rd['IsActive'] != '')
-            echo "{errors: { reason: '" . (($rd['IsActive'] == 'Yes') ? PASSWORD_INCORRECT1 : DEACTIVE_USER) . "' }}";
+            authJsonResponse(['errors' => ['reason' => (($rd['IsActive'] == 'Yes') ? PASSWORD_INCORRECT1 : DEACTIVE_USER)]]);
         else
-            echo "{errors: { reason: '" . PASSWORD_INCORRECT1 . "' }}";
+            authJsonResponse(['errors' => ['reason' => PASSWORD_INCORRECT1]]);
     }
 }

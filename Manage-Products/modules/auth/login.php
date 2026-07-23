@@ -26,7 +26,7 @@
 
 
                                             <link rel="stylesheet" type="text/css" href="./ext-3.4.0/resources/css/ext-all.css"/>
-                                            <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,300,900' rel='stylesheet' type='text/css' />
+                                            <link href="https://fonts.googleapis.com/css?family=Raleway:400,700,300,900" rel="stylesheet" type="text/css" />
                                             <!-- <link rel="stylesheet" type="text/css" href="./resources/themes/xtheme-vistablack/css/xtheme-vistablack.css">-->
                                             <link rel="stylesheet" type="text/css" href="./ext-3.4.0/resources/css/xtheme-gray.css" />
                                             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

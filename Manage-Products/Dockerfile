@@ -15,4 +15,6 @@ RUN mkdir -p /var/www/html/cache && chmod 777 /var/www/html/cache
 
 WORKDIR /var/www/html
 
-CMD php -S 0.0.0.0:${PORT:-8080} -t /var/www/html
+RUN chmod +x /var/www/html/docker-entrypoint.sh
+
+CMD ["/var/www/html/docker-entrypoint.sh"]

@@ -95,7 +95,13 @@ namespace Retaline.Web
 
 			services.Configure<MultitenancyOptions>(_configuration.GetSection("Multitenancy"));
 
-			var key = Encoding.ASCII.GetBytes(_configuration["Token:SecretKey"]);
+			var secretKey = _configuration["Token:SecretKey"];
+			if (string.IsNullOrEmpty(secretKey))
+			{
+				throw new InvalidOperationException(
+					"Token:SecretKey is not configured. Set the Token__SecretKey environment variable.");
+			}
+			var key = Encoding.ASCII.GetBytes(secretKey);
 
 			services.AddSession(options =>
 			{

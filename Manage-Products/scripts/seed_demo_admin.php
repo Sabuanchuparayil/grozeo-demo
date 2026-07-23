@@ -6,7 +6,6 @@
 
 define('ROOT', dirname(__DIR__));
 define('INCLUDE_PATH', ROOT . '/includes');
-define('MODULES_PATH', ROOT . '/modules');
 
 require INCLUDE_PATH . '/config.php';
 require INCLUDE_PATH . '/lib.php';

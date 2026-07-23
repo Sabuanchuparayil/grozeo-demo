@@ -1,0 +1,391 @@
+﻿@model Retaline.Web.Models.Checkout.PlaceOrder;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+    string orderDate = ""; try { orderDate = Convert.ToDateTime(Model.OrderDate).ToString("dd-MM-yyyy"); } catch { orderDate = Model.OrderDate; }
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    var user = customAuthService.GetUserFromClaims();
+    double timeLeft = 0; try { timeLeft = (DateTime.TryParse(Model.CancelTime, out DateTime cancelTime) == true && DateTime.TryParse(Model.CurAPITime, out DateTime curAPIDate) == true ? (cancelTime > curAPIDate ? (cancelTime.Subtract(curAPIDate).TotalSeconds) : 0) : 0); } catch { timeLeft = 0; }
+}
+
+@await Component.InvokeAsync("ConversionTags")
+
+
+<style>
+    #app {
+        position: relative;
+    }
+
+    .base-timer {
+        position: relative;
+        width: 50px;
+        height: 50px;
+    }
+
+    .base-timer__svg {
+        transform: scaleX(-1);
+    }
+
+    .base-timer__circle {
+        fill: none;
+        stroke: none;
+    }
+
+    .base-timer__path-elapsed {
+        stroke-width: 7px;
+        stroke: rgb(240, 240, 240);
+    }
+
+    .base-timer__path-remaining {
+        stroke-width: 7px;
+        stroke-linecap: round;
+        transform: rotate(90deg);
+        transform-origin: center;
+        transition: 1s linear all;
+        fill-rule: nonzero;
+        stroke: currentColor;
+    }
+
+        .base-timer__path-remaining.green {
+            color: #7CBF21;
+        }
+
+        .base-timer__path-remaining.orange {
+            color: orange;
+        }
+
+        .base-timer__path-remaining.red {
+            color: #ff304f;
+        }
+
+    #app .base-timer__label {
+        color: #ff304f;
+        font-size: 11.9306px;
+        line-height: 14px;
+    }
+
+    .base-timer__label {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+    }
+
+    .margin-bottom-10 {
+        margin-bottom: 10px;
+    }
+</style>
+
+<script>
+    function postUrlToParent() {
+        // Assuming "window.parent" is the reference to the parent window
+        //window.parent.postMessage(window.location.href, '*');
+        window.parent.postMessage('closeiframe', '*');
+    }
+
+    // Example: Hook this function to an event that indicates a URL change in the iframe
+    window.addEventListener('load', postUrlToParent);
+
+    $(document).ready(function () {
+
+        const FULL_DASH_ARRAY = 283;
+        const WARNING_THRESHOLD = 40;
+        const ALERT_THRESHOLD = 20;
+
+        const COLOR_CODES = {
+            info: {
+                color: "green"
+            },
+            warning: {
+                color: "orange",
+                threshold: WARNING_THRESHOLD
+            },
+            alert: {
+                color: "red",
+                threshold: ALERT_THRESHOLD
+            }
+        };
+
+
+        const TIME_LIMIT = @(timeLeft > 0 ? 60 : 0); @*@(DateTime.TryParse(Model.CancelTime, out DateTime tmpDate2) == true && DateTime.TryParse(Model.CurAPITime, out DateTime curAPIDate) == true ? (tmpDate2 > curAPIDate? (tmpDate2.Subtract(curAPIDate).TotalSeconds) :0 ) : 0)*@ ;//60;
+        let timePassed = @(timeLeft > 60 ? 0 : 60 - timeLeft);
+        let timeLeft = TIME_LIMIT;
+        let timerInterval = null;
+        let remainingPathColor = COLOR_CODES.info.color;
+
+        document.getElementById("app").innerHTML = `
+                                            <div class="base-timer">
+                                            <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                                <g class="base-timer__circle">
+                                                <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+                                                <path
+                                                    id="base-timer-path-remaining"
+                                                    stroke-dasharray="283"
+                                                    class="base-timer__path-remaining ${remainingPathColor}"
+                                                    d="
+                                                    M 50, 50
+                                                    m -45, 0
+                                                    a 45,45 0 1,0 90,0
+                                                    a 45,45 0 1,0 -90,0
+                                                    "
+                                                ></path>
+                                                </g>
+                                            </svg>
+                                            <span id="base-timer-label" class="base-timer__label">${formatTime(
+            timeLeft
+        )}</span>
+                                            </div>
+                                            `;
+
+        startTimer();
+
+        function onTimesUp() {
+            clearInterval(timerInterval);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timePassed = timePassed += 1;
+                timeLeft = TIME_LIMIT - timePassed;
+                document.getElementById("base-timer-label").innerHTML = formatTime(
+                    timeLeft
+                );
+                setCircleDasharray();
+                setRemainingPathColor(timeLeft);
+
+                if (isNaN(timeLeft) || timeLeft <= 0) {
+                    onTimesUp();
+                    $("#app").hide();
+                    $('#cancel-order-wrap').html($('#cancel-toggle').html());
+                }
+            }, 1000);
+        }
+
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            let seconds = time % 60;
+
+            if (seconds < 10) {
+                seconds = `0${seconds}`;
+            }
+
+            return `${minutes}:${seconds}`;
+        }
+
+        function setRemainingPathColor(timeLeft) {
+            const { alert, warning, info } = COLOR_CODES;
+            if (timeLeft <= alert.threshold) {
+                document
+                    .getElementById("base-timer-path-remaining")
+                    .classList.remove(warning.color);
+                document
+                    .getElementById("base-timer-path-remaining")
+                    .classList.add(alert.color);
+            } else if (timeLeft <= warning.threshold) {
+                document
+                    .getElementById("base-timer-path-remaining")
+                    .classList.remove(info.color);
+                document
+                    .getElementById("base-timer-path-remaining")
+                    .classList.add(warning.color);
+            }
+        }
+
+        function calculateTimeFraction() {
+            const rawTimeFraction = timeLeft / TIME_LIMIT;
+            return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+        }
+
+        function setCircleDasharray() {
+            const circleDasharray = `${(
+                calculateTimeFraction() * FULL_DASH_ARRAY
+            ).toFixed(0)} 283`;
+            document
+                .getElementById("base-timer-path-remaining")
+                .setAttribute("stroke-dasharray", circleDasharray);
+        }
+
+    });
+</script>
+<div class="container">
+<div class="row">
+    <div class="col-12">
+        @if (Model.StatusCode >= 4 && Model.StatusCode != 21)
+        {
+
+            <div class="payment-status_wrap">
+                <div class="payment-status">
+                    <div class="payment-status_text">
+                        <span class="payment-status_icon">
+                            <i class="fa-light @(Model.StatusCode==19?"fa-circle-xmark text-danger":"fa-circle-check text-success")"></i>
+                        </span>
+                        <h4 class="@(Model.StatusCode == 19?"text-danger":"text-success")"> @(Model.StatusCode == 19 ? "The order has been cancelled!" : "Thank you for the purchase!")</h4>
+                        <p>@(Model.StatusCode == 19 ? "" : "Order was successfully placed") </p>
+                    </div>
+
+                    <div class="btn-field">
+                        <a href="/account" class="btn btn-outline-secondary">View Orders</a>
+                        <a href="/" class="btn btn-primary">Continue Shopping</a>
+                    </div>
+                </div><!--payment-status-->
+
+                <div class="payment-status_info">
+                    <div class="status_info-label">
+                        <span>Order group number</span>
+                        <span>@Model.OrderGroupId</span>
+                    </div>
+                    <div class="status_info-label">
+                        <span>Date</span>
+                        <span>@Model.OrderDate</span>
+                    </div>
+                    <div class="status_info-label">
+                        <span>Payment Method</span>
+                        <span>@Model.PaymentMethod</span>
+                    </div>
+                    <div class="status_info-label">
+                        <span>Payment status</span>
+                        <span>@(String.IsNullOrEmpty(Model.PaymentStatus) ? "Yet to collect" : Model.PaymentStatus)</span>
+                    </div>
+                </div><!--payment-status_info-->
+
+                <div class="order-summery_wrap">
+                    <ul class="order-summery_list">
+                        <li class="">
+                            <div class="order-summery_label">Sub total</div>
+                            <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.SubTotal</div>
+                        </li>
+                        <li>
+                            <div class="order-summery_label">Delivery change</div>
+                            <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.DeliveryCharge</div>
+                        </li>
+                    </ul>
+                    <div class="grand-total">
+                        <div class="order-summery_label">Grand Total</div>
+                        <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.Total</div>
+                    </div>
+                </div>
+
+                <div class="checkout-listing_wrap">
+
+                    <div class="sub_title">
+                        <h6>Order details</h6>
+                    </div>
+                    <div class="checkout-listing myorder-listing">
+                        @foreach (var item in Model.SuccessOrders)
+                        {
+                            <div class="product-card">
+                                <div class="product-card_thumb">
+                                    <a href="#">
+                                        <img src="@(item.TopImageUrl??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'" alt=""class=" img-fluid">
+                                    </a>
+                                </div>
+                                <div class="product-card_info">
+                                    @*   <h4>
+                            <a href="products-details.html">Saffola Active Pro Weight Watchers Edible Oil</a>
+                            </h4> *@
+                                    <div class="checkout-listing_info">
+                                        <div class="checkout-listing_info-pro">
+
+                                            <ul>
+                                                <li>
+                                                    <span>Order ID :</span>
+                                                    <span>@item.OrderKey</span>
+                                                </li>
+                                                <li>
+                                                    <span>Order Date :</span>
+                                                    <span>@orderDate</span>
+                                                </li>
+                                                <li>
+                                                    <span>Order Amount :</span>
+                                                    <span>@(_configuration["CurrencySymbol"])@item.OrderTotal</span>
+                                                </li>
+                                                <li>
+                                                    <span>Sold by :</span>
+                                                    <span>@item.BranchName, @item.BranchLocation</span>
+                                                </li>
+                                                <li>
+                                                    <span>Order Status :</span>
+                                                    <span>@item.Status</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div><!--product-card_info-->
+
+                                <div class="btn-field">
+                                    <a class="btn btn-outline-secondary orderdtils" href="/orderdetails/@item.OrderKey">View Details</a>
+                                    @if (item.TrackUrl != "")
+                                    {
+                                        <a class="btn btn-outline-secondary trackorder" href="@(item.TrackUrl??"#")">Track Order</a>
+                                       // <a class="btn btn-outline-secondary cancel-order" orderid="@item.OrderId" ordernum="@item.OrderKey" href="#">Cancel Order</a>
+                                    }
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        }
+
+        else if (Model.StatusCode == 1)
+        {
+
+            var item = Model.SuccessOrders[0];
+
+            <div class="payment-status_wrap">
+
+                <div class="payment-processing">
+                    <div class="payment-status_text">
+                        <img src="/images/payment_processing.svg" />
+                        <h3>Payment processing!</h3>
+                        <p>Please wait while your payment is being processed</p>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    orderMaster.getPaymentStatus(@item.OrderKey)
+                });
+
+            </script>
+        }
+        else
+        {
+            <div class="payment-status_wrap payment-failed">
+
+                <div class="payment-status">
+                    <div class="payment-status_text">
+                        <span class="payment-status_icon">
+
+                            <img class="img-fluid payment-failed_img" src="/images/paymenterror.svg">
+                        </span>
+                        <h4>You’re almost there !</h4>
+                        <p>Sorry, we had an issue confirming your payment. <a href="/cart">Please try again</a></p>
+                    </div>
+                </div><!--payment-status-->
+
+            </div>
+        }
+
+    </div>
+    </div>
+</div>
+
+
+<environment include="Development">
+    <script src="~/js/custom/order.js" asp-append-version="true"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/custom/order.min.js" asp-append-version="true"></script>
+</environment>
+@*<script>
+    orderMaster.url.cancelRedirect = '/orderdetails/@Model.OrderNum';
+</script>*@

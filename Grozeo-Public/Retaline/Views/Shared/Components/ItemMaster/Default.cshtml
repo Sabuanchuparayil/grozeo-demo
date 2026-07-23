@@ -1,0 +1,54 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Microsoft.AspNetCore.Http;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<Product>;
+@{
+    int storegroupid = 0; try { storegroupid = (tenant?.Value == null || String.IsNullOrEmpty(tenant?.Value.StoreId) ? 0 : Convert.ToInt32(tenant?.Value.StoreId)); } catch { storegroupid = 0; }
+    //var mitems = Model;
+    var curUser = customAuthService.GetUserFromClaims();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    GuestData guestUser = HttpHelper.GuestUser;
+
+}
+
+
+@* @foreach (var mitem in Model)
+{
+    string strHref = (mitem.IsGroupItem > 0 ?
+                String.Format("/groupitem/{0}/{1}", mitem.GroupId, mitem.GroupDisplayName.Replace("\"", "").Replace("\\", ""))
+            : String.Format("/pd/{0}/{1}/{2}/{3}", mitem.StitId, mitem.BranchId, mitem.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(mitem.SKU) ? mitem.PackageName + "-" + mitem.Quantity : mitem.SKU).Replace("/", "%2F").Replace("\\", "%2F"))
+            );
+    bool isOutOfStock = (mitem.StockAvailable > 0 && (mitem.SellingPrice <= 0 || mitem.StockAvailable <= 0));
+    bool isSoldOut = (mitem.StockAvailable <= 0 && mitem.SellingPrice > 0);
+    bool isNotDeliverable = (mitem.BranchTypeId <= 0 && guestUser.GuestLatitude != null);
+
+    var requiresAgeVerification = mitem.HasAgeVerification == 1;
+    var isUserVerified = curUser?.AgeVerified == 1;
+    var verificationNeeded = (!isUserVerified && requiresAgeVerification ? 1 : 0); *@
+<div class="row">
+    <div class="col-12">
+    @await Component.InvokeAsync("ProductCard", Model)
+    </div>
+</div>
+@* } *@
+
+

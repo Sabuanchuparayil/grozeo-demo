@@ -1,0 +1,404 @@
+﻿
+<div class="container-fluid">
+    <div id="invoice_three" class='panel Invoice_div' style="page-break-after: always;">
+        <script>
+            window.onload = function () {
+                function printDiv(divId) {
+                    const el = document.getElementById(divId);
+                    if (!el) { alert("Element not found"); return; }
+                    const divContents = el.innerHTML;
+                    const printWindow = window.open('', '');
+                    printWindow.document.write('<html><head><title>Invoice</title></head><body>');
+                    printWindow.document.write(divContents);
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.print();
+                }
+                window.printDiv = printDiv; // expose globally for onclick
+            };
+        </script>
+
+        <style>
+            .Invoice_div hr {
+                border-top: 2px dotted #828282 !important
+            }
+
+            .store_name {
+                display: none !important;
+            }
+
+            @media print {
+
+                .no-print {
+                    display: none !important;
+                }
+
+                td.logo img {
+                    display: none !important;
+                }
+
+                .store_name {
+                    display: block !important;
+                }
+
+                table,
+                td,
+                th {
+                    font-size: 10px !important;
+                }
+
+                td,
+                th {
+                    padding: 2px !important;
+                }
+
+                    td[height="20"] {
+                        height: 8px !important;
+                    }
+            }
+        </style>
+
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="15" valign="center" style="font-size: 1px; line-height: 1px;"></td>
+            </tr>
+            <tr>
+                <td class="logo" align="center" style="font-family: arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 12px; text-transform: uppercase;">
+                    [imageload]
+                    <div class="store_name" style="font-family: arial, sans-serif; font-size: 12px; font-weight: bold; line-height: 12px; text-transform: uppercase;">
+                        [STORENAME]
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td height="10" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--logo-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+            <tr>
+                <td align="center" style=" font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 12px; text-transform: uppercase; color: #000;">
+                    Reta Globe India Private Limited
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+                    105, Viaan Classic, Global City, Virar West
+                </td>
+            </tr>
+            <!--<tr>
+        <td align="center" style="font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+            [ADDRESSLINE2]
+        </td>
+    </tr>-->
+            <tr>
+                <td align="center" style="font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+                    Mumbai,Maharashtra,401303
+                </td>
+            </tr>
+            <tr>
+                <td height="5" valign="center" style="font-size: 1px; line-height: 1px;">
+                    <hr style="margin:0px!important;">
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 14px; text-transform: uppercase; color: #000;">
+                    TAX INVOICE
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center" style=" font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+                    Regular Tax Payer - Original for Recipient
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="padding-bottom:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+                    Tax payable on reverse charge basis: No
+                </td>
+            </tr>
+
+
+            <tr>
+                <td height="15" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;">
+                    <hr style="margin:0px!important;">
+                </td>
+            </tr>
+
+        </table><!--header part-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="15" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom: 2px dotted #828282;">
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Invoice No.[INVOICENO] </td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Order No: [ORDERNO_order_order_id]</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Invoice Date: [INVOICEDATE]</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Order Date: [ORDERDATE]</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Payment Status: [PAYMENTSTATUS_payMode]</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Pymt. Ref.:[PAYMENTREF_order_payment_gateway_refid]</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">GSTIN: 27AAMCR7479P1Z5</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">State & Code: Maharashtra (27)</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Place of Supply: [PLACEOFSUPPLY_dst_Name]</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Place of Delivery: [PLACEOFDELIVERY_deli_state]</td>
+            </tr>
+
+        </table><!--table of content-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="15" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;">
+                </td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom: 2px dotted #828282;">
+
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">
+                    Invoiced by
+                </td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Invoice to</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;"> Reta Globe India Private Limited</td>
+                <td align="right" style="padding: 5px; padding-top: 0; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; text-transform: uppercase; color: #000;">[CUSTOMERNAME_order_customer_name]</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">27AAMCR7479P1Z5, Maharashtra (27)</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">[CONTACTNUMBER_order_customer_name]</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">105, Viaan Classic, Global City, Virar West</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">[ADDRESSLINE_order_city]</td>
+            </tr>
+            <!--<tr>
+            <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">[ADDRESSLINE2]</td>
+            <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">[ADDRESSLINE2]</td>
+        </tr>-->
+            <tr>
+                <td align="left" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">Mumbai, Maharashtra, 401303</td>
+                <td align="right" style="padding:5px; padding-top:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #000;">[DISTRICT1_delivery_district] [STATE2_order_state], [PIN3_deli_delivery_pin]</td>
+            </tr>
+
+        </table><!--table of content-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="20" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom: 2px dotted #828282;">
+            <thead>
+                <tr>
+                    <th width="33.33%" align="left" style="padding:5px; font-family: arial, sans-serif; font-weight: 500; font-size: 11px; line-height: 14px; color: #000; border-bottom: 2px dotted #828282;">Item Name<br>Item/ Service Code<br>HSN/ SAC Tax% & CC%</th>
+                    <th width="33.33%" align="center" style="padding:5px; font-family: arial, sans-serif; font-weight: 500; font-size: 11px; line-height: 14px; color: #000; border-bottom: 2px dotted #828282; text-align:center;">Quantity<br>MRP/ Service Cost<br>Discount</th>
+                    <th width="33.33%" align="right" style="padding:5px; font-family: arial, sans-serif; font-weight: 500; font-size: 11px; line-height: 14px; color: #000; border-bottom: 2px dotted #828282; text-align:right;">Unit Amount<br>Total Amount<br>Taxable Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                [ITEMREPEAT]
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="3" height="10" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td width="100px" align="left" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">Total Items: 1</td>
+                                <td width="100px" align="center" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">Total Quantity: 1</td>
+                                <td align="right" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td align="right" style="padding:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">Grand Total </td>
+                                            <td align="right" style="padding:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">[GRANDTOTAL_order_delivery_charge]</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tfoot>
+
+        </table><!--table of content value-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="20" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom: 2px dotted #828282;">
+            <thead>
+                <tr>
+                    <th width="70px" align="left" style="padding:5px;font-family: arial, sans-serif; font-size: 11px; font-weight: 500; line-height: 16px; color: #000; border-bottom: 2px dotted #828282;">
+                        Tax Head
+                    </th>
+                    <th align="right" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: 500; line-height: 16px; color: #000; border-bottom: 2px dotted #828282; text-align:right;">
+                        Amount
+                    </th>
+                    <th align="right" style="padding: 5px; font-family: arial, sans-serif; font-size: 11px; font-weight: 500; line-height: 16px; color: #000; border-bottom: 2px dotted #828282; text-align: right;">
+                        Head
+                    </th>
+                    <th align="right" style="padding: 5px; font-family: arial, sans-serif; font-size: 11px; font-weight: 500; line-height: 16px; color: #000; border-bottom: 2px dotted #828282; text-align: right;">
+                        Amount
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="4" height="10" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td align="left" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        IGST Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        [IGST_order_delivery_charge_igst]
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        Taxable  Value
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        [ASSESSABLEVALUE_order_delivery_charge_et]
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        CGST Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0;  padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        [CGSTTOTAL_order_delivery_charge_cgst]
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        GST Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        [TAXTOTAL_order_delivery_charge_gst]
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        SGST Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        [SGSTTOTAL_order_delivery_charge_sgst]
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        Cess Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0;  padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        0.00
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        Cess Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        0.00
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        Round Off
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0;  padding-bottom:0 ; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 16px; color: #000;">
+                        0.00
+                    </td>
+                </tr>
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td align="left" style="padding:5px; padding-top:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 14px; color: #000;">
+                        Tax Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 14px; color: #000;">
+                        [TAXTOTAL_order_delivery_charge_gst]
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 14px; color: #000;">
+                        Invoice Total
+                    </td>
+                    <td align="right" style="padding:5px; padding-top:0; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 14px; color: #000;">
+                        [GRANDTOTAL_order_delivery_charge]
+                    </td>
+                </tr>
+            </tfoot>
+        </table><!--table of content taxhead-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="left" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: bold; line-height: 18px; color: #000;">
+                    Invoice total in words: [INVOICETOTALINWORD]
+                </td>
+            </tr>
+        </table><!--invoice totoal in words-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="20" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center" style="padding-top:0; padding-bottom:0; font-family: arial, sans-serif; font-size: 10px; font-weight: normal; line-height: 10px; color: #000;">
+                    Sales Order Generated: [SALEORDERDATE]  & Invoice Generated: [INVOICEDATE]
+                </td>
+            </tr>
+            <tr>
+                <td align="center" style="padding-bottom:0; padding-bottom:0; font-family: arial, sans-serif; font-size: 10px; line-height: 18px; color: #000; font-style: italic;">
+                    This is a computer generated Invoice and does not require any signature
+                </td>
+            </tr>
+        </table><!--signature-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="5" valign="center" style="padding:0px; font-family: arial, sans-serif; font-size: 1px; line-height: 1px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 18px; color: #000;">
+                    <a style="padding:5px; margin-right:10px; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #FFF; text-decoration: none; background: #8a8a8a;" href="#">View in Browser</a>
+                    <a style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 12px; color: #FFF; text-decoration: none; background: #2c483b;" href="javascript:void(0)" onclick="printDiv('invoice_three')">Print</a>
+                </td>
+            </tr>
+            <tr>
+                <!--<td align="center" style="padding:5px; font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 18px; color: #000;">
+                Invoice link: <a style="font-family: arial, sans-serif; font-size: 11px; font-weight: normal; line-height: 14px; color: #000; text-decoration: none;" href=""></a>
+            </td>-->
+            </tr>
+        </table><!--view in Browser and link-->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height="20" valign="center" style="padding:5px; font-family: arial, sans-serif; font-size: 8px; line-height: 12px; color: #000;"></td>
+            </tr>
+        </table><!--spacing-->
+
+    </div>       
+    </div>

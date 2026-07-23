@@ -1,0 +1,57 @@
+﻿
+<script asp-location="Footer">
+    $(document).ready(function () {
+        $('#eu-cookie-bar-notification').show();
+
+        $('#eu-cookie-ok').on('click', function () {
+            var postData = {};
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                data: postData,
+                url: "/savecookieconsent",
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                    $('#eu-cookie-bar-notification').hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Cannot store value');
+                }
+            });
+        });
+    });
+
+    // CSRF (XSRF) security
+function addAntiForgeryToken(data) {
+    //if the object is undefined, create a new one.
+    if (!data) {
+        data = {};
+    }
+    //add token
+    var tokenInput = $('input[name=__RequestVerificationToken]');
+    if (tokenInput.length) {
+        data.__RequestVerificationToken = tokenInput.val();
+    }
+    return data;
+};
+
+</script>
+<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification ">
+
+    <div class="cookie-header">
+        <!-- <i class="fa-light fa-cookie-bite"></i> -->
+        <i class="fa-solid fa-cookie-bite"></i>
+        <h4>Cookies Consent</h4>
+    </div>
+    <div class="cookie-content">
+        <p>
+            This website use cookies to help you have a superior and more relevant browsing experience on the website.
+        </p>
+    </div>
+    <div class="cookie-buttons">
+        <button type="button" class="btn btn-primary ok-button" id="eu-cookie-ok">OK</button>
+        <a class="btn btn-outline-primary learn-more" href="/privacy">Learn More</a>
+    </div>
+</div>

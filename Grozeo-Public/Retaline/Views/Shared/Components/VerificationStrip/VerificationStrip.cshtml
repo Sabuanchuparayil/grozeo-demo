@@ -1,0 +1,213 @@
+﻿
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+    Retaline.Core.BusinessModel.UserDetails.User curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+}
+@if (curUser.Token != null && (curUser.EmailVerified == 0 || curUser.PhoneVerified == 0))
+{
+    
+    <input type="hidden" id="email_to_verify" value="@curUser.Email" />
+    <input type="hidden" id="mobile_to_verify" value="@curUser.Mobile" />
+   
+    <div class="verify_strip_wrap ">
+        <div class="head_verifysec m-100 text-center p-2">
+            @if (curUser.EmailVerified == 0)
+            {
+                <p class="m-0 lh-sm">
+                    <i class="fa-regular fa-envelope me-1"></i> Verify email id @curUser.Email <a class="mx-2 text-white text-decoration-underline verify_validation" href="javascript:void(0)" data-target="email">Verify</a>
+                </p>
+            }
+            else if (curUser.PhoneVerified == 0)
+            {
+                <p class="m-0 lh-sm">
+                    <i class="fa-regular fa-mobile me-1"></i> Verify your maobile number @(curUser.Mobile)<a class="mx-2 verify_validation" href="javascript:void(0)" data-target="mobile">Verify</a>
+                </p>
+            }
+
+           
+        </div>
+
+
+        <div class="verify_dropdown_popover openpopover">
+
+            <div class="w-100">
+
+                <div class="newemailid w-100 hide">
+
+                    <form id="change_email_form" class="row needs-validation">
+                        <div class="col-12">
+                            <p class="mb-2 text-center">New Email ID</p>
+                            <div class="form-group">
+                                <input type="email" name="newemail" id="newemail" class="form-control" required="" autocomplete="off">
+                            </div>
+                            <div class="btn-field">
+                                <button id="" class="btn btn-outline-secondary mx-1 change_target" onclick="closepopover()">Not Now</button>
+                                <button id="send_otp" type="submit" class="btn btn-primary mx-1">Send OTP</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+                </div><!--newemailid-->
+
+               <div class="emailverification w-100 hide">
+                    <form class="row needs-validation" id="verify_email_otp">
+
+                        <div class="col-12">
+                            <p class="otp_info">Enter OTP received in <span>@curUser.Email<a class="edit_btn" href="">Change</a></span></p>
+                            <div class="form-group">                              
+                                        <div class="otp-container" id="otpContainer_vstrip"></div>
+                                <input type="hidden" id="otpHiddenInput" name="txtLoginOTP">
+
+                             
+                                <div class="verificationStripError email hide"></div>
+
+                            </div>
+                            <div class="btn-field">
+                                <button id="" class="btn btn-outline-secondary mx-1 change_target" onclick="closepopover()">Not Now</button>
+                                <button id="verify_otp" type="submit" class="btn btn-primary mx-1">Verify</button>
+                            </div>
+
+                          @*   <div class="otp_countdown_wrap">
+                                <span class="otp_countdown" id="countdown">Resend in 47 seconds</span>
+                                <span class="resentlink" id="resend"></span>
+                            </div> *@
+
+                        </div>
+
+                    </form><!--form-group-->
+
+                </div><!--emailverification-->
+
+                <div class="newmobileverification w-100 hide">
+                    <form class="row needs-validation" id="verify_mobile_otp">
+
+                        <div class="col-12">
+                            <p class="otp_info">Enter OTP received in <span>@curUser.Mobile</span></p>
+                            <div class="form-group">
+                                <div class="otp-container" id="otpContainer"></div>
+                                <input type="hidden" id="otpHiddenInput" name="txtLoginOTP">
+
+
+                                <div class="verificationStripError mobile hide"></div>
+
+                            </div>
+                            <div class="btn-field">
+                                <button id="" class="btn btn-outline-secondary mx-1 change_target" onclick="closepopover()">Not Now</button>
+                                <button id="verify_otp" type="submit" class="btn btn-primary mx-1">Verify</button>
+                            </div>
+
+                            @*   <div class="otp_countdown_wrap">
+                        <span class="otp_countdown" id="countdown">Resend in 47 seconds</span>
+                        <span class="resentlink" id="resend"></span>
+                        </div> *@
+
+                        </div>
+
+                    </form><!--form-group-->
+
+                </div><!--emailverification-->
+            </div>
+        </div><!--verify_dropdown_popover-->
+    </div>
+
+    <script>
+        document.body.className += ' strip_padding';
+    </script>
+    <script>
+        const NUM_INPUTS_OTP = 4; // Change this to scale the number of OTP boxes
+        const otpContainer_vstrip = document.getElementById("otpContainer");
+        const hiddenOtpInput_vstrip = document.getElementById("otpHiddenInput");
+
+        function createOtpInputs(count) {
+            otpContainer_vstrip.innerHTML = "";
+
+            for (let i = 0; i < count; i++) {
+                const input = document.createElement("input");
+                input.setAttribute("type", "number");
+                input.setAttribute("maxlength", "1");
+                input.setAttribute("id", "dynamic-otp"+i);
+                input.classList.add("otp-input");
+
+                // Input handling
+                input.addEventListener("input", (e) => {
+                    const value = e.target.value.replace(/\D/g, ''); // Allow digits only
+                    if (value.length > 1) {
+                        handlePaste(value, i);
+                        return;
+                    }
+                    e.target.value = value;
+
+                    if (value && i < count - 1) otpContainer_vstrip.children[i + 1].focus();
+                    updateHiddenField();
+                });
+
+                // Key navigation
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Backspace") {
+                        if (!e.target.value && i > 0) {
+                            otpContainer_vstrip.children[i - 1].focus();
+                        }
+                    } else if (e.key === "ArrowLeft" && i > 0) {
+                        otpContainer_vstrip.children[i - 1].focus();
+                    } else if (e.key === "ArrowRight" && i < count - 1) {
+                        otpContainer_vstrip.children[i + 1].focus();
+                    }
+                });
+
+                // Paste handling
+                input.addEventListener("paste", (e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData("text").replace(/\D/g, '');
+                    handlePaste(paste, i);
+                });
+
+                otpContainer_vstrip.appendChild(input);
+            }
+
+            otpContainer_vstrip.children[0].focus();
+            updateHiddenField();
+        }
+
+        function handlePaste(paste, startIndex) {
+            const chars = paste.split("");
+            for (let j = 0; j < chars.length && (startIndex + j) < NUM_INPUTS_OTP; j++) {
+                const input = otpContainer_vstrip.children[startIndex + j];
+                input.value = chars[j];
+            }
+
+            const nextIndex = Math.min(startIndex + chars.length, NUM_INPUTS_OTP - 1);
+            otpContainer_vstrip.children[nextIndex].focus();
+
+            updateHiddenField();
+        }
+
+        function updateHiddenField() {
+            const otpValues = Array.from(otpContainer_vstrip.querySelectorAll(".otp-input"))
+                .map(input => input.value)
+                .join('');
+            if (hiddenOtpInput_vstrip) {
+                hiddenOtpInput_vstrip.value = otpValues;
+            }
+        }
+
+        createOtpInputs(NUM_INPUTS_OTP);
+
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+
+
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<CategoryData>;
+@{
+    var showItems = 5;
+}
+<div class="container">
+    <div class="row  mb-0">
+        <div class="col-12">
+            <div class="titlewrap">
+                <h2>Browse by Category</h2>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="browse-category-list">
+                @if (Model == null || Model.Count <= 0)
+                {
+                    <h5 class="Showing_all_title">No category found</h5>
+                }
+                else
+                {
+                    <ul>
+
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            @if (i == (showItems))
+                            {
+                                <li class="show_cat browsecat-btn"><a href="javascript:void(0)">View More...</a></li>
+
+                            }
+                            else
+                            {
+                                if (Model[i].IsVirtualCategory == 1)
+                                {
+                                    <li class="@(i>=showItems?"hide":"")"><a href="@String.Format("{2}/vc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                                }
+                                else if (Model[i].Categorylevel == 2)
+                                {
+                                    <li class="@(i>=showItems?"hide":"")"><a href="@String.Format("{3}/pc/{0}/{1}/{2}", Model[i].ParentCategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                                }
+                                else if (Model[i].Categorylevel == 3)
+                                {
+                                    <li class="@(i>=showItems?"hide":"")"><a href="@String.Format("{4}/pc/{0}/{1}/{2}/{3}", Model[i].ParentCategoryId, Model[i].CategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                                }
+                                else
+                                {
+                                    <li class="@(i>=showItems?"hide":"")"><a href="@String.Format("{2}/pc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                                }
+                            }
+
+
+                        }
+                        <li class="hide_cat browsecat-btn hide"><a href="javascript:void(0)">View Less</a></li>
+
+                    </ul>
+
+
+                }
+
+
+                </ul>
+            </div>
+        </div>
+    </div><!--row-->
+</div>
+
+<script>
+    var showItems = @showItems;
+    console.log(showItems)
+    $('.show_cat').off('click').on('click', function () {
+        $('.browse-category-list ul li').removeClass('hide');
+        $('.show_cat').addClass('hide');
+        $('.hide_cat').removeClass('hide');
+
+    })
+    $('.hide_cat').off('click').on('click', function () {
+        $('.browse-category-list ul li').each(function (index) {
+            if (index > showItems) {
+                $(this).addClass('hide');
+            }
+        }); $('.show_cat').removeClass('hide');
+        $('.hide_cat').addClass('hide');
+
+    })
+</script>

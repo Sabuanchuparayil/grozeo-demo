@@ -1,0 +1,57 @@
+﻿@model string
+
+<div class="col-12 col-lg-3">
+	<div class="submenu-wrap">
+		<ul class="submenu-wrap_list">
+			<li id="side-menu-account">
+				<a class="" href="/account">
+					<i class="fa-light fa-bag-shopping me-2" aria-hidden="true"></i>
+					My Orders
+				</a>
+			</li>
+			<li id="side-menu-mywallet">
+				<a class="" href="/mywallet">
+					<i class="fa-light fa-wallet me-2" aria-hidden="true"></i>
+					My Wallet
+				</a>
+			</li>
+			<li id="side-menu-Address">
+				<a class="" href="/Address">
+					<i class="fa-light fa-location-dot me-2" aria-hidden="true"></i>
+					Manage Address
+				</a>
+			</li>
+			<li id="side-menu-wishlist">
+				<a href="/wishlist">
+					<i class="fa-light fa-heart me-2" aria-hidden="true"></i>
+					My Wishlist
+				</a>
+			</li>
+			<li id="side-menu-support">
+				<a class="" href="/contact">
+					<i class="fa-light fa-headphones me-2" aria-hidden="true"></i>
+					Support
+				</a>
+			</li>
+			<li id="side-menu-install">
+				<a class="" href="/install">
+					<i class="fa-light fa-mobile me-2" aria-hidden="true"></i>
+					Install App
+				</a>
+			</li>
+			<li id="side-menu-logout">
+				<a class="" href="/logout">
+					<i class="fa-light fa-arrow-right-from-bracket me-2" aria-hidden="true"></i>
+					Log out
+				</a>
+			</li>
+		</ul>
+	</div>
+</div><!--col-lg-3-->
+
+
+<script type="text/javascript">
+    $(function() {
+		$("#side-menu-@Model > a").addClass("active");
+	});
+</script>

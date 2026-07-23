@@ -1,0 +1,124 @@
+.header-wrap {
+    justify-content: space-between;
+}
+.mainlogo img {
+    max-width: 250px;
+    max-height: 110px;
+}
+.mainlogo img, .header.affix .mainlogo, .header.affix .mainlogo img{
+    transition: all .3s ease;
+}
+.header {
+    background-color: var(--bs-bg);
+    border-bottom: 1px solid var(--bs-primary)
+}
+.topmainnav {
+    width: 100%;
+    background: var(--bs-bg);
+}
+.header-content-wrap {
+    align-content: center;
+}
+
+
+
+.header_adress .yourlocation i {
+    inset-inline-start: 0;
+    font-size: 30px;
+    top: 3px;
+    width: 26px;
+    font-weight: 100;
+}
+.header_adress .locationaddrees{
+    color: var(--bs-text-primary);
+}
+.header_adress .typelocation    {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.header-action-icons > span {
+    display: none;
+}
+
+.header-action-icons i {
+    font-size: 1.625rem;
+    color: var(--bs-text-primary);
+}
+
+.cart-count {
+    border-radius: 4px;
+    inset-inline-end: 0px;
+    top:-2px;
+    background-color: transparent;
+    right: 4px;
+}
+
+.cart-count {
+    color: var(--bs-text-secondary);
+    font-size: 14px;
+}
+
+.mainsearchwrap .search__input {
+    border-radius: 30px;
+    background: color-mix(in srgb, var(--bs-bg) 95%, black);
+    border: none;
+    font-weight: 300;
+    color: var(--bs-text-primary);
+}
+
+.mainsearchwrap .search-icon, .fa-grid-2 {
+    color: var(--bs-primary);
+}
+
+.mainsearchwrap .search__input::placeholder {
+    color: var(--bs-text-primary);
+}
+.searchform {
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .header.affix .mainlogo img {
+        max-height: 70px;
+    }
+    .header-action-list {
+        max-width: 130px;
+    }
+    .header_adress .yourlocation {
+        padding-inline-start: 2rem;
+    }
+    .mainsearchwrap {
+        max-width: unset;
+        order: 1;
+        width: unset;
+        display: flex;
+        align-items: center;
+    }
+    .mainlogo{
+        order: 2;
+        height: auto;
+    }
+    .serchsec_header-action{
+        order: 3;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .header_adress {
+        max-width: 220px;
+    }
+    .mainsearchwrap .search-icon, .fa-grid-2 {
+        font-size: 26px;
+    }
+}
+@media (max-width: 991.99px) {
+    .header-wrap {
+        justify-content: start;
+    }
+    .header_mobilemenu-wrap .cart-count {
+        background-color: var(--bs-primary);
+        color: var(--bs-white);
+    }
+}

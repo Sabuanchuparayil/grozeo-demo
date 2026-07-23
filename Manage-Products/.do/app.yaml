@@ -1,0 +1,63 @@
+name: grozeo-manage-products
+region: fra1
+
+# ── Web service ──────────────────────────────────────────────
+services:
+  - name: manage-products
+    source_dir: /
+    github:
+      repo: Grozeo-International/Manage-Products
+      branch: main
+      deploy_on_push: true
+    build_command: ""
+    run_command: ""
+    environment_slug: php-8-2
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-1gb
+
+    # Environment variables — set real values in DigitalOcean dashboard
+    envs:
+      - key: DB_HOST
+        scope: RUN_TIME
+        value: REPLACE_WITH_MANAGED_DB_HOST
+      - key: DB_USER
+        scope: RUN_TIME
+        value: REPLACE_WITH_DB_USER
+      - key: DB_PASS
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_DB_PASSWORD
+      - key: DB_NAME
+        scope: RUN_TIME
+        value: grozeo_manage
+      - key: APP_ENV
+        scope: RUN_TIME
+        value: production
+      - key: AWS_ACCESS_KEY_ID
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_NEW_AWS_KEY
+      - key: AWS_SECRET_ACCESS_KEY
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_NEW_AWS_SECRET
+      - key: AWS_DEFAULT_REGION
+        scope: RUN_TIME
+        value: ap-south-1
+
+    http_port: 8080
+    routes:
+      - path: /
+
+    health_check:
+      http_path: /modules/auth/login.php
+      initial_delay_seconds: 30
+      period_seconds: 30
+
+# ── Managed MySQL database ───────────────────────────────────
+databases:
+  - name: grozeo-mysql
+    engine: MYSQL
+    version: "8"
+    size: db-s-1vcpu-1gb
+    num_nodes: 1

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editor Interface implementing CKEditor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//cdn.ckeditor.com/4.5.8/full/ckeditor.js"></script>
+        <script>
+            var editorCmp = location.hash.substr(1);
+
+            CKEDITOR.on('instanceReady', function (ev) {
+                parent.Ext.getCmp(editorCmp).mceReady(ev.editor.name);
+                SetContents(parent.EditorContent);
+            });
+
+            function SetContents(value) {
+                var editor = CKEDITOR.instances.editor1;
+                editor.setData(value);
+            }
+
+
+
+            var exEditor = {
+                getContent: function () {
+                    var editor = CKEDITOR.instances.editor1;
+                    return editor.getData();
+                },
+                insertContent: function (value) {
+                    var editor = CKEDITOR.instances.editor1;
+                    if (editor.mode === 'wysiwyg')
+                    {
+                        editor.insertText(value);
+                    }
+                }
+            };
+
+        </script>
+    </head>
+    <body>
+        <form><textarea name="editor1" id="editor1" rows="10" cols="80"></textarea></form>
+        <script>
+            CKEDITOR.replace('editor1', {height: 392,
+                removePlugins: 'elementspath',
+                resize_enabled: false,
+                skin: 'moono_blue,/ckeditor/moono_blue/',
+                toolbar: [
+                    {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo', '-', 'Scayt']},
+                    {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar']},
+                    '/',
+                    {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+                    {name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']},
+                    {name: 'styles', items: ['Styles', 'Format', '-', 'Maximize']}
+                ]});
+        </script>
+    </body>
+</html>

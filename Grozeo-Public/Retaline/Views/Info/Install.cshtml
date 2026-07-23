@@ -1,0 +1,119 @@
+﻿@using Microsoft.AspNetCore.Http
+@model string;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+    string strThemeTitle = "Grozeo";
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.Name))
+    {
+        strThemeTitle = tenant.Value.Name;
+    }
+}
+<div class="container">
+
+<div id="content">
+    <div class="row">
+        @await Component.InvokeAsync("InfoPageSideMenu", "install")
+
+        <div class="inst_applist d-flex p-4">
+            <h5 class="w-100 mb-3">Install @strThemeTitle APP</h5>
+            <div class="loglabel img-thumbnail border-0 mb-3 p-1 d-flex align-items-center justify-content-center">
+                @await Component.InvokeAsync("Logo", false)
+            </div>
+            <div class="inst_app_disc px-3 w-100">
+                @if (String.IsNullOrEmpty(Model))
+                {
+                    <p class="mb-2">Install @strThemeTitle App to your homescreen to get a better shopping experience</p>
+                }
+                else
+                {
+                    <p class="mb-2">We are yet to make the mobile application live. Please click on the Install button to add @strThemeTitle to your home screen.</p>
+                }
+
+                @* <img width="65" height="65" style="max-height: 66px; max-width: 66px;" src="https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl=@($"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.Value}{_httpContextAccessor.HttpContext.Request.Path.Value}")"> *@
+                <br />
+
+                <input type="button" value="Install to Homescreen" class="btn btn-primary mt-3" id="btnaddhomescreen">
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" id="addtodock-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 10px;">
+            <div class="modal-body">
+
+                <h5 class="d-flex justify-content-between fw-bold" style="font-size: 16px;">Add to dock In Safari<button type="button" class="btn-close ms-2" data-bs-dismiss="modal" aria-label="Close"></button></h5>
+                <div id="AdressSearchWrap" class="newaddress_wrap">
+
+                    <p>Click <img class="mx-1" src="/images/mac_options.svg" alt="the Share button" height="24" width="20" originalimagename="SharedGlobalArt/IL_Share.png"> in the toolbar, then choose Add to Dock. Then Click Add.</p>
+
+
+                </div><!--newaddress_wrap-->
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" style="min-width:100px;" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script>
+
+    // Detects if device is on iOS
+    const isIos = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent);
+    }
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // Detects if device is in standalone mode
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+    // Checks if should display install popup notification:
+    if (isIos() && !isInStandaloneMode()) {
+        this.setState({ showInstallMessage: true });
+        //master.showInstallPromotion();
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        //master.showInstallPromotion();
+        console.log('beforeinstallprompt event was fired.');
+    });
+
+    window.addEventListener('appinstalled', () => {
+        master.hideInstallPromotion();
+        deferredPrompt = null;
+        $('#lblInstall').text('The @strThemeTitle App is already installed in your device!');
+        $('#btnaddhomescreen').prop('disabled', true);
+        $('#btnaddhomescreen').css('opacity', '0.2');
+        console.log('CFED app was installed successfully');
+    });
+    //const buttonInstall = document.getElementById("btnaddhomescreen");
+    $('#btnaddhomescreen').unbind('click').on('click', async () => {
+        if (isSafari) {
+            $('#addtodock-modal').modal('show');
+        } else {
+            //buttonInstall.addEventListener('click', async () => {
+            //master.hideInstallPromotion();
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            // Optionally, send analytics event with outcome of user choice
+            console.log('User response to the install prompt: ${outcome}');
+            // We've used the prompt, and can't use it again, throw it away
+            deferredPrompt = null;
+            //window.location.href = '/';
+            //master.hideInstallPromotion();
+        }
+
+    });
+
+</script>

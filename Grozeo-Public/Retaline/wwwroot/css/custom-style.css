@@ -1,0 +1,20 @@
+﻿.title-case {
+    text-transform: capitalize;
+}
+
+.error, .Error {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: left;
+    color: red;
+}
+
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
+.font-size-10 {
+    font-size: xx-small !important;
+    color: black !important;
+}

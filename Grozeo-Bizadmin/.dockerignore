@@ -1,0 +1,7 @@
+jscache/
+vlsupload/
+myphaprescription/
+.git/
+mypharmacy_database.sql
+*.sql
+db/

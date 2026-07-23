@@ -1,0 +1,456 @@
+.finascop_delete {height:16px;background-image:url("../images/default/icons/finascop_delete.png") !important;}
+
+.finascop_import {height:16px;background-image:url("../images/default/icons/finascop_import.png") !important;}
+.finascop_approval {height:auto;background-image:url("../images/default/icons/finascop_approval.png") !important;}
+
+.finascop_usermapping {height:auto;background-image:url("../images/default/icons/finascop_user_mapping.png") !important;}
+
+.finascop_settings_icon {
+    height:16px;background-image:url("../images/default/icons/finascop_settings.png") !important;
+}
+.finascop_accountsgroup {height:auto;background-image:url("../images/default/icons/finascop_accountgroup.png") !important;}
+
+.finascop_add {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_add.png") !important;}
+
+.finascop_additem {height:auto;background-image:url("../images/default/icons/finascop_additem.png") !important;}
+
+.finascop_sale_view {height: 16px;  margin-right: 8px;background-image:url("../images/default/icons/finascop_sale_view.png") !important;}
+.finascop_icon_ledger {
+    height:16px;background-image:url("../images/default/tbaricons/menu/finascop_ledger.png") !important;
+}
+
+.finascop_viewfile {height:16px;background-image:url("../images/default/icons/finascop_viewfile.png") !important;}
+.finascop_hideicon{display:none;}
+.finascop_edit {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_edit.png") !important;}
+.finascop_print {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_print.png") !important;}
+.finascop_sale_edit {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_sale_edit.png") !important;}
+.finascop_sale_cancel {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_sale_cancel.png") !important;}
+
+.finascop_refID_copy {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_refID_copy.png") !important;}
+
+.finascop_indicateCYAN {
+    background-color: #CEF6F5 !important;
+
+}
+
+.finascop_ok {height:16px;margin-right:2px;background-image:url("../images/default/icons/ok.png") !important;}
+
+
+.finascop_my-icon54 {    height: auto;
+                         background: url("../images/default/icons/finascop_image-attached.png") no-repeat !important;
+                         margin: 0 25px 0 0;
+
+                         padding-left: 15px !important;}
+
+.finascop_my-icon55{ padding-left: 15px !important;}
+.finascop_my-icon56 {    height: auto;
+                         background: url("../images/default/icons/finascop_comment-attached.png") no-repeat !important;
+                         margin: 0 25px 0 0;
+                         padding-left: 15px !important;}
+.finascop_my-icon57 {    height: auto;
+                         background: url("../images/default/icons/finascop_comment-attached.png") no-repeat !important;
+                         margin: 0 25px 0 0;
+                         padding-left: 15px !important;}
+
+.finascop_my-icon1 {width:25px;height:auto;}
+.finascop_manage_structure {height:auto;background-image:url("../images/default/icons/finascop_manage_structure.png") !important;}
+.finascop_opening_balance {height:16px;width:16px;background-image:url("../images/default/icons/finascop_report_picture.png") !important;}
+.finascop_openingbalance {height:16px;background-image:url("../images/default/icons/finascop_openingbalance.png") !important;}
+.finascop_database_save {height:auto;background-image:url("../images/default/icons/finascop_database_save.png") !important;}
+.finascop_close_btn {height:16px;background-image:url("../images/default/icons/finascop_cross.png") !important;}
+.finascop_search_btn {height:16px;background-image:url("../images/default/icons/finascop_search.png") !important;}
+.finascop_my-resetpass {height:auto;background-image:url("../images/default/icons/finascop_resetpass.png") !important;}
+
+.finascop_disable_settings {height:auto;background-image:url("../images/default/icons/finascop_disable_settings.png") !important;}
+
+.finascop_voucher {height:auto;background-image:url("../images/default/icons/finascop_voucher.png") !important;}
+.finascop_dataentry{height:16px;background-image:url("../images/default/icons/finascop_dataentry.png") !important;}
+.finascop_dataentry_receipt {height:16px;background-image:url("../images/default/icons/finascop_dataentry_receipt.png") !important;}
+.finascop_upload_file {height:16px;background-image:url("../images/default/icons/finascop_upload_file.png") !important;}
+.finascop_app_scan {height:16px;background-image:url("../images/default/icons/finascop_app_scan.png") !important;}
+
+.finascop_datafinalized {height:auto;background-image:url("../images/default/icons/finascop_datafinalized.png") !important;}
+.finascop_audit {height:16px;background-image:url("../images/default/icons/finascop_audit.png") !important;}
+
+.finascop_sale {height:auto;background-image:url("../images/default/icons/finascop_sale.png") !important;}
+.finascop_invoice {height:auto;background-image:url("../images/default/icons/finascop_invoice.png") !important;}
+.finascop_bank {height:auto;background-image:url("../images/default/icons/finascop_bank.png") !important;}
+.finascop_itemmaster {height:auto;background-image:url("../images/default/icons/finascop_itemmaster.png") !important;}
+.finascop_view_inv {height:16px;background-image:url("../images/default/icons/finascop_view_inv.png") !important;}
+
+
+.finascop_terms {height:auto;background-image:url("../images/default/icons/finascop_terms.png") !important;}
+
+.finascop_purchase {height:auto;background-image:url("../images/default/icons/finascop_purchase.png") !important;}
+
+.finascop_report {height:16px;width:16px;background-image:url("../images/default/icons/finascop_report.png") !important;}
+.finascop_balance {height:16px;background-image:url("../images/default/icons/finascop_balance.png") !important;}
+.finascop_trialbalance {height:16px;background-image:url("../images/default/icons/finascop_trialbalance.png") !important;}
+.finascop_profit_loss{height:16px;background-image:url("../images/default/icons/finascop_profit_loss.png") !important;}
+.finascop_balancesheet {height:16px;background-image:url("../images/default/icons/finascop_layout_content.png") !important;}
+.finascop_parent-group {height:16px;background-image:url("../images/default/icons/parent-group.png") !important;}
+.finascop_child-group {height:16px;background-image:url("../images/default/icons/child-group.png") !important;}
+
+.bt_nature_group a span{color: #000 !important;font-weight:bold;}
+.bt_nature_group .x-treegrid-text{color: #000 !important;font-weight:bold;}
+.bt_nature_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+
+.pc_nature_group a span{color: #966400 !important;font-weight:bold;}
+.pc_nature_group .x-treegrid-text{color: #966400 !important;font-weight:bold;}
+.pc_nature_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+
+.cat_group a span{color: #CCC !important;font-weight:bold;}
+.cat_group .x-treegrid-text{color: #CCC !important;font-weight:bold;}
+.cat_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+
+.subcat_type a span{color: #000000 !important;font-weight:bold;}
+.subcat_type .x-treegrid-text{color: #000000 !important;font-weight:bold;}
+.subcat_type .x-treegrid-text{color: #000000 !important;font-weight:bold;}
+
+
+.finascop_basic_nature a span{color: #7B7D21  !important;font-weight:bold;}
+.finascop_nature_group a span{color: #0000FF !important;font-weight:bold;}
+.finascop_group a span{color: #FF0000 !important;font-weight:bold;}
+.finascop_ledger_type a span{color: #006500 !important;font-weight:bold;}
+.finascop_ledger_name a span{color: #009694 !important;font-weight:bold;}
+.finascop_branch_ledger_name a span{color: #966400 !important;font-weight:bold;}
+.finascop_rose a span{color: #FF05FF !important;font-weight:bold;}
+.finascop_opening_balance_group a span{color: #8c0280 !important;font-weight:bold;}
+
+.finascop_nature_group .x-treegrid-text{color: #0000FF !important;font-weight:bold;}
+.finascop_basic_nature .x-treegrid-text{color: #7B7D21 !important;font-weight:bold;}
+.finascop_group .x-treegrid-text{color: #FF0000 !important;font-weight:bold;}
+.finascop_ledger_type .x-treegrid-text{color: #006500 !important;font-weight:bold;}
+.finascop_ledger_name .x-treegrid-text{color: #009694 !important;font-weight:bold;}
+.finascop_branch_ledger_name .x-treegrid-text{color: #966400 !important;font-weight:bold;}
+.finascop_rose .x-treegrid-text{color: #FF05FF !important;font-weight:bold;}
+.finascop_opening_balance_group .x-treegrid-text{color: #8c0280 !important;font-weight:bold;}
+.finascop_boldFont td{font-weight: bold !important; }
+
+.finascop_basic_nature .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_nature_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_ledger_type .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_ledger_name .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_branch_ledger_name .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_rose .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+.finascop_opening_balance_group .x-tree-node-icon  {background-image:url('../images/default/icons/finascop_transparent.png') !important;}
+
+
+.finascop_unAudited {
+    background-color: #ffb6c1 !important;
+}
+
+.finascop_color-blue { background-color: #0000FF;
+                       width: 20%;
+                       height:20px;
+                       margin: 5px 2px 5px 5px;
+                       border: 2px solid #DDDDDD;
+                       float:left;}
+
+.finascop_color-red { background-color: #FF0000;
+                      width: 20%;
+                      height:20px;
+                      margin: 5px 2px 5px 5px;
+                      border: 2px solid #DDDDDD;
+                      float:left;}
+
+.finascop_color-green { background-color: #006500;
+                        width: 20%;
+                        height:20px;
+                        margin: 5px 2px 5px 5px;
+                        border: 2px solid #DDDDDD;
+                        float:left;}
+
+.finascop_color-l-blue { background-color: #009694;
+                         width: 20%;
+                         height:20px;
+                         margin: 5px 2px 5px 5px;
+                         border: 2px solid #DDDDDD;
+                         float:left;}
+.finascop_color_wrap{
+    width:100%;
+    float:left;
+}
+.finascop_color_text{
+    width:69%;
+    float:left;
+    padding: 4px 5px;
+}
+
+.finascop_color-blue_small { background-color: #0000FF;
+                             width: 20px;
+                             height:10px;
+                             margin: 5px 2px 5px 5px;
+                             border: 2px solid #DDDDDD;
+                             float:left;}
+
+.finascop_color-red_small { background-color: #FF0000;
+                            width: 20px;
+                            height:10px;
+                            margin: 5px 2px 5px 5px;
+                            border: 2px solid #DDDDDD;
+                            float:left;}
+
+.finascop_color-green_small { background-color: #009694;
+                              width: 20px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+.finascop_color-brown_small { background-color: #966400;
+                              width: 20px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+
+.finascop_color-violet_small { background-color: #8c0280;
+                              width: 20px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+
+.finascopstockpo_white_small { background-color: #ffffff;
+                              width: 10px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+.finascopstockpo_orange_small { background-color: #FFE0B2;
+                              width: 10px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+.finascopstockpo_pink_small { background-color: #ffbebe;
+                              width: 10px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+.finascopstockpo_green_small { background-color: #AECCB6;
+                              width: 10px;
+                              height:10px;
+                              margin: 5px 2px 5px 5px;
+                              border: 2px solid #DDDDDD;
+                              float:left;}
+
+.finascop_text_c{
+    width:auto;
+    float:left;
+    font-size: 13px;
+    color: #000000;
+    padding: 4px 5px;
+}
+
+.finascop_color_wr{
+    width:100%;
+    float:left;
+
+}
+
+.row-style-bold{
+    font-weight: bold  !important;
+}
+
+
+.finascop_indicateColPINK {
+    background-color: #ffbebe !important;
+
+}
+.finascop_indicateColWHITE {
+    background-color: #ffffff  !important;
+}
+.finascop_indicateColPALEGREEN {
+    background-color: #98FB98 !important;
+
+}
+
+.finascop_indicateColGUMLEAFGREEN{
+    background-color: #AECCB6 !important;
+}
+
+.finascop_indicateColCASHMERE {
+    background-color: #D6B795 !important;
+}
+
+.finascop_indicateColLIGHTORANGE {
+    background-color: #FFE0B2 !important;
+}
+
+.finascop_indicateColLIGHTYELLOW {
+    background-color:  #FFFF99 !important;
+
+}
+
+
+
+.finascop_color-light-green_small { background-color: #98FB98;
+                                    width: 20px;
+                                    height:10px;
+                                    margin: 5px 2px 5px 5px;
+                                    border: 2px solid #DDDDDD;
+                                    float:left;}
+.finascop_color-light-orange_small{ background-color: #FFE0B2;
+                                    width: 20px;
+                                    height:10px;
+                                    margin: 5px 2px 5px 5px;
+                                    border: 2px solid #DDDDDD;
+                                    float:left;}
+.finascop_color-light-yellow_small{ background-color: #FFFF99;
+                                    width: 20px;
+                                    height:10px;
+                                    margin: 5px 2px 5px 5px;
+                                    border: 2px solid #DDDDDD;
+                                    float:left;}
+
+.finascop_color-light-red_small{ background-color: #ffbebe;
+                                 width: 20px;
+                                 height:10px;
+                                 margin: 5px 2px 5px 5px;
+                                 border: 2px solid #DDDDDD;
+                                 float:left;}
+
+.finascop_color-cashmere_small{ background-color: #D6B795;
+                                width: 20px;
+                                height:10px;
+                                margin: 5px 2px 5px 5px;
+                                border: 2px solid #DDDDDD;
+                                float:left;}
+
+.finascop_color-gumleaf-green_small{ background-color: #AECCB6;
+                                     width: 20px;
+                                     height:10px;
+                                     margin: 5px 2px 5px 5px;
+                                     border: 2px solid #DDDDDD;
+                                     float:left;}
+
+.finascop_color-light-white_small{ background-color: #ffffff;
+                                   width: 20px;
+                                   height:10px;
+                                   margin: 5px 2px 5px 5px;
+                                   border: 2px solid #DDDDDD;
+                                   float:left;}
+
+.finascop_color-lightpink_small { background-color: #ffb6c1;
+                                  width: 8%;
+                                  height:10px;
+                                  margin: 5px 2px 5px 5px;
+                                  border: 2px solid #DDDDDD;
+                                  float:left;}
+
+.finascop_details-outer strong{font-weight:bold;}
+
+
+.finascop_details-outer div{font:11px/13px arial,tahoma,helvetica,sans-serif; margin:0;}
+.finascop_stockmenu {height:auto;background-image:url("../images/default/icons/finascop_stock.png") !important;}
+
+.finascop_salescustomer {height:auto;background-image:url("../images/default/icons/finascop_salescustomer.png") !important;}
+
+.finascop_stockgroup {height:auto;background-image:url("../images/default/icons/finascop_stockgroup.png") !important;}
+.finascop_details-slider_font {font-size: 13px;}
+
+
+.finascop_convertable_on {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_on.png") !important;}
+
+.finascop_convertable_off {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_off.png") !important;}
+
+.finascop_convertible {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_convertible.png") !important;}
+
+.finascop_nonconvertible {height:16px;margin-right:2px;background-image:url("../images/default/icons/finascop_nonconvertible.png") !important;}
+
+.finascop_listin_sales_on {height:16px;margin-right:2px;
+                        background-image:url("../images/default/icons/finascop_listin_sales_on.png") !important;}
+
+.finascop_listin_sales_off {height:16px;margin-right:2px;
+                        background-image:url("../images/default/icons/finascop_listin_sales_off.png") !important;}
+
+.finascop_stock_enable {height:16px;margin-right:2px;
+                        background-image:url("../images/default/icons/finascop_stock_enable.png") !important;}
+.finascop_stock_disable {height:16px;margin-right:2px;
+                        background-image:url("../images/default/icons/finascop_stock_disable.png") !important;}
+.finascop_branch_stock_rate {height:16px;margin-right:2px;
+                        background-image:url("../images/default/icons/finascop_branch_stock_rate.png") !important;}
+.finascop_marketing_worddoc {height:16px;margin-right:2px;
+                            background-image:url("../images/default/icons/msword_icon.png") !important;}
+.finascop_marketing_pdfdoc {height:16px;margin-right:2px;
+                                background-image:url("../images/default/icons/pdf_icon.png") !important;}
+.finascop_marketing_imgicon {height:16px;margin-right:2px;
+                                    background-image:url("../images/default/icons/jpgpng_icon.png") !important;}
+.finascop_details-slider_font td , th{
+    border-bottom: 1px solid #ddd;
+}
+
+.finascop_details-slider_table{                               
+    border-collapse:separate; 
+    border-spacing:5em;
+}
+
+.x-combo-list-item{
+    height:16px
+}
+
+.finascop_listin_purchase{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_listin_purchase.png") !important;}
+
+.finascop_listnotin_purchase{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_listnotin_purchase.png") !important;}
+
+.finascop_tangible{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_tangible.png") !important;}
+
+.finascop_intangible{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_intangible.png") !important;}
+
+.finascop_purchase_cancel{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_purchase_cancel.png") !important;}
+
+.finascop_purchase_return{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_purchase_return.png") !important;}
+
+.finascop_sales_return{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_sales_return.png") !important;}
+
+.finascop_stock_conversion{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_stock_conversion.png") !important;}
+.finascop_modify{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_modify.png") !important;}
+
+.finascop_purchase_returns{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_purchase_returns.png") !important;}
+
+.finascop_purchase_return_action{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_purchase_return_action.png") !important;}
+
+.finascop_purchase_show{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_purchase_show.png") !important;}
+.finascop_PurchaseReturn_View{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_sale_view.png") !important;}
+.finascop_approved {height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_approved.png") !important;}
+.finascop_StockRegister{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_StockRegister.png") !important;}
+
+.finascop_Bank_building{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_Bank_building.png") !important;}
+
+.finascop_webpage_icon{height:16px;margin-right:2px;
+              background-image:url("../images/default/icons/finascop_webpage_icon.png") !important;}
+			  
+.finascop_mem_edit {height:16px;background-image:url("../images/default/icons/finascop_mem_edit.png");}
+
+.finascop_thes_save {height:16px;background-image:url("../images/default/icons/finascop_thes_save.png");}
+.finascop_calendar {height:16px;background-image:url("../images/default/icons/calendar_view_day.png");}
+.finascop_tick {height:16px;background-image:url("../images/default/icons/tick.png");}
+.finascop_indicateColGUMLEAFGREEN .x-grid3-row-checker { background:#000000; } 
+
+.finascop_marketing_worddoc {height:16px;margin-right:2px;
+                             background-image:url("../images/default/icons/msword_icon.png") !important;}
+.finascop_marketing_pdfdoc {height:16px;margin-right:2px;
+                            background-image:url("../images/default/icons/pdf_icon.png") !important;}
+.finascop_marketing_imgicon {height:16px;margin-right:2px;
+                             background-image:url("../images/default/icons/jpgpng_icon.png") !important}
+.call_play {height:16px;margin-right:2px;
+                                background-image:url("../images/default/icons/call_play.png") !important}            

@@ -1,0 +1,96 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model string;
+<div class="header-action-list">
+    <div class="homebtn">
+        <a href="/" class="header-action-icons" id="homeLink">
+            <i class="fa-light fa-house" aria-hidden="true"></i>
+            <span>Home</span>
+        </a>
+    </div>
+    <div class="myaccount_drpdn">
+        <a href="javascript:void(0)" class="header-action-icons mobile-profilemenu" id="profileLink" onclick="OpenMobileMenu()">
+            <i class="fa-light fa-user "></i>
+            <span>Profile</span>
+        </a>
+        <a href="javascript:void(0)" class="header-action-icons trigerprofile dropdown-toggle @(string.IsNullOrEmpty(Model) ? "open-login-modal" : "")" data-bs-toggle="@(string.IsNullOrEmpty(Model) ? "" : "dropdown")" aria-expanded="false">
+            <i class="fa-light fa-user "></i>
+            <span>Profile</span>
+        </a>
+        <div class="dropdown-menu">
+            <div class="profile_drdn_info">
+                <h6> @(Model == null ? "" : Model)</h6>
+                <p>To access account and manage orders</p>
+            </div>
+            <ul class="dropdown-menu_list">
+                <li>
+                    <a class="dropdown-item" href="/account">
+                        <i class="fa-light fa-bag-shopping me-2" aria-hidden="true"></i>
+                        <span>Profile</span>
+                        My Orders
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/mywallet">
+                        <i class="fa-light fa-wallet me-2" aria-hidden="true"></i>
+                        My Wallet
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/address">
+                        <i class="fa-light fa-location-dot me-2" aria-hidden="true"></i>
+                        Manage Address
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/wishlist">
+                        <i class="fa-light fa-heart me-2" aria-hidden="true"></i>
+                        My Wishlist
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/contact">
+                        <i class="fa-light fa-headphones me-2" aria-hidden="true"></i>
+                        Support
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/install">
+                        <i class="fa-light fa-mobile me-2" aria-hidden="true"></i>
+                        Install App
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fa-light fa-arrow-right-from-bracket me-2" aria-hidden="true"></i>
+                        Log out
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <div class="hedr_wishlist">
+        <a href="javascript:void(0)" class="header-action-icons @(string.IsNullOrEmpty(Model) ? "open-login-modal" : "open-wishlist")">
+            <i class="fa-light fa-heart"></i>
+            <span>Wishlist</span>
+        </a>
+    </div>
+
+    <div class="CartMenu minicart_menu">
+        @await Component.InvokeAsync("HeaderCart")
+
+       
+    </div>
+
+</div>
+@await Component.InvokeAsync("FloatingViewCart")
+<script>
+    if (location.pathname === '/') {
+        document.getElementById('homeLink').classList.add('active');
+    }
+    if (location.pathname === '/account') {
+        document.getElementById('profileLink').classList.add('active');
+    }
+</script>

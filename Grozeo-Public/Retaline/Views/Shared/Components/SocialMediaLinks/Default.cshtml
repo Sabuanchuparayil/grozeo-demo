@@ -1,0 +1,31 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.Home.IHomePageService _homePageService;
+@{
+    string sm_tw = "https://twitter.com/grozeo_", sm_fb = "https://www.facebook.com/grozeoglobal", sm_insta = "https://www.instagram.com/grozeo_/";
+    int storegroupid = 0; try { storegroupid = (tenant?.Value == null || String.IsNullOrEmpty(tenant?.Value.StoreId) ? 0 : Convert.ToInt32(tenant?.Value.StoreId)); } catch { storegroupid = 0; }
+    if (storegroupid > 0)
+    {
+        IList<Retaline.Core.BusinessModel.Home.RetalinePlugin> _tenantPlugins = _homePageService.GetTenantPlugins(tenant.Value.Id).Result;
+        if (_tenantPlugins != null && _tenantPlugins.Count > 0 && _tenantPlugins.Any(p => p.Key == "SMUrls"))
+        {
+            Retaline.Core.BusinessModel.Home.RetalinePlugin seoConfig = _tenantPlugins.Where(p => p.Key == "SMUrls").FirstOrDefault();
+            try { sm_fb = seoConfig.TenantPlugins.Where(p => p.Name == "FBUrl").FirstOrDefault().Value; } catch { sm_fb = "#"; }
+            try { sm_insta = seoConfig.TenantPlugins.Where(p => p.Name == "InstaUrl").FirstOrDefault().Value; } catch { sm_insta = "#"; }
+            try { sm_tw = seoConfig.TenantPlugins.Where(p => p.Name == "TwitterUrl").FirstOrDefault().Value; } catch { sm_tw = "#"; }
+        }
+    }
+
+}
+
+    <a href="@sm_fb" target="_blank">
+        <i class="fa-brands fa-facebook-f"></i>
+    </a>
+    <a href="@sm_tw" target="_blank">
+        <i class="fa-brands fa-twitter"></i>
+    </a>
+    <a href="@sm_insta" target="_blank">
+        <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="#" target="_blank">
+        <i class="fa-brands fa-vimeo-v"></i>
+    </a>

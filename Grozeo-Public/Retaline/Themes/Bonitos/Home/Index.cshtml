@@ -1,0 +1,376 @@
+﻿@using Retaline.Core.ViewModel.Home;
+@using Retaline.Core.BusinessModel.Home;
+@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.Home.IHomePageService _homeService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _customAuthenticationService;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+
+
+@model List<HomePageViewModel>;
+@{
+    Layout = "_Layout";
+    bool showPWA = false;
+    int storegroupid = -1;
+    bool isNearestStoreView = Model.Any(m => m.Type == "Tenant Site");
+    if (tenant != null && tenant.Value != null)
+    {
+        showPWA = tenant.Value.ShowPWA;
+        if (!String.IsNullOrEmpty(tenant?.Value.StoreId))
+        {
+            try
+            {
+                storegroupid = Convert.ToInt32(tenant?.Value.StoreId);
+            }
+            catch { storegroupid = -1; }
+        }
+        if (String.IsNullOrEmpty(tenant?.Value.LogoImage) && String.IsNullOrEmpty(tenant?.Value.LogoSmall))
+            showPWA = false;
+    }
+
+    //var homeContent = _homeService.GetHomePageContent().Result;
+    string strInvokedPWA = _httpContextAccessor.HttpContext.Session.GetString("INVOKEDPWA");
+    //var categories = catalogService.GetCategoryMenuList().Result;//.Skip(15).Take(24);// GetCatalog().Result;
+    List<Retaline.Core.BusinessModel.Catalog.CategoryData> categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    try
+    {
+        categories = catalogService.HomeCategoriesMenu(120).Result;
+    }
+    catch
+    {
+        categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    }
+    var virtualCategories = categories.Where(c => c.Categorylevel == 4 && c.IsHome.Value == 1).ToList();
+
+    if (categories != null)
+    {
+        if (categories.Count > 40)
+            categories = categories.Skip(15).ToList();//.Take(65)
+        else
+            categories = categories.ToList(); // .Take(65)
+
+        categories = categories.OrderBy(c => c.Categorylevel).ToList();
+    }
+
+    var pcategories = new List<HomeValue>();
+    try { pcategories = Model[1].Content.Take(12).ToList(); } catch { }
+    var isCombinedCategoryAvailable = Model.Any(m => m.Type == "combinedcategory" && m.Content.Count > 0);
+    if (isCombinedCategoryAvailable)
+        try
+        {
+            List<HomeValue> new_cats = Model.Where(m => m.Type == "combinedcategory").FirstOrDefault().Content.Where(c => c.CategoryType != 4 || c.IsHome == 1)
+                .GroupBy(x => new { x.Id, x.CategoryType }).Select(x => x.FirstOrDefault()).Take(12).ToList();
+            pcategories = new_cats;
+        }
+        catch { }
+
+    if (pcategories.Count < 12)
+    {
+        try
+        {
+            List<string> catIds = pcategories.Select(c => String.Format("{0}_{1}", c.Id, c.CategoryType)).ToList();
+            List<Retaline.Core.BusinessModel.Catalog.CategoryData> cat = categories.Where(c => !catIds.Contains(String.Format("{0}_{1}", c.Id, c.Categorylevel)) && (c.Categorylevel != 4 || (c.Categorylevel == 4 && c.IsHome.Value == 1))).OrderByDescending(c => c.IsHome).ToList();
+            List<HomeValue> catHomeValues = cat.Select(c => new HomeValue
+                    {
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
+                        CategoryType = c.Categorylevel,
+                        Id = c.Id,
+                        ImageUrl = c.ImageUrl,
+                        IsHome = Convert.ToInt32(c.IsHome),
+                        IsInCategory = Convert.ToInt32(c.IsInCategory),
+                        ParentCategoryId = c.ParentCategoryId,
+                        Status = c.Status,
+                        ParentCategoryName = c.CategoryName
+                    }).ToList();
+            if (catHomeValues != null && catHomeValues.Count > 0)
+            {
+                pcategories.AddRange(catHomeValues.Take(12 - pcategories.Count));
+            }
+        }
+        catch { }
+    }
+
+    if (pcategories.Count < 12)
+    {
+        try
+        {
+            List<string> catIds = pcategories.Select(c => String.Format("{0}_{1}", c.Id, c.CategoryType)).ToList();
+            List<Retaline.Core.BusinessModel.Catalog.CategoryData> cat = categories.Where(c => !catIds.Contains(String.Format("{0}_{1}", c.Id, c.Categorylevel)) && (c.Categorylevel != 4 || (c.Categorylevel == 4 && c.IsHome.Value == 1))).OrderByDescending(c => c.IsHome).ToList();
+            List<HomeValue> catHomeValues = cat.Select(c => new HomeValue
+                    {
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
+                        CategoryType = c.Categorylevel,
+                        Id = c.Id,
+                        ImageUrl = c.ImageUrl,
+                        IsHome = Convert.ToInt32(c.IsHome),
+                        IsInCategory = Convert.ToInt32(c.IsInCategory),
+                        ParentCategoryId = c.ParentCategoryId,
+                        Status = c.Status,
+                        ParentCategoryName = c.CategoryName
+                    }).ToList();
+            if (catHomeValues != null && catHomeValues.Count > 0)
+            {
+                pcategories.AddRange(catHomeValues.Take(12 - pcategories.Count));
+            }
+        }
+        catch { }
+    }
+
+    //int curbranchId = _customAuthenticationService.GetBranchId();
+    //var groupCategories = catalogService.GetCategoryGroupDetails().Result;
+
+    List<HomeValue> dailyOffers = new List<HomeValue>();
+    if(Model != null && Model.Count > 0)
+        dailyOffers = Model[0].Content.Where(a => a.AdZoneName.StartsWith("Offer ")).ToList();
+
+}
+<!--<h1>Main Banner</h1>-->
+@if (Model != null && Model.Count > 0)
+    @await Component.InvokeAsync("HomeBanner", Model[0].Content)
+
+
+@await Component.InvokeAsync("HomeCategorySlider", pcategories)
+
+
+
+@if (dailyOffers.Count > 0 && dailyOffers.Sum(a => a.AdZoneDetails.Count) > 0)
+{
+    @await Component.InvokeAsync("HomeBannerOffers", dailyOffers)
+}
+
+
+@await Component.InvokeAsync("HomePreferredItems", Model)
+
+
+@{
+    int bstypeid = -1, rttypeid = -1;
+    if (ViewBag.UrlType == "/rc")
+    {
+        string strrttypeid = ViewBag.UrlTypeId ?? "";
+        try { bstypeid = Convert.ToInt32(strrttypeid.Replace("/", "")); } catch { bstypeid = -1; }
+    }
+    else if (ViewBag.UrlType == "/bt")
+    {
+        string strbstypeid = ViewBag.BTypeId ?? "";
+        try { rttypeid = Convert.ToInt32(strbstypeid.Replace("/", "")); } catch { rttypeid = -1; }
+    }
+    string loadMoreUrl = $"/loadmoreoffers/{bstypeid}/{rttypeid}/1";
+}
+<div class="section-grz_">
+  <div class="container">
+    <div class="row row_mb">
+        <div class="col-12">
+        <div class="titlewrap">
+            <h2>Explore more products</h2>
+        </div>
+        <div class="product-itemview">
+            <div class="btnautoloadmore product-card" navlink="@loadMoreUrl" contenttype="2" pagenum="1" subcatId="-1" brandid="-1" catlevel="-1" searchkey="">Load more..</div>
+        </div>
+    </div><!--col-12-->
+    </div><!--row-->
+  </div>
+</div>
+@await Component.InvokeAsync("BonitosCollectionBanner", dailyOffers)
+
+@*@await Component.InvokeAsync("BrowseByCategory", categories)*@
+@await Component.InvokeAsync("SuggestedProducts", Model)
+
+@await Component.InvokeAsync("BonitosBottomBanner", dailyOffers)
+
+<!-- Custom component for bonitos theme starts-->
+<div class="section-grz_support-usefull-link sesection-grz-mb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="support-usefull-wrap">
+                    <div class="support-usefull-box">
+                        <i class="icons">
+                            <svg width="58" height="45" viewBox="0 0 58 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_4546_22400)">
+                                    <path d="M12.125 5.625C12.402 5.625 12.6763 5.67956 12.9322 5.78557C13.1881 5.89157 13.4207 6.04695 13.6166 6.24282C13.8124 6.43869 13.9678 6.67123 14.0738 6.92715C14.1798 7.18307 14.2344 7.45737 14.2344 7.73438C14.2344 8.01138 14.1798 8.28568 14.0738 8.5416C13.9678 8.79752 13.8124 9.03006 13.6166 9.22593C13.4207 9.4218 13.1881 9.57718 12.9322 9.68318C12.6763 9.78919 12.402 9.84375 12.125 9.84375C11.848 9.84375 11.5737 9.78919 11.3178 9.68318C11.0619 9.57718 10.8293 9.4218 10.6334 9.22593C10.4376 9.03006 10.2822 8.79752 10.1762 8.5416C10.0702 8.28568 10.0156 8.01138 10.0156 7.73438C10.0156 7.45737 10.0702 7.18307 10.1762 6.92715C10.2822 6.67123 10.4376 6.43869 10.6334 6.24282C10.8293 6.04695 11.0619 5.89157 11.3178 5.78557C11.5737 5.67956 11.848 5.625 12.125 5.625ZM12.125 12.6562C12.7713 12.6562 13.4114 12.5289 14.0085 12.2816C14.6057 12.0342 15.1483 11.6717 15.6053 11.2147C16.0623 10.7576 16.4249 10.215 16.6722 9.6179C16.9196 9.02075 17.0469 8.38072 17.0469 7.73438C17.0469 7.08803 16.9196 6.448 16.6722 5.85085C16.4249 5.25371 16.0623 4.71112 15.6053 4.25408C15.1483 3.79705 14.6057 3.4345 14.0085 3.18716C13.4114 2.93981 12.7713 2.8125 12.125 2.8125C11.4787 2.8125 10.8386 2.93981 10.2415 3.18716C9.64433 3.4345 9.10175 3.79705 8.64471 4.25408C8.18767 4.71112 7.82513 5.25371 7.57778 5.85085C7.33043 6.448 7.20312 7.08803 7.20312 7.73438C7.20312 8.38072 7.33043 9.02075 7.57778 9.6179C7.82513 10.215 8.18767 10.7576 8.64471 11.2147C9.10175 11.6717 9.64433 12.0342 10.2415 12.2816C10.8386 12.5289 11.4787 12.6562 12.125 12.6562ZM0.875 24.6094C0.875 28.415 3.19531 31.6758 6.5 33.0469V37.2656C6.5 38.4346 7.44043 39.375 8.60938 39.375H15.6406C16.8096 39.375 17.75 38.4346 17.75 37.2656V33.75C17.75 32.9766 17.1172 32.3438 16.3438 32.3438C15.5703 32.3438 14.9375 32.9766 14.9375 33.75V36.5625H9.3125V18.3164C9.54102 18.29 9.77832 18.2812 10.0156 18.2812H14.2344C15.0518 18.2812 15.8252 18.4307 16.5371 18.7119C17.2578 18.9932 18.0752 18.6328 18.3564 17.9121C18.6377 17.1914 18.2773 16.374 17.5566 16.0928C16.5283 15.6885 15.4033 15.4688 14.2344 15.4688H10.0156C4.9707 15.4688 0.875 19.5645 0.875 24.6094ZM6.5 29.874C4.80371 28.7402 3.6875 26.7979 3.6875 24.6094C3.6875 22.4121 4.80371 20.4785 6.5 19.3447V29.874ZM45.875 5.625C46.152 5.625 46.4263 5.67956 46.6822 5.78557C46.9381 5.89157 47.1707 6.04695 47.3666 6.24282C47.5624 6.43869 47.7178 6.67123 47.8238 6.92715C47.9298 7.18307 47.9844 7.45737 47.9844 7.73438C47.9844 8.01138 47.9298 8.28568 47.8238 8.5416C47.7178 8.79752 47.5624 9.03006 47.3666 9.22593C47.1707 9.4218 46.9381 9.57718 46.6822 9.68318C46.4263 9.78919 46.152 9.84375 45.875 9.84375C45.598 9.84375 45.3237 9.78919 45.0678 9.68318C44.8119 9.57718 44.5793 9.4218 44.3834 9.22593C44.1876 9.03006 44.0322 8.79752 43.9262 8.5416C43.8202 8.28568 43.7656 8.01138 43.7656 7.73438C43.7656 7.45737 43.8202 7.18307 43.9262 6.92715C44.0322 6.67123 44.1876 6.43869 44.3834 6.24282C44.5793 6.04695 44.8119 5.89157 45.0678 5.78557C45.3237 5.67956 45.598 5.625 45.875 5.625ZM45.875 12.6562C46.5214 12.6562 47.1614 12.5289 47.7585 12.2816C48.3557 12.0342 48.8983 11.6717 49.3553 11.2147C49.8123 10.7576 50.1749 10.215 50.4222 9.6179C50.6696 9.02075 50.7969 8.38072 50.7969 7.73438C50.7969 7.08803 50.6696 6.448 50.4222 5.85085C50.1749 5.25371 49.8123 4.71112 49.3553 4.25408C48.8983 3.79705 48.3557 3.4345 47.7585 3.18716C47.1614 2.93981 46.5214 2.8125 45.875 2.8125C45.2286 2.8125 44.5886 2.93981 43.9915 3.18716C43.3943 3.4345 42.8517 3.79705 42.3947 4.25408C41.9377 4.71112 41.5751 5.25371 41.3278 5.85085C41.0804 6.448 40.9531 7.08803 40.9531 7.73438C40.9531 8.38072 41.0804 9.02075 41.3278 9.6179C41.5751 10.215 41.9377 10.7576 42.3947 11.2147C42.8517 11.6717 43.3943 12.0342 43.9915 12.2816C44.5886 12.5289 45.2286 12.6562 45.875 12.6562ZM57.125 24.6094C57.125 19.5645 53.0293 15.4688 47.9844 15.4688H43.7656C42.5967 15.4688 41.4717 15.6885 40.4434 16.0928C39.7227 16.374 39.3623 17.1914 39.6436 17.9121C39.9248 18.6328 40.7422 18.9932 41.4629 18.7119C42.1748 18.4307 42.9482 18.2812 43.7656 18.2812H47.9844C48.2217 18.2812 48.459 18.29 48.6875 18.3164V36.5625H43.0625V33.75C43.0625 32.9766 42.4297 32.3438 41.6562 32.3438C40.8828 32.3438 40.25 32.9766 40.25 33.75V37.2656C40.25 38.4346 41.1904 39.375 42.3594 39.375H49.3906C50.5596 39.375 51.5 38.4346 51.5 37.2656V33.0469C54.8047 31.667 57.125 28.415 57.125 24.6094ZM51.5 29.874V19.3447C53.1963 20.4785 54.3125 22.4121 54.3125 24.6094C54.3125 26.7979 53.1963 28.7402 51.5 29.874ZM26.1875 8.4375C26.1875 7.69158 26.4838 6.97621 27.0113 6.44876C27.5387 5.92132 28.2541 5.625 29 5.625C29.7459 5.625 30.4613 5.92132 30.9887 6.44876C31.5162 6.97621 31.8125 7.69158 31.8125 8.4375C31.8125 9.18342 31.5162 9.89879 30.9887 10.4262C30.4613 10.9537 29.7459 11.25 29 11.25C28.2541 11.25 27.5387 10.9537 27.0113 10.4262C26.4838 9.89879 26.1875 9.18342 26.1875 8.4375ZM34.625 8.4375C34.625 6.94566 34.0324 5.51492 32.9775 4.46002C31.9226 3.40513 30.4918 2.8125 29 2.8125C27.5082 2.8125 26.0774 3.40513 25.0225 4.46002C23.9676 5.51492 23.375 6.94566 23.375 8.4375C23.375 9.92934 23.9676 11.3601 25.0225 12.415C26.0774 13.4699 27.5082 14.0625 29 14.0625C30.4918 14.0625 31.9226 13.4699 32.9775 12.415C34.0324 11.3601 34.625 9.92934 34.625 8.4375ZM27.5938 16.875C22.5488 16.875 18.4531 20.9707 18.4531 26.0156C18.4531 29.54 20.4482 32.5986 23.375 34.1279V40.0781C23.375 41.2471 24.3154 42.1875 25.4844 42.1875H32.5156C33.6846 42.1875 34.625 41.2471 34.625 40.0781V34.1279C37.5518 32.6074 39.5469 29.5488 39.5469 26.0156C39.5469 20.9707 35.4512 16.875 30.4062 16.875H27.5938ZM23.375 21.2959V30.7354C22.083 29.5752 21.2656 27.8877 21.2656 26.0156C21.2656 24.1436 22.083 22.4561 23.375 21.2959ZM26.1875 39.375V19.8457C26.6357 19.7402 27.1104 19.6875 27.5938 19.6875H30.4062C30.8896 19.6875 31.3643 19.7402 31.8125 19.8457V39.375H26.1875ZM34.625 30.7354V21.2959C35.917 22.4561 36.7344 24.1348 36.7344 26.0156C36.7344 27.8877 35.917 29.5752 34.625 30.7354Z" fill="#5D8FB7" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_4546_22400">
+                                        <rect width="56.25" height="45" fill="white" transform="translate(0.875)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </i>
+                        <span>Trusted By<br>1 million Customers</span>
+                    </div>
+                    <div class="support-usefull-box">
+                        <i class="icons">
+                            <svg width="46" height="45" viewBox="0 0 46 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_4546_22405)">
+                                    <path d="M2.9375 22.5C2.9375 11.6279 11.7529 2.8125 22.625 2.8125C33.4971 2.8125 42.3125 11.6279 42.3125 22.5V35.165C42.3125 37.4941 40.4229 39.3838 38.0938 39.3838L30.8252 39.375C30.2451 37.7402 28.6807 36.5625 26.8438 36.5625H21.2188C18.8897 36.5625 17 38.4521 17 40.7812C17 43.1104 18.8897 45 21.2188 45H26.8438C28.6807 45 30.2451 43.8223 30.8252 42.1875L38.0938 42.1963C41.9785 42.1963 45.1338 39.0498 45.1338 35.165V22.5C45.125 10.0723 35.0527 0 22.625 0C10.1973 0 0.125 10.0723 0.125 22.5V26.7188C0.125 27.4922 0.757813 28.125 1.53125 28.125C2.30469 28.125 2.9375 27.4922 2.9375 26.7188V22.5ZM28.25 40.7812C28.25 41.5547 27.6172 42.1875 26.8438 42.1875H21.2188C20.4453 42.1875 19.8125 41.5547 19.8125 40.7812C19.8125 40.0078 20.4453 39.375 21.2188 39.375H26.8438C27.6172 39.375 28.25 40.0078 28.25 40.7812ZM12.7813 19.6875H14.1875V30.9375H12.7813C10.4521 30.9375 8.5625 29.0479 8.5625 26.7188V23.9062C8.5625 21.5771 10.4521 19.6875 12.7813 19.6875ZM5.75 23.9062V26.7188C5.75 30.6035 8.89649 33.75 12.7813 33.75H14.1875C15.7432 33.75 17 32.4932 17 30.9375V19.6875C17 18.1318 15.7432 16.875 14.1875 16.875H12.7813C8.89649 16.875 5.75 20.0215 5.75 23.9062ZM31.0625 19.6875H32.4688C34.7979 19.6875 36.6875 21.5771 36.6875 23.9062V26.7188C36.6875 29.0479 34.7979 30.9375 32.4688 30.9375H31.0625V19.6875ZM32.4688 16.875H31.0625C29.5068 16.875 28.25 18.1318 28.25 19.6875V30.9375C28.25 32.4932 29.5068 33.75 31.0625 33.75H32.4688C36.3535 33.75 39.5 30.6035 39.5 26.7188V23.9062C39.5 20.0215 36.3535 16.875 32.4688 16.875Z" fill="#5D8FB7" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_4546_22405">
+                                        <rect width="45" height="45" fill="white" transform="translate(0.125)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </i>
+                        <span>24 x 7 Customer<br>Support</span>
+                    </div>
+                    <div class="support-usefull-box">
+                        <i class="icons">
+                            <svg width="65" height="45" viewBox="0 0 65 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M47.725 3H6.075C4.42945 3 3.1 4.34062 3.1 6V30C3.1 31.6594 4.42945 33 6.075 33H31.567L30.8233 36H6.075C2.7932 36 0.125 33.3094 0.125 30V6C0.125 2.69063 2.7932 0 6.075 0H47.725C51.0068 0 53.675 2.69063 53.675 6V12C52.6616 11.9719 51.6483 12.1406 50.7 12.525V6C50.7 4.34062 49.3705 3 47.725 3ZM23.925 22.5C23.925 21.675 24.5944 21 25.4125 21H34.3375C35.1556 21 35.825 21.675 35.825 22.5C35.825 23.325 35.1556 24 34.3375 24H25.4125C24.5944 24 23.925 23.325 23.925 22.5ZM25.4125 12H43.2625C44.0806 12 44.75 12.675 44.75 13.5C44.75 14.325 44.0806 15 43.2625 15H25.4125C24.5944 15 23.925 14.325 23.925 13.5C23.925 12.675 24.5944 12 25.4125 12ZM13.5125 7.5C14.3306 7.5 15 8.175 15 9V9.9C15.5485 9.99375 16.7664 10.2281 17.2405 10.3594C18.0308 10.575 18.5049 11.3906 18.2911 12.1969C18.0773 13.0031 17.2684 13.4719 16.4689 13.2562C16.097 13.1531 14.8234 12.9094 14.4143 12.8438C13.2243 12.6562 12.2202 12.8062 11.5416 13.1156C10.8722 13.425 10.6212 13.8187 10.5654 14.1469C10.5003 14.5312 10.5561 14.7281 10.6119 14.8406C10.6677 14.9719 10.7978 15.1312 11.0767 15.3187C11.6996 15.75 12.6665 16.05 13.9588 16.4437L14.0145 16.4625C15.158 16.8094 16.6084 17.25 17.6868 18.0469C18.2725 18.4688 18.8024 19.0406 19.1371 19.8094C19.4718 20.5875 19.5462 21.4406 19.3881 22.3594C19.1092 24 18.0308 25.1156 16.6641 25.7063C16.1435 25.9313 15.5857 26.0813 15 26.1656V27C15 27.825 14.3306 28.5 13.5125 28.5C12.6944 28.5 12.025 27.825 12.025 27V26.1C11.1511 25.9406 9.84023 25.4812 9.01281 25.2C8.84547 25.1437 8.70602 25.0969 8.58516 25.05C7.80422 24.7875 7.38586 23.9344 7.64617 23.1562C7.90649 22.3781 8.7525 21.9469 9.52414 22.2094C9.70078 22.2656 9.89602 22.3312 10.0913 22.4062C10.9745 22.7062 12.0157 23.0625 12.6107 23.1656C13.8472 23.3625 14.842 23.2406 15.4927 22.9594C16.097 22.6969 16.3759 22.3313 16.4503 21.8531C16.5247 21.4125 16.4689 21.1688 16.4038 21.0094C16.3388 20.85 16.1993 20.6719 15.9297 20.475C15.3254 20.025 14.3771 19.7156 13.0941 19.3219L12.9082 19.2656C11.8019 18.9281 10.4352 18.5156 9.40328 17.8125C8.82688 17.4188 8.26906 16.875 7.92508 16.1344C7.5718 15.375 7.48813 14.5312 7.63688 13.6406C7.90649 12.075 9.00352 10.9781 10.3144 10.3875C10.835 10.1438 11.4114 9.975 12.0157 9.88125V9C12.0157 8.175 12.6851 7.5 13.5032 7.5H13.5125Z" fill="#5D8FB7" />
+                                <g clip-path="url(#clip0_4626_1008)">
+                                    <path d="M50.6704 19.3851C50.4771 19.3153 50.2676 19.3153 50.0796 19.3851L38.9937 23.4457L50.375 27.9198L61.7563 23.4511L50.6704 19.3851ZM38.3438 38.2162C38.3438 38.5761 38.5693 38.8983 38.9077 39.0219L49.5156 42.9105V29.4237L38.3438 25.0355V38.2162ZM51.2344 42.9105L61.8423 39.0219C62.1807 38.8983 62.4062 38.5761 62.4062 38.2162V25.0355L51.2344 29.4237V42.9052V42.9105ZM49.4888 17.7684C50.0635 17.559 50.6919 17.559 51.2612 17.7684L62.4331 21.8666C63.4482 22.2372 64.125 23.204 64.125 24.2889V38.2162C64.125 39.2958 63.4482 40.2626 62.4331 40.6385L51.2612 44.7313C50.6865 44.9408 50.0581 44.9408 49.4888 44.7313L38.3169 40.6332C37.3018 40.2626 36.625 39.2958 36.625 38.2162V24.2889C36.625 23.2094 37.3018 22.2426 38.3169 21.8666L49.4888 17.7684Z" fill="#5D8FB7" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_4626_1008">
+                                        <rect width="27.5" height="27.5" fill="white" transform="translate(36.625 17.5)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </i>
+                        <span>Secure Payment<br>& Delivery</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Custom component for bonitos theme ends-->
+
+<script>
+    master.properties.isHomePage = true;
+</script>
+@if (_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "fl"))
+{
+    string strFlResult = _httpContextAccessor.HttpContext.Session.GetString("FLRESULT");
+    string strAuthResul = _httpContextAccessor.HttpContext.Session.GetString("FLAUTHRESULT");
+    _httpContextAccessor.HttpContext.Session.Remove("FLRESULT");
+    _httpContextAccessor.HttpContext.Session.Remove("FLAUTHRESULT");
+
+    if (!String.IsNullOrEmpty(strFlResult))
+    {
+        Retaline.Core.BusinessModel.UserDetails.UserDetailsFromApi result = Newtonsoft.Json.JsonConvert.DeserializeObject<Retaline.Core.BusinessModel.UserDetails.UserDetailsFromApi>(strAuthResul);
+        if (result == null || result.Data == null)
+        {
+            <script>
+                $(document).ready(function () {
+                    master.showResult('There is a technical error. Please contact administrator for more details', 'Failure', false);
+                });
+            </script>
+        }
+        else if (!result.Data.IsRegisterd)
+        {
+
+            <script>
+                let data_email = '@result.Data.email'
+                $(document).ready(function () {
+                    $("#login-modal").modal('show');
+                    $("#txt-signup-email").val(data_email);
+                    $("#newacount_emailid_field").addClass('hide');
+
+                    // Show signup form:
+                    $('#h-loginHead').html("Create Account");
+                    $('.mobile-control').toggleClass("hide", true);
+                    $('.otp-control').toggleClass("hide", false);
+                    $('.create_account').removeClass("hide");
+                    $('.otp-control').addClass("hide");
+                    $('.sociallogin').addClass("hide");
+                    $('#email-acc-create').addClass("hide");
+                    $('#phone-acc-create').removeClass("hide");
+                    $('#pwd-acc-create').removeClass("hide");
+                });
+
+            </script>
+        }
+        else
+        {
+            <script>
+                let data_email = '@result.Data.email'
+                $(document).ready(function () {
+                    $("#login-modal").modal('show');
+                    // Show signup form:
+                    $('#h-loginHead').html("Login");
+                    $('.mobile-control').toggleClass("hide", true);
+                    $('.otp-control').addClass("hide");
+                    $('.enterpassword_control').removeClass("hide");
+                    var html = "Please enter your password";
+                    $('#psw-email').val(data_email);
+                    $('#lbl-password').html(html);
+
+                });
+            </script>
+        }
+
+        //if(strFlAuthResult == "2")
+        // Show failure popupu message for "Sorry there is a technical error happend on your login attempt."
+
+    }
+
+}
+
+@if (showPWA && !_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "ReturnUrl"))
+{
+
+    @if (string.IsNullOrEmpty(strInvokedPWA) || strInvokedPWA != "true")
+    {
+        _httpContextAccessor.HttpContext.Session.SetString("INVOKEDPWA", "true");
+
+        <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+        @await Component.InvokeAsync("PWAModel")
+
+
+        <script>
+
+            // Detects if device is on iOS
+            const isIos = () => {
+                const userAgent = window.navigator.userAgent.toLowerCase();
+                return /iphone|ipad|ipod/.test(userAgent);
+            }
+            // Detects if device is in standalone mode
+            const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+            // Checks if should display install popup notification:
+            //if (isIos() && !isInStandaloneMode()) {
+            //    this.setState({ showInstallMessage: true });
+            //    master.showInstallPromotion();
+            //}
+
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                master.showInstallPromotion();
+                console.log('beforeinstallprompt event was fired.');
+            });
+
+            window.addEventListener('appinstalled', () => {
+                master.hideInstallPromotion();
+                deferredPrompt = null;
+                console.log('CFED app was installed successfully');
+            });
+            //const buttonInstall = document.getElementById("btnaddhomescreen");
+            $('#btnaddhomescreen').unbind('click').on('click', async () => {
+                //buttonInstall.addEventListener('click', async () => {
+                master.hideInstallPromotion();
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                // Optionally, send analytics event with outcome of user choice
+                console.log('User response to the install prompt: ${outcome}');
+                // We've used the prompt, and can't use it again, throw it away
+                deferredPrompt = null;
+                master.hideInstallPromotion();
+            });
+
+        </script>
+
+    }
+    else
+    {
+        <span style="display: none">INVOKEDPWA: @strInvokedPWA</span>
+    }
+
+}

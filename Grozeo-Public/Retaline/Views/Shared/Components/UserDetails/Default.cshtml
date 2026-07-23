@@ -1,0 +1,15 @@
+﻿@model Retaline.Core.BusinessModel.UserDetails.User;
+
+<div class="top_baseinfo_btnwrap d-flex justify-content-between">
+    <div class="baseinfo">
+        <span class="name">@Model.Name</span>
+        <span class="phone_number">@Model.Mobile </span>
+        <span class="emailid_editprofie">
+            <a href="mailto:@Model.Email">@Model.Email</a>
+            @*<a href="#" class="editprofile trigrteditprofile">Edit</a>*@
+        </span>
+    </div>
+    <div class="btntopmyacont">
+        <a class="btn backtomyorder" href="/account">Back</a>
+    </div>
+</div><!--top_baseinfo_btnwrap-->

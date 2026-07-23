@@ -1,0 +1,81 @@
+﻿@{
+}
+<div class="modal" id="choose-deliverytype-modal" style="font-size: 12px;">
+    <div class="modal-dialog model-left">
+        <div class="modal-content" style=" height: 100%; overflow: hidden auto; border: none; border-radius: 0;">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" style="width: 100%;">Select your ordering method </h4>
+                <button type="button" id="changeaddrclosepop" class="close" data-dismiss="modal"><img src="~/images/cancel.png" class="alcancel"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="" style="display:none;">
+                <div id="delivery-map"></div>
+            </div>
+            <!-- Modal footer -->
+
+
+
+            <div class="card hover-overlay ripple shadow-1-strong rounded" id="choose-location"
+                 style="width: 99%; margin: 3px auto; cursor: pointer; box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%); transition: .3s; height: 100%;">
+                <div class="row myorder" style="padding: 20px;">
+                    <div class="col-md-12 col-xs-12" style="padding-bottom: 10px;">
+                        <b style="padding-right: 10px;"><input type="radio" name="rdDeliverytype" id="rdDeliverytype1" /> I need delivery</b>
+                    </div>
+                    <div class="col-md-12 col-xs-12" style="padding-bottom: 10px; margin-left: 10px;">
+                        We will be glad to deliver your order at your doorstep. Items will be supplied safe and secure at the right time.
+
+                    </div><br />
+
+                    @*<div class="col-md-12 col-xs-12">
+                    <b><i class="fa fa-shopping-cart" style="margin-right: 4px;"></i> @item.BranchName</b> Branch
+                </div>*@
+
+
+                </div>
+            </div>
+
+            <div class="card hover-overlay ripple shadow-1-strong rounded" id="btn-show-address-popup"
+                 style="width: 99%; margin: 3px auto; cursor: pointer; box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%); transition: .3s; height: 100%;">
+                <div class="row myorder" style="padding: 20px;">
+                    <div class="col-md-12 col-xs-12" style="padding-bottom: 10px;">
+                        <b style="padding-right: 10px;"><input type="radio" name="rdDeliverytype" id="rdDeliverytype1" /> I can Collect</b>
+                    </div>
+                    <div class="col-md-12 col-xs-12" style="padding-bottom: 10px; margin-left: 10px;">
+                        Place your order and get your items collected from our retailers in the chosen location according to you.
+                    </div><br />
+
+                </div>
+            </div>
+
+
+            @*<div class="modal-footer">
+            <h5 class=" mr-auto"><img src="~/images/location1.png" class="alname"> home - @(odoUser != null && odoUser.PrimaryAddress!=null? odoUser.PrimaryAddress.PINCode:"")</h5>
+            <button type="button" class="btn btn-success" data-dismiss="modal">CHOOSE &nbsp; <img src="~/images/send.png" class="alsend"></button>
+            <button type="button" class="btn-show-address-popup btn btn-success" data-dismiss="modal">Add Address &nbsp; <img src="~/images/send.png" class="alsend"></button>
+        </div>*@
+        </div>
+
+        @*<div class="modal " id="BranchesModal" role="dialog">
+            <div class="modal-dialog" style="max-width: 400px;">
+                <div class="modal-content  pb-4 pd20">
+                    <div class=" col-md-12  col-sm-12">
+                        <a href="javascript:void(0)" onclick="$('#BranchesModal').modal('hide');" class="close pt-2"><img src="~/images/cancel.png" class="imgclose"></a>
+                        <div class="form-container" style=" text-align: center;">
+                            <h3 class="title pt-12" style="margin: 0px; font-size: 16px;">
+                                Choose Branch
+                            </h3>
+                            <div class="tab-content" style="padding: 0px;">
+                                <div class="lstbranches">
+                                    <img src="~/images/loadingbig.gif" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+    </div>
+</div>

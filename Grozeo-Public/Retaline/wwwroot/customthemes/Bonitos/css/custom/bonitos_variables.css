@@ -1,0 +1,14 @@
+﻿:root {
+    --bs-body-bg: #fff;
+    --bs-body-color: #000000;
+    --bs-primary: #E67766;
+    --bs-header-search-input-bg: #ffffff;
+    --rowgrid-margin-bottom: 5.5rem;
+    --theme-bg-secondary: #5D8FB7;
+    --bs-section-padding-top: 2.5rem;
+    --bs-section-padding-bottom: 2.5rem;
+    --bs-body-font-family: "PT Sans Narrow", sans-serif;
+    --heder-font-family: "Lora", serif;
+    --bs-body-font-size: 15px;
+}
+/* root end */

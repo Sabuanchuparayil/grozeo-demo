@@ -1,0 +1,132 @@
+﻿{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "Domain": "",
+  "PartnerSiteUrl": "https://partner.grozeo.co.uk",
+  "CurrencySymbol": "£",
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=tcp:grozeoindbserver.database.windows.net,1433;Initial Catalog=grozeoUKtenantDB;User Id=GrozeoTenantDBServer;Password=GzRT#nt@56"
+  },
+  "ApiUrls": {
+    "ApiDomain": "https://bizapi.grozeo.co.uk",
+    "Authentication": {
+      "GetGuest": "/api/initial",
+      "GetOtp": "/api/signup/mobile",
+      "VerifyOtp": "/api/signup/verify",
+      "SignUp": "/api/signup/customer",
+      "ImpersonateToken": "/api/impersonate/token",
+      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9vZG9jYXJ0LmFwaS5kZXYudmVsb3NpdC5pblwvYXBpXC9pbml0aWFsIiwiaWF0IjoxNjEzMjc5MTM0LCJuYmYiOjE2MTMyNzkxMzQsImp0aSI6ImhLd1NlSG5VRVNuMjhnRVEiLCJzdWIiOjEsInBydiI6ImEzZDhlY2ZiMWRiMmJjNDNiNGVkN2NhNWYwM2EzMDQ5OTMwMmFjMTUiLCJhdWQiOiJ3ZWIiLCJkdW1teSI6MSwiZXhwIjoxNjE0NTc1MTM0fQ.9sIDM2LF71woiKfMhZl3IIjDcbDEpD3pDy-C8Z87MrI"
+    },
+    "Home": {
+      "GetContent": "/api/home/main/{0}/1",
+      "BusinessTypes": "/api/back-office/agent/businesstype"
+    },
+    "ProfileManagement": {
+      "GetProfile": "/api/customer",
+      "GetCart": "/api/cart",
+      "GetAddresses": "/api/customer/address",
+      "DeleteAddresses": "/api/customer",
+      "AddAddresses": "/api/customer/address",
+      "ChangePrimaryAddress": "/api/address/{0}/primary",
+      "Branches": "/api/address/{0}/switchbranch",
+      "BranchSelect": "/api/address/switchbranch",
+      "MyWallet": "/api/customer/wallet/history",
+      "NearestRetailer": "/api/nearestRetailer"
+    },
+    "Catalog": {
+      "GetCategories": "/api/home/category",
+      "GetCategoryMenu": "/api/home/categorymenu",
+      "Product": "/api/products/item",
+      "ProductBySubCategory": "/api/innersubcategoryscreen?page=",
+      "ProductByCategoryId": "/api/category/{0}/categoryproducts?page={1}",
+      "ProductByParentCategoryId": "/api/category/{0}/parentproducts?page={1}",
+      "Search": "/api/search/products-search?page={0}",
+      "Offer": "/api/home/offers?page=",
+      "Advertizements": "/api/home/advt/",
+      "BrandProducts": "/api/brandscreen?page=",
+      "ShopByConcern": "/api/healthconcernscreen",
+      "gropuProducts": "/api/search/group-search?page={0}",
+      "VirtualSubcategories": "/api/home/virtualsubcats/",
+      "CategoryByGroup": "/api/search/group-products",
+      "Brands": "/api/product/brandlist",
+      "GetRelatedCategories": "/api/category/relatedcategories/{0}/{1}"
+    },
+    "Cart": {
+      "CartDetails": "/api/cart/cartdetails",
+      "AddToCart": "/api/cart",
+      "UpdateCart": "/api/cart",
+      "DeleteCart": "/api/cart/",
+      "ClearCart": "/api/cart/clear/items/",
+      "Checkout": "/api/checkout/delivery/step3",
+      "DeliveryMethod": "/api/checkout/delivery/step1",
+      "Prescription": "/api/checkout/delivery/step2",
+      "ReplaceItem": "/api/cart/replaceitem"
+    },
+    "Checkout": {
+      "CheckoutConfirm": "/api/pharmacy/checkout",
+      "ConfirmOrder": "/api/checkout/confirm",
+      "ApplyCoupon": "/api/coupon-wallet",
+      "UseWallet": "/api/coupon-wallet",
+      "Abort": "/api/payment/abort/{0}",
+      "PaymentComplete": "/payment/result/redirect/",
+      "SetSlot": "/api/orders/setslot"
+    },
+    "Order": {
+      "OrderHistory": "/api/order/list",
+      "FailedOrders": "/api/order/list/failed",
+      "ActiveOrders": "/api/order/list/active",
+      "OrderDetails": "/api/orders/{0}/complete",
+      "PaymentStatus": "/api/cart/postpayment",
+      "cancelOrder": "/api/orders/cancel"
+    },
+    "Wishlist": {
+      "Get": "/api/wishlist",
+      "Add": "/api/wishlist",
+      "Delete": "/api/wishlist"
+    },
+    "Info": {
+      "CrmContactUrl": "http://leads.bitszol.com/api/entries.aspx?frm=2393",
+      "CrmOrderUrl": "http://leads.bitszol.com/api/entries.aspx?frm=2394",
+      "Pages": "/api/pages",
+      "Feedback": "/api/feedback"
+    }
+  },
+  "Token": {
+    "SecretKey": "2C4187B7-231E-4F15-89B8-425F7A55A921",
+    "Audience": "Retaline",
+    "Issuer": "Retaline"
+  },
+  "CanCheckout": "true",
+  "OnlinePaymentEnabled": "true",
+  "Azure": {
+    "Blob": {
+      "ConnectionString": "",
+      "DataProtectionKeysContainerName": ""
+    }
+  },
+  "Multitenancy": {
+    "Tenants": [
+      {
+        "Name": "Grozeo UK",
+        "Hostnames": [
+          "grozeo.co.uk",
+          "grozeo.com",
+          "www.grozeo.co.uk"
+        ],
+        "Theme": "Grozeo",
+        "CanCheckout": "true",
+        "OnlinePaymentEnabled": "true",
+        "APIUrl": "https://bizapi.grozeo.co.uk",
+        "StoreId": "",
+        "CustomColor": "#76b91c",
+        "PaymentGateway": "RazorPay"
+      }
+    ]
+  }
+}

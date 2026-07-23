@@ -1,0 +1,19 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@model List<Retaline.Core.BusinessModel.Catalog.CategoryData>;
+@foreach(var category in Model)
+@*@for (int i = 0; i < Model.Count; i++)*@
+{
+    <div class="swiper-slide">
+        <div class="group_items">
+            <div class="group_img">
+                <img src="@category.ImageUrl"  onerror="this.src='/images/p-no-image.png'">
+            </div>
+            <div class="group_cont">
+                <h3><a href="@($"/vc/{category.ParentCategoryId}/{category.CategoryName}")">@category.CategoryName</a></h3>
+                <a href="@($"/vc/{category.ParentCategoryId}/{category.CategoryName}")" class="viewmore">View</a>
+            </div>
+        </div><!--group_items-->
+    </div>
+
+    <!--swiper-slide-->
+}

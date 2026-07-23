@@ -1,0 +1,156 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject IHttpContextAccessor _httpContextAccessor;
+
+@{
+    Retaline.Core.BusinessModel.UserDetails.User odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    if (User.Identity.IsAuthenticated)
+        odoUser = customAuthService.GetUserFromClaims();
+
+}
+<div class="container">
+
+    <div class="row">
+        @await Component.InvokeAsync("MyAccountSideMenu", "support")
+
+        <div class="col-12 col-lg-9">
+
+
+
+            <div id="contactSubmit" class="contact-card">
+                <div class="contact-card_info">
+                    <div class="contact-card_info-img">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M19.1853 27.03L16.9353 27.9975C16.1778 28.32 15.3228 28.32 14.5728 27.9975L12.3228 27.03C11.2203 26.5575 10.5078 25.47 10.5078 24.27V20.25C10.5078 17.7675 12.5253 15.75 15.0078 15.75H16.5078C18.9903 15.75 21.0078 17.7675 21.0078 20.25V24.27C21.0078 25.47 20.2953 26.5575 19.1928 27.03H19.1853Z" fill="#DDA15E" />
+                            <path d="M25.605 31.5C24.24 30.1125 22.3425 29.25 20.25 29.25H18C18 30.495 16.995 31.5 15.75 31.5C14.505 31.5 13.5 30.495 13.5 29.25H11.25C7.11 29.25 3.75 32.61 3.75 36.75V42H20.25L23.25 31.5H25.605Z" fill="#277730" />
+                            <path d="M12 39H13.5C14.325 39 15 39.675 15 40.5V42H12V39Z" fill="#DDA15E" />
+                            <path d="M8.25 21.5475C8.0325 21.675 7.77 21.75 7.5 21.75C6.675 21.75 6 21.075 6 20.25C6 19.425 6.675 18.75 7.5 18.75C7.815 18.75 8.1075 18.8475 8.355 19.02" fill="#277730" />
+                            <path d="M23.2495 21.5475C23.467 21.675 23.7295 21.75 23.9995 21.75C24.8245 21.75 25.4995 21.075 25.4995 20.25C25.4995 19.425 24.8245 18.75 23.9995 18.75C23.6845 18.75 23.392 18.8475 23.1445 19.02" fill="#277730" />
+                            <path d="M13.5 27.5332L14.565 27.9907C15.3225 28.3207 16.1775 28.3207 16.935 27.9907L18 27.5332V29.2507C18 30.4957 16.995 31.5007 15.75 31.5007C14.505 31.5007 13.5 30.4957 13.5 29.2507V27.5332Z" fill="#BC6C25" />
+                            <path d="M20.25 42L23.25 31.5H39.75L36.75 42" fill="#8B8C89" />
+                            <path d="M20.5425 18.285C20.115 18.1125 19.62 18 18.9975 18C15.75 18 15.75 21 12.495 21C11.6475 21 11.0175 20.7975 10.5 20.4975V20.25C10.5 17.7675 12.5175 15.75 15 15.75H16.5C18.2775 15.75 19.815 16.785 20.5425 18.285Z" fill="#277730" />
+                            <path d="M21 23.7V20.25C21 17.7675 18.9825 15.75 16.5 15.75H15C12.5175 15.75 10.5 17.7675 10.5 20.25V23.25H9C8.5875 23.25 8.25 22.9125 8.25 22.5V20.25C8.25 16.11 11.61 12.75 15.75 12.75C17.82 12.75 19.695 13.59 21.0525 14.9475C22.41 16.305 23.25 18.18 23.25 20.25V22.635C23.25 22.995 22.995 23.3025 22.65 23.37L21 23.7Z" fill="#E7ECEF" />
+                            <path d="M30 36C30.4125 36 30.75 36.3375 30.75 36.75C30.75 37.1625 30.4125 37.5 30 37.5V36Z" fill="#A2F1A7" />
+                            <path d="M15.75 24.7505C15.6675 24.3455 15.93 23.948 16.335 23.8655L22.5 22.6355V20.4905C22.5 16.898 19.7925 13.7555 16.215 13.5155C12.285 13.253 9 16.373 9 20.2505V22.5005H10.5V24.0005H9C8.175 24.0005 7.5 23.3255 7.5 22.5005V20.4905C7.5 16.2005 10.68 12.4355 14.955 12.038C19.86 11.573 24 15.4355 24 20.2505V22.6355C24 23.348 23.4975 23.963 22.7925 24.1055L16.6275 25.3355C16.2225 25.418 15.825 25.1555 15.7425 24.7505H15.75Z" fill="#5FB9A3" />
+                            <path d="M15.75 42.0006H14.25V40.5006C14.25 40.0881 13.9125 39.7506 13.5 39.7506H8.25C7.8375 39.7506 7.5 39.4131 7.5 39.0006V36.0006C7.5 35.7981 7.5825 35.6106 7.7175 35.4681L8.685 34.5006C8.9775 34.2081 9.45 34.2081 9.7425 34.5006C10.035 34.7931 10.035 35.2656 9.7425 35.5581L8.9925 36.3081V38.2506H13.4925C14.7375 38.2506 15.7425 39.2556 15.7425 40.5006V42.0006H15.75Z" fill="#5FB9A3" />
+                            <path d="M39.75 42H2.25V43.5H39.75V42Z" fill="#A2F1A7" />
+                            <path d="M30.75 14.7825L26.25 18L27 14.25H25.5C25.0875 14.25 24.75 13.9125 24.75 13.5V5.25C24.75 4.8375 25.0875 4.5 25.5 4.5H36C36.4125 4.5 36.75 4.8375 36.75 5.25V9.75H31.5C31.0875 9.75 30.75 10.0875 30.75 10.5V14.7825Z" fill="#5FB9A3" />
+                            <path d="M45.75 10.5V21C45.75 21.4125 45.4125 21.75 45 21.75H42.75L43.5 26.25L38.25 21.75H31.5C31.0875 21.75 30.75 21.4125 30.75 21V10.5C30.75 10.0875 31.0875 9.75 31.5 9.75H45C45.4125 9.75 45.75 10.0875 45.75 10.5Z" fill="#277730" />
+                        </svg>
+                    </div>
+                    <h2>We’d Love to hear from you.</h2>
+                    <p>Got questions or feedback? Feel free to reach out to us. We’re just a message away!</p>
+                </div>
+                <div class="contact-card_form">
+                    <form class="contact-form_wrap" action="/contact" id="frmContactSubmit" novalidate="novalidate">
+
+                        <div class="form-info_bac">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" value="@(User.Identity.IsAuthenticated && odoUser != null ? odoUser.Name:"")" data-msg-required="Please enter your name." placeholder="" class="form-control" name="name" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" value="@(User.Identity.IsAuthenticated && odoUser != null ? odoUser.Email:"")" data-msg-required="Please enter your email address." data-msg-email="Please enter a valid email address." class="form-control" placeholder="" name="email" id="txtEmail">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" value="@(User.Identity.IsAuthenticated && odoUser != null ? odoUser.Mobile:"")" data-msg-required="Please enter your mobile number." data-msg-email="Please enter a valid mobile number." class="form-control" placeholder="" name="mobile" id="txtPhone">
+                            </div>
+                        </div>
+                        <div class="info-addres">
+                            @await Component.InvokeAsync("ContactAddress")
+                            @*      <h6>Grozeo India</h6>
+                            <ul class="contacts-info-list">
+                            <li>
+                            <i class="fa-light fa-location-dot" aria-hidden="true"></i>
+                            <div class="info-item">
+                            <p>Reta Globe India Private Limited, The Atomic Near Technopark Phase 1, Kazhakootam, 695581, Trivandrum, Kerala</p>
+                            </div>
+                            </li>
+
+                            <li>
+                            <i class="fa-light fa-envelope"></i>
+                            <span class="info-item">
+                            <a href="mailto:info@grozeo.com">info@grozeo.com</a>
+                            </span>
+                            </li>
+                            <li>
+                            <i class="fa-light fa-phone"></i>
+                            <div class="info-item">
+                            +91 98765 43210 /  +91 98765 43210
+                            </div>
+                            </li>
+
+                            </ul>
+                            </div>
+
+                            <div class="form-info_msg">
+                            <div class="form-group">
+                            <label>Message</label>
+                            <textarea data-msg-required="Please enter your message." rows="8" class="form-control" placeholder="" name="message" id="txtMessage"></textarea>
+                            </div>
+
+                            <div class="btn-field">
+                            <input type="submit" value="Submit" class="btn btn-primary">
+                            <input type="hidden" id="hidOrderId" /><input type="hidden" id="hidOrderNum" value="" /><input type="hidden" id="hidOrderBranch" /><input type="hidden" id="hidOrderDate" />
+
+                            </div>*@
+
+                        </div>
+                        <div class="form-info_msg">
+                            <div class="btn-field">
+                                <input type="submit" value="Submit" class="btn btn-primary">
+                                <input type="hidden" id="hidOrderId" /><input type="hidden" id="hidOrderNum" value="" /><input type="hidden" id="hidOrderBranch" /><input type="hidden" id="hidOrderDate" />
+
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+            <div id="contactResult" style="display:none;">
+                <div class="contact-card_info">
+                    <div class="contact-card_info-img">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M19.1853 27.03L16.9353 27.9975C16.1778 28.32 15.3228 28.32 14.5728 27.9975L12.3228 27.03C11.2203 26.5575 10.5078 25.47 10.5078 24.27V20.25C10.5078 17.7675 12.5253 15.75 15.0078 15.75H16.5078C18.9903 15.75 21.0078 17.7675 21.0078 20.25V24.27C21.0078 25.47 20.2953 26.5575 19.1928 27.03H19.1853Z" fill="#DDA15E" />
+                            <path d="M25.605 31.5C24.24 30.1125 22.3425 29.25 20.25 29.25H18C18 30.495 16.995 31.5 15.75 31.5C14.505 31.5 13.5 30.495 13.5 29.25H11.25C7.11 29.25 3.75 32.61 3.75 36.75V42H20.25L23.25 31.5H25.605Z" fill="#277730" />
+                            <path d="M12 39H13.5C14.325 39 15 39.675 15 40.5V42H12V39Z" fill="#DDA15E" />
+                            <path d="M8.25 21.5475C8.0325 21.675 7.77 21.75 7.5 21.75C6.675 21.75 6 21.075 6 20.25C6 19.425 6.675 18.75 7.5 18.75C7.815 18.75 8.1075 18.8475 8.355 19.02" fill="#277730" />
+                            <path d="M23.2495 21.5475C23.467 21.675 23.7295 21.75 23.9995 21.75C24.8245 21.75 25.4995 21.075 25.4995 20.25C25.4995 19.425 24.8245 18.75 23.9995 18.75C23.6845 18.75 23.392 18.8475 23.1445 19.02" fill="#277730" />
+                            <path d="M13.5 27.5332L14.565 27.9907C15.3225 28.3207 16.1775 28.3207 16.935 27.9907L18 27.5332V29.2507C18 30.4957 16.995 31.5007 15.75 31.5007C14.505 31.5007 13.5 30.4957 13.5 29.2507V27.5332Z" fill="#BC6C25" />
+                            <path d="M20.25 42L23.25 31.5H39.75L36.75 42" fill="#8B8C89" />
+                            <path d="M20.5425 18.285C20.115 18.1125 19.62 18 18.9975 18C15.75 18 15.75 21 12.495 21C11.6475 21 11.0175 20.7975 10.5 20.4975V20.25C10.5 17.7675 12.5175 15.75 15 15.75H16.5C18.2775 15.75 19.815 16.785 20.5425 18.285Z" fill="#277730" />
+                            <path d="M21 23.7V20.25C21 17.7675 18.9825 15.75 16.5 15.75H15C12.5175 15.75 10.5 17.7675 10.5 20.25V23.25H9C8.5875 23.25 8.25 22.9125 8.25 22.5V20.25C8.25 16.11 11.61 12.75 15.75 12.75C17.82 12.75 19.695 13.59 21.0525 14.9475C22.41 16.305 23.25 18.18 23.25 20.25V22.635C23.25 22.995 22.995 23.3025 22.65 23.37L21 23.7Z" fill="#E7ECEF" />
+                            <path d="M30 36C30.4125 36 30.75 36.3375 30.75 36.75C30.75 37.1625 30.4125 37.5 30 37.5V36Z" fill="#A2F1A7" />
+                            <path d="M15.75 24.7505C15.6675 24.3455 15.93 23.948 16.335 23.8655L22.5 22.6355V20.4905C22.5 16.898 19.7925 13.7555 16.215 13.5155C12.285 13.253 9 16.373 9 20.2505V22.5005H10.5V24.0005H9C8.175 24.0005 7.5 23.3255 7.5 22.5005V20.4905C7.5 16.2005 10.68 12.4355 14.955 12.038C19.86 11.573 24 15.4355 24 20.2505V22.6355C24 23.348 23.4975 23.963 22.7925 24.1055L16.6275 25.3355C16.2225 25.418 15.825 25.1555 15.7425 24.7505H15.75Z" fill="#5FB9A3" />
+                            <path d="M15.75 42.0006H14.25V40.5006C14.25 40.0881 13.9125 39.7506 13.5 39.7506H8.25C7.8375 39.7506 7.5 39.4131 7.5 39.0006V36.0006C7.5 35.7981 7.5825 35.6106 7.7175 35.4681L8.685 34.5006C8.9775 34.2081 9.45 34.2081 9.7425 34.5006C10.035 34.7931 10.035 35.2656 9.7425 35.5581L8.9925 36.3081V38.2506H13.4925C14.7375 38.2506 15.7425 39.2556 15.7425 40.5006V42.0006H15.75Z" fill="#5FB9A3" />
+                            <path d="M39.75 42H2.25V43.5H39.75V42Z" fill="#A2F1A7" />
+                            <path d="M30.75 14.7825L26.25 18L27 14.25H25.5C25.0875 14.25 24.75 13.9125 24.75 13.5V5.25C24.75 4.8375 25.0875 4.5 25.5 4.5H36C36.4125 4.5 36.75 4.8375 36.75 5.25V9.75H31.5C31.0875 9.75 30.75 10.0875 30.75 10.5V14.7825Z" fill="#5FB9A3" />
+                            <path d="M45.75 10.5V21C45.75 21.4125 45.4125 21.75 45 21.75H42.75L43.5 26.25L38.25 21.75H31.5C31.0875 21.75 30.75 21.4125 30.75 21V10.5C30.75 10.0875 31.0875 9.75 31.5 9.75H45C45.4125 9.75 45.75 10.0875 45.75 10.5Z" fill="#277730" />
+                        </svg>
+                    </div>
+                    <h2>
+                        Thank you for reaching out!
+                    </h2>
+                    <p id="contactResultText">We've received your message and our team is reviewing it. You can expect a response shortly</p>
+                </div>
+
+            </div>
+        </div><!--col-lg-9-->
+    </div>
+</div>
+
+<script>
+    //Script to block unwanted character input in phone input.
+
+    document.getElementById("txtPhone").addEventListener("input", function (e) {
+        let input = e.target.value.replace(/[^+\d]/g, ""); // Allow only + and digits
+        input = input.replace(/\+(?=.)/g, ""); // Remove any + after the start
+        if (input[0] !== '+' && input[0] === '0') input = input.substring(1); // Block leading 0 if no +
+        e.target.value = input.substring(0, 15); // Limit length to 15
+
+
+    });
+</script>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Grozeo Partner</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <a href="/Tenant/Dashboard">
+                <img src="~/images/grozeo-logo.svg" alt="Grozeo" />
+            </a>
+        </div>
+        <ul class="nav-menu">
+            <li><a asp-area="Tenant"    asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
+            <li><a asp-area="Tenant"    asp-controller="Order"     asp-action="Index">Orders</a></li>
+            <li><a asp-area="Tenant"    asp-controller="Product"   asp-action="Index">Products</a></li>
+            <li><a asp-area="Tenant"    asp-controller="Inventory" asp-action="Index">Inventory</a></li>
+            <li><a asp-area="Finance"   asp-controller="Settlement" asp-action="Index">Finance</a></li>
+            <li><a asp-area="Business"  asp-controller="CRM"       asp-action="Prospects">Business</a></li>
+            <li><a asp-area="Support"   asp-controller="Ticket"    asp-action="Index">Support</a></li>
+        </ul>
+        <div class="user-info">
+            <span>@User.Identity?.Name</span>
+            <form asp-area="Account" asp-controller="Account" asp-action="Logout" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit">Sign out</button>
+            </form>
+        </div>
+    </nav>
+    <main class="main-content">
+        @RenderBody()
+    </main>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

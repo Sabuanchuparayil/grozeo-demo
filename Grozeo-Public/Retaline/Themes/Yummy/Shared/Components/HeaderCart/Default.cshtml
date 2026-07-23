@@ -1,0 +1,95 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    string triggerClass = "trigerCartMenu"; //User.Identity.IsAuthenticated ? "trigerCartMenu" : "open-login-modal";
+}
+
+
+
+<div class="minicart Carttoggelwrap">
+    <a href="javascript:void(0)" class="minicart-overlay close-minicart" onclick="cart.CloseMiniCart()" role="button" aria-label="Close Cart"></a>
+    <div class="minicart-card">
+        <div class="minicart-card_head">
+            <h5>My cart</h5>
+            <div class="close-minicart_icon">
+                <a href="javascript:void(0)" class="close-minicart" onclick="cart.CloseMiniCart()" role="button" aria-label="Close Cart">
+                    <i class="fa-regular fa-xmark" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        <div class="btn-field">
+            <div class="text-center"><img src="/images/loadingbig.gif" class="imgloadingmore" style="width: 45px;height: auto;margin-left: 5px;"></div>
+
+            <form method="get" action="/cart">
+                <button class="btn btn-primary checkoutBTN">View Cart</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script type="text/x-handlebars" id="cart-details-model">
+    <div class="minicart-card">
+
+      <div class="minicart-card_head">
+        <h5>My cart</h5>
+        <div class="close-minicart_icon">
+          <a href="javascript:void(0)" class="close-minicart" onclick="CloseMiniCart()" role="button" aria-label="Close Cart">
+            <i class="fa-regular fa-xmark" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="minicart-card_body">
+        {{#if cartItems.length}}
+          <ul class="minicart-preview">
+            {{#each cartItems}}
+              <li class="minicart-preview_items">
+                <a href="#" class="minicart-preview_img">
+                  <img class="img-fluid" alt="" src="{{productImage}}" onerror="this.src='/images/p-no-image.png'">
+                </a>
+                <div class="minicart-preview_content">
+                  <div class="minicart-preview_name">
+                    <a href="#">{{productName}}</a>
+                    <span class="d-inline-block ms-1">x {{cartOrderQty}}</span>
+                  </div>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+
+          {{#showRemainingItems remainingItems}}
+            <div class="minicart_moreitems">
+              <a href="/cart">{{remainingItems}} More items...</a>
+            </div>
+          {{/showRemainingItems}}
+
+          <div class="minicart-info">
+            <div class="minicart-total subtotal">
+              <div class="minicart-total_label">Sub total:</div>
+              <div class="minicart-total_value">@(_configuration["CurrencySymbol"]){{actualPrice}}</div>
+            </div>
+            <div class="minicart-total savings">
+              <div class="minicart-total_label">Discount:</div>
+              <div class="minicart-total_value">-@(_configuration["CurrencySymbol"]){{totalDiscount}}</div>
+            </div>
+          </div>
+
+          <div class="minicart-total grandtotal">
+            <div class="minicart-total_label">Total:</div>
+            <div class="minicart-total_value">@(_configuration["CurrencySymbol"]){{salesPrice}}</div>
+          </div>
+
+          <div class="btn-field">
+            <form method="get" action="/cart">
+              <button class="btn btn-primary checkoutBTN">View Cart</button>
+            </form>
+          </div>
+
+        {{else}}
+          <div class="empty-cart-message">
+            <p>Your cart is empty.</p>
+          </div>
+        {{/if}}
+      </div>
+
+    </div>
+</script>

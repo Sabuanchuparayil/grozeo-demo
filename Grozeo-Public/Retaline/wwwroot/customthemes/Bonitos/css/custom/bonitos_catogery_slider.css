@@ -1,0 +1,89 @@
+﻿
+.catogery-slider__title {
+    position: relative;
+    width: 195px;
+    height: 115px;
+    gap: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    background-image: url(/customthemes/Bonitos/images/shop_cat.png);
+    background-size: 95%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+    .catogery-slider__title::before {
+        content: '';
+        /* -webkit-mask-image: url(//toytime-theme.myshopify.com/cdn/shop/files/A_A_A_A__1.png?v=1707981036&width=375);
+  mask-image: url(//toytime-theme.myshopify.com/cdn/shop/files/A_A_A_A__1.png?v=1707981036&width=375); */
+        -webkit-mask-image: url(/customthemes/Bonitos/images/shop_cat.png);
+        mask-image: url(/customthemes/Bonitos/images/shop_cat.png);
+        -webkit-mask-size: contain;
+        -webkit-mask-position: bottom center;
+        -webkit-mask-repeat: no-repeat;
+        background-color: #d6e9f1;
+        background-color: #d6e9f1;
+        pointer-events: all;
+        position: absolute;
+        top: 0;
+        transition: all 0.3s linear;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        bottom: 0;
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .catogery-slider__title:hover::before {
+        opacity: 0;
+        transform: scale(1.2);
+    }
+
+    .catogery-slider__title > span {
+        width: 100%;
+        z-index: 2;
+        font-size: 22px;
+        color: #2A4052;
+        position: relative;
+    }
+
+/* Define your colors */
+.catogery-slider__items:nth-child(6n + 1) .catogery-slider__title::before {
+    background-color: #F5CAD1; /* Color 1 */
+}
+
+.catogery-slider__items:nth-child(6n + 2) .catogery-slider__title::before {
+    background-color: #F5CBA3; /* Color 2 */
+}
+
+.catogery-slider__items:nth-child(6n + 3) .catogery-slider__title::before {
+    background-color: #FAE8B4; /* Color 3 */
+}
+
+.catogery-slider__items:nth-child(6n + 4) .catogery-slider__title::before {
+    background-color: #CEE4DD; /* Color 4 */
+}
+
+.catogery-slider__items:nth-child(6n + 5) .catogery-slider__title::before {
+    background-color: #C6D6E3; /* Color 5 */
+}
+
+.catogery-slider__items:nth-child(6n + 6) .catogery-slider__title::before {
+    background-color: #E3D6EF; /* Color 6 */
+}
+
+@media (max-width: 992px) {
+    .catogery-slider__title {
+        height: 90px;
+    }
+}
+
+@media (max-width: 567px) {
+    .catogery-slider__title {
+        height: 65px;
+    }
+}

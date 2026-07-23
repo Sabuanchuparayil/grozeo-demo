@@ -1,0 +1,61 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model bool
+@{
+    string strthemeLogo = "", strthemeLogoSmall = "";
+    if (tenant != null && tenant.Value != null)
+    {
+        if (!String.IsNullOrEmpty(tenant.Value.LogoImage))
+            strthemeLogo = tenant.Value.LogoImage;
+
+        if (!String.IsNullOrEmpty(tenant.Value.LogoSmall))
+            strthemeLogoSmall = tenant.Value.LogoSmall;
+    }
+
+}
+<div class="mainlogo">
+    <a href="/">
+        @if (Model)
+        {
+            <span class="desktoplogo">
+                <img class="desktoplogo_img" src="@(String.IsNullOrEmpty(strthemeLogo) ? "/images/LOGO.svg": strthemeLogo)" alt="@tenant?.Value?.Name">
+            </span>
+        }
+        else
+        {
+
+            @*<span class="logotext">grozeo hypermarket</span>*@
+
+            @if (String.IsNullOrEmpty(strthemeLogo))
+            {
+                @if (tenant?.Value?.StoreId != "0" && !String.IsNullOrEmpty(tenant?.Value?.StoreId))
+                {
+                    <span title="@tenant?.Value?.Name" class="logotext">
+                        <i class="fa-solid fa-store me-2" aria-hidden="true"></i>
+                        <span class="storname">@(tenant?.Value?.Name.Length > 15 ? Retaline.Web.Service.Common.ShrinkText(tenant?.Value?.Name, 15, false).Split(' ')[0] : tenant?.Value?.Name)</span>
+                    </span>
+                }
+                else
+                {
+                    <span class="desktoplogo">
+                        <img src="/images/LOGO.svg" onerror="LogoIMGError(this)" alt="@tenant?.Value?.Name">
+                    </span>
+                    <span class="mobilelogo">
+                        <img class="mobile-logoimg" src="/images/G_mobilelogo.png">
+                    </span>
+                }
+            }
+            else
+            {
+                <span class="desktoplogo">
+                    <img class="desktoplogo_img" src="@(String.IsNullOrEmpty(strthemeLogo) ? "/images/LOGO.svg": strthemeLogo)" alt="@tenant?.Value?.Name" onerror="LogoIMGError(this)">
+                </span>
+            }
+            @if (!String.IsNullOrEmpty(strthemeLogoSmall))
+            {
+                <span class="mobilelogo">
+                    <img class="mobile-logoimg" src="@strthemeLogoSmall">
+                </span>
+            }
+        }
+    </a>
+</div><!--mainlogo-->

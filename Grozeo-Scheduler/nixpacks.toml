@@ -1,0 +1,28 @@
+[phases.setup]
+nixPkgs = [
+  "php82",
+  "php82Extensions.pdo_mysql",
+  "php82Extensions.redis",
+  "php82Extensions.mbstring",
+  "php82Extensions.xml",
+  "php82Extensions.curl",
+  "php82Extensions.bcmath",
+  "php82Extensions.intl",
+  "php82Packages.composer"
+]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader --no-interaction"]
+
+[phases.build]
+cmds = [
+  "rm -f bootstrap/cache/packages.php bootstrap/cache/services.php",
+  "php artisan package:discover --ansi",
+  "php artisan config:clear"
+]
+
+# Railway runs this as the queue worker process.
+# Add a second Railway service in the same project for the cron scheduler:
+#   Start command: php artisan schedule:run (triggered by Railway Cron every minute)
+[start]
+cmd = "php artisan migrate --force && php artisan config:cache && php artisan queue:work --queue=default,high --tries=3 --sleep=3 --timeout=300"

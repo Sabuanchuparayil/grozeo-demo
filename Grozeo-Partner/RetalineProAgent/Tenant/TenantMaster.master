@@ -1,0 +1,162 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/AgentMaster.Master" AutoEventWireup="true" CodeBehind="TenantMaster.master.cs" Inherits="RetalineProAgent.Tenant.TenantMaster" %>
+<%@ Register Src="~/Controls/SideBarRightMenu.ascx" TagPrefix="uc1" TagName="SideBarRightMenu" %>
+<%@ Register Src="~/Controls/HeaderNavigation.ascx" TagPrefix="uc1" TagName="HeaderNavigation" %>
+<%@ Register Src="~/Controls/PopupUpgradeStore.ascx" TagPrefix="uc1" TagName="PopupUpgradeStore" %>
+<%@ Register Src="~/Controls/HeaderUser.ascx" TagPrefix="uc1" TagName="HeaderUser" %>
+<%@ Register Src="~/Controls/ctrlMenuNavigation.ascx" TagPrefix="uc1" TagName="ctrlMenuNavigation" %>
+
+
+<asp:Content ContentPlaceHolderID="cntRibbonTopRight" runat="server">
+    <asp:Panel runat="server" ID="pnlRibbon" Visible="false" CssClass="ribbon-corner ribbon-fold">
+     
+        <% if (!this.CurrentUser.CanCheckout)
+            {  %>
+                <a class="tx-white" href="/tenant/ManageBusinessInfo">Checkout Disabled</a>
+        <% }
+            else
+            {  %>
+        <a class="tx-white" href="/tenant/store/gst-add"><%= (ConfigurationManager.AppSettings.Get("VATType") == "2" ? "GST" : "VAT") %> Validation Pending</a>
+        <% } %>
+           <i class="fa-regular fa-circle-plus closeribbon tx-18 mr-2 ml-2" style="cursor: pointer;" onclick="$(this).closest('.ribbon-corner').hide()"></i>
+    </asp:Panel>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="matomoSite" runat="server">
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "<%= ConfigurationSettings.AppSettings.Get("MatomoUrl")%>";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '73']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+    
+</asp:Content>
+
+
+<%--<asp:Content ContentPlaceHolderID="cntPendingTasks" runat="server">--%>
+    
+    <%--<a class="pndjobs" title="Pending Jobs" href="/Tenant/PendingActions" id="pendingActionsCount" style="display:none;">
+              <span class="d-none d-md-flex ml-0 ml-md-2 pl-0 pl-md-1">Pending Tasks</span>
+              <span class="pndjobs_ount ml-0 ml-md-1" id="pendingCount"></span>
+            </a>
+    <script src="/Content/js/custom/home.js"></script>
+    <script type="text/javascript">
+        home.url.pendingActions = '/api/home/GetPendingTasks/0';
+    </script>--%>
+    <%--<asp:ContentPlaceHolder ID="cntTenantPendingTasks" runat="server">
+    </asp:ContentPlaceHolder>  --%> 
+<%--</asp:Content>--%>
+
+<asp:Content ContentPlaceHolderID="cphAdmin" runat="server">
+    <asp:Panel runat="server" CssClass="desktoplogo" ID="pnlLogo" Visible="false">
+            <asp:Image CssClass="desktoplogo_img" ID="logoImage" runat="server" />
+        </asp:Panel>
+        <div class="logotext d-flex align-items-center" runat="server" id="storeName" visible="false">
+            
+            <h2 data-toggle="tooltip" title="" class="" data-original-title='<%=  String.IsNullOrEmpty(this.CurrentUser.StoreGroupName) ? "My Store" : this.CurrentUser.StoreGroupName  %>'>
+                <%=  String.IsNullOrEmpty(this.CurrentUser.StoreGroupName) ? "My Store" : this.CurrentUser.StoreGroupName  %>
+            </h2>
+        </div>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cntSwitchTenant" runat="server">
+
+    <a class="pndjobs" title="Pending Jobs" href="/Tenant/PendingActions" id="pendingActionsCount" style="display:none;">
+              <span class="d-none d-md-flex ml-0 ml-md-2 pl-0 pl-md-1">Pending Tasks</span>
+              <span class="pndjobs_ount ml-0 ml-md-1" id="pendingCount"></span>
+            </a>
+    <script src="/Content/js/custom/home.js"></script>
+    <script type="text/javascript">
+        home.url.pendingActions = '/api/home/GetPendingTasks/0';
+    </script>
+
+
+                <% if (this.CurrentUser.PackageId < 2 && false)
+                { %>
+            <div class="public_site_url mr-3">
+            <%--<a href="#" data-toggle="modal" data-target="#modalupgrade" class=" header-notification upgradelink px-3 py-2" title="Upgrade">
+                <span class="mr-2 d-none d-lg-inline-block">Upgrade</span>
+                <i class="fa-thin fa-arrow-up-big-small"></i>
+            </a>--%>
+            <a href="/tenant/subscription" class=" header-notification upgradelink px-3 py-2" title="Upgrade">
+                <span class="mr-2 d-none d-lg-inline-block">Upgrade</span>
+                <i class="fa-thin fa-arrow-up-big-small"></i>
+            </a>
+          </div>
+            <% } %>
+
+  <div class="public_site_url mr-3">
+  <a href="/tenant/subscription" class=" header-notification upgradelink px-3 py-2" title="Subscription">
+      <span class="mr-2 d-none d-lg-inline-block">Subscription</span>
+      <i class="fa-thin fa-arrow-up-big-small"></i>
+  </a>
+</div>
+
+            <div class="public_site_url mr-3">
+            <a href="//<%= this.CurrentUser.PublicSiteUrl %>" target="_blank" class="header-notification website_view px-3 py-2" title="Go to Public Site">
+                <%--<span class="mr-2 tx-16 d-none d-lg-inline-block">Go to Site</span>
+                <i class="fa-thin fa-browser"></i>--%>
+
+                <span class="gto_wrap">
+                 <span class="mr-2 tx-16 d-none d-lg-inline-block">Go to Site</span>
+                <i class="fa-thin fa-browser"></i>
+              </span>
+              <div class="liquid"></div>
+
+            </a>
+            <asp:PlaceHolder ID="plcPublicSiteUrlNav" Visible="false" runat="server">
+            <div class="url_popover">
+              <div class="closepopover">X</div>
+            <div class="arrow"></div>
+              <h3>Congratulations !!</h3>
+              <p>Your online store is LIVE now. Click here to visit</p>
+            </div>
+            </asp:PlaceHolder>
+          </div> <!--public_site_url-->
+            
+
+    <asp:PlaceHolder ID="plsSwitchContainerBtn" runat="server">
+         <link href="/content/css/bootstrap-select.min.css" rel="stylesheet" />
+<script src="/content/js/bootstrap-select.min.js"></script>
+    <uc1:SideBarRightMenu runat="server" plcSwitchButton="plsSwitchContainerBtn" plcSideMenuContainer="plsSwitchContainer" id="SideBarRightMenu" />
+</asp:PlaceHolder>
+
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cntUserHead" runat="server">
+    <uc1:HeaderUser runat="server" ID="HeaderUser" />
+</asp:Content>
+<asp:Content ContentPlaceHolderID="head" runat="server">
+    <link href="../Content/css/custom/perfect-scrollbar.min.css" rel="stylesheet" />
+    <script src="../Content/js/custom/perfect-scrollbar.jquery.min.js"></script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+    <asp:Content ContentPlaceHolderID="cntProfileNav" runat="server"><a href="/tenant/profile" class="nav-link"><i class="fa-thin fa-user-vneck mr-2"></i> View Profile</a></asp:Content>
+<asp:Content ContentPlaceHolderID="cpHeaderNavigationAdmin" runat="server">
+    <%--<uc1:HeaderNavigation runat="server" ID="HeaderNavigation" />--%>
+    <uc1:ctrlMenuNavigation runat="server" ID="ctrlMenuNavigation" StartingNode="~/tenant" />
+
+    <%--<asp:ContentPlaceHolder ID="cpNHeaderNavigation" runat="server"></asp:ContentPlaceHolder>--%>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpBreadcrumb" runat="server">
+    <asp:ContentPlaceHolder ID="cpBreadcrumb" runat="server"><li class="breadcrumb-item"><a href="/">Home</a></li></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpTitle" runat="server">
+    <asp:ContentPlaceHolder ID="cpTitle" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpMainContent" runat="server">
+    <asp:ContentPlaceHolder ID="cpMainContent" runat="server"></asp:ContentPlaceHolder>
+    <% if (this.CurrentUser.PackageId < 2)
+    { %>
+        <uc1:PopupUpgradeStore runat="server" id="PopupUpgradeStore1" />
+    <% } %>
+
+</asp:Content>
+

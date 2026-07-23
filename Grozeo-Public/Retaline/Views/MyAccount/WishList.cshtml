@@ -1,0 +1,41 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@model List<Product>;
+@{
+    string productUrl = "#";
+}
+<div class="container">
+
+    <div class="row">
+        @await Component.InvokeAsync("MyAccountSideMenu", "wishlist")
+        <div class="col-12 col-lg-9">
+
+            <div class="titlewrap title_group">
+                <h2>Wishlist</h2>
+                @if (Model.Count > 0)
+                {
+                    <button class="btn btn-primary moveall-wishlist">Move all to cart</button>
+
+                }
+
+                </div>
+                <div class="products-wishlist-view product-itemview">
+
+
+                    @if (Model == null || Model.Count <= 0)
+                    {
+                        <div class="d-flex justify-content-center w-100">
+                            <img src="/images/empty_wishlist.svg">
+                        </div>
+
+                    }
+                    else
+                    {
+                        @await Component.InvokeAsync("ProductCard", Model)
+                    }
+
+            </div><!--product-itemview-->
+        </div><!--col-lg-9-->
+    </div>
+</div>
+</section>

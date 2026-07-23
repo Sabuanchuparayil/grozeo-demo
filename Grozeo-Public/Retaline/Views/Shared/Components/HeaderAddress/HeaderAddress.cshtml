@@ -1,0 +1,34 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model Retaline.Core.BusinessModel.UserDetails.User;
+@using Retaline.Core.BusinessModel.UserDetails;
+@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@{
+	string addressTrigger = "";
+    var curUser = Model;
+	GuestData guestUser = HttpHelper.GuestUser;
+
+}
+@if (curUser.PrimaryAddress != null)
+{
+	<div class="header_adress">
+		<div class="yourlocation delivery_adress_triger" data-bs-toggle="modal" data-bs-target="#adressDropdown">
+			<i class="fa-thin fa-location-dot" aria-hidden="true"></i>
+			<span class="typelocation">@curUser.PrimaryAddress.Type</span>
+			<span class="locationaddrees">@curUser.PrimaryAddress.HouseName, @curUser.PrimaryAddress.City</span>
+		</div>
+	</div>
+
+}else{
+	<div class="header_adress">
+		<div class="yourlocation delivery_adress_triger" data-bs-toggle="modal" data-bs-target="@(User.Identity.IsAuthenticated ? addressTrigger : "#search-address-modal")">
+			<i class="fa-thin fa-location-dot" aria-hidden="true"></i>
+			<span class="typelocation">@(User.Identity.IsAuthenticated ? "" : "Guest")</span>
+			<span class="locationaddrees">@(guestUser.GuestLocality != null ? guestUser.GuestLocality : "Select location")</span>
+		</div>
+	</div>
+}
+
+
+

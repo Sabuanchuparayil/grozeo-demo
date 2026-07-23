@@ -1,0 +1,19 @@
+﻿@model Retaline.Core.BusinessModel.InfoPages.Page;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+
+@{
+
+}
+<div class="container">
+
+<div id="content">
+    <div class=" section1 pt-0 mt-5">
+        <div class="container">
+            <div style="padding: 0px 45px;font-size: 12px;">
+
+                @(new Microsoft.AspNetCore.Html.HtmlString(System.Web.HttpUtility.HtmlDecode(System.Web.HttpUtility.HtmlDecode(Retaline.Web.Service.Common.FormatContentWithPlaceholder(Model?.Content, tenant?.Value)))))
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

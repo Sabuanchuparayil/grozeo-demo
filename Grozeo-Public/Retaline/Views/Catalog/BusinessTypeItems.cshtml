@@ -1,0 +1,36 @@
+﻿@model List<Retaline.Core.BusinessModel.Store.StoreGroup>
+
+@{
+    Layout = null;
+}
+
+@foreach (var btype in Model)
+{
+    <li class="swiper-slide">
+
+        <div class="store_list_wrap justify-content-center d-flex flex-wrap">
+
+            <div class="card p-3">
+                <a href="/st/@btype.Id/@btype.Name">
+                    <span class="highlight_store">
+                        <i class="fa-solid fa-star"></i>
+                    </span>
+                    <div class="store_logo d-flex justify-content-center align-items-center mb-2">
+
+                        <img src="@btype.Logo">
+                        <h4>@btype.Name</h4>
+                    </div>
+                    <div style="position: relative;" class="">
+                        <div class="store_location w-100 text-center"> &nbsp;</div>
+                        <div class="store_category w-100 text-center">@btype.BusinessType</div>
+                        <div class="store_visite">
+                            <span class="visite_store">Visit Store Now</span>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </li>
+
+}

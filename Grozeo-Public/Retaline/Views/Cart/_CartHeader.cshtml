@@ -1,0 +1,7 @@
+﻿@model Retaline.Core.ViewModel.Cart.CartViewModel
+
+@if (User.Identity.IsAuthenticated)
+{
+@await Component.InvokeAsync("HeaderCart",Model)
+    
+}

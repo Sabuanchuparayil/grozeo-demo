@@ -1,0 +1,29 @@
+{
+	"storename": "ABC Stores",
+	"address": "test address, test city, test state",
+	"email": "test@email.com",
+	"websiteurl": "mywebsite.com",
+	"phone": 9898989898,
+	"Images": [
+		{
+			"name": "Template",
+			"type": 1,
+			"url": "https://partner.dev.grozeo.in/Content/canvas/images/Homebanner.jpg"
+		},
+		{
+			"name": "QRCode",
+			"type": 2,
+			"url": "https://partner.dev.grozeo.in/Content/canvas/images/qrcode.jpg"
+		},
+		{
+			"name": "Big-Logo",
+			"type": 7,
+			"url": "https://partner.dev.grozeo.in/Content/canvas/images/big-logo.jpg"
+		},
+		{
+			"name": "Small-logo",
+			"type": 7,
+			"url": "https://partner.dev.grozeo.in/Content/canvas/images/small-logo.jpg"
+		}
+	]
+}

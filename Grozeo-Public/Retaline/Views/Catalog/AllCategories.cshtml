@@ -1,0 +1,136 @@
+﻿@using Retaline.Core.BusinessModel.Catalog
+@model IEnumerable<BusinessType>;
+
+		<section class="InnerPAgeSection">
+			<div class="container">
+				<div class="row">
+					
+
+					<div class="col-12">
+						@foreach(var item in Model){
+						<div class="all_categorylist_sec">
+							<h2 class="business_department-title">@item.Name</h2>
+							
+							<div class="all_categorylist_wrap_sec">
+
+								<div class="all_categorylist_wrap">
+									<h2 class="business_cat-title">@item.Name</h2>
+
+									<div class="categorylist_items_wrap">
+
+										<ul class="all_categorylist">
+	
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Bakery & Dairy</a>
+													<span class="category_count">10</span>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Beauty & Personal Care</a>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Snacks & Packaged Food</a>
+													<span class="category_count">03</span>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+													<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Bakery & Dairy</a>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Beauty & Personal Care</a>
+												</div>
+											</li><!--allcat_listitems-->											
+		
+										</ul><!--all_categorylist-->
+	
+										<ul class="all_categorylist">
+		
+											<li>
+												<a href="" class="listitems_img">
+													<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Bakery & Dairy</a>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Beauty & Personal Care</a>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+												<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Snacks & Packaged Food</a>
+													<span class="category_count">08</span>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li>
+												<a href="" class="listitems_img">
+													<img src="/images/noimagefound.png">
+												</a>
+												<div class="listitems_title">
+													<a href="">Bakery & Dairy</a>
+												</div>
+											</li><!--allcat_listitems-->
+		
+											<li class="more_sub_category">
+												<div class="listitems_title">
+													<a href="">View More Category...</a>
+												</div>
+											</li><!--allcat_listitems-->
+											
+		
+										</ul><!--all_categorylist-->
+
+									</div><!--categorylist_items_wrap-->
+
+
+								</div><!--all_categorylist_wrap-->
+
+							</div><!--all_categorylist_wrap_sec-->
+
+						</div><!--all_categorylist_sec-->
+						}
+
+					</div><!--col-12-->
+
+				</div><!--row-->
+			</div><!--container-->
+		</section>
+
+

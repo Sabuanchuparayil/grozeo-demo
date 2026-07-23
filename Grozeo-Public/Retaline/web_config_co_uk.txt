@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <!-- To customize the asp.net core module uncomment and edit the following section. 
+  For more info see https://go.microsoft.com/fwlink/?linkid=838655 -->
+  <system.webServer>
+    <handlers>
+      <remove name="aspNetCore" />
+      <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+    </handlers>
+    <aspNetCore processPath="%LAUNCHER_PATH%" arguments="%LAUNCHER_ARGS%" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="InProcess" />
+    <httpErrors errorMode="Custom" defaultResponseMode="ExecuteURL" existingResponse="Replace" defaultPath="/bad-request">
+      <error statusCode="500" responseMode="ExecuteURL" path="/internalerrorpage.html" />
+      <error statusCode="400" responseMode="ExecuteURL" path="/bad-request" />
+      <error statusCode="404" responseMode="ExecuteURL" path="/page-not-found" />
+    </httpErrors>
+
+    <rewrite>
+      <rules>
+        <rule name="www redirect retaline">
+          <match url="(.*)" />
+          <conditions>
+            <add input="{HTTP_HOST}" pattern="^grozeo\.co\.uk$" />
+            <add input="{HTTP_HOST}" pattern="^\.grozeo\.co\.uk$" negate="true" />
+          </conditions>
+
+          <action type="Redirect" url="https://www.grozeo.co.uk/{R:1}" />
+        </rule>
+
+
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>

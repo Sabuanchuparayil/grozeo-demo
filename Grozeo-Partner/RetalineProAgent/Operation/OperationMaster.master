@@ -1,0 +1,32 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/AgentMaster.Master" AutoEventWireup="true" CodeBehind="OperationMaster.master.cs" Inherits="RetalineProAgent.Operation.OperationMaster" %>
+
+<asp:Content ID="Content7" ContentPlaceHolderID="cpHeaderNavigationAdmin" runat="server">
+
+        <asp:SiteMapDataSource ID="SMDataSource" runat="server"  StartingNodeUrl="~/operation" ShowStartingNode="false"  />
+<ul class="nav nav-sidebar">
+<asp:Repeater ID="navRepeater" runat="server" DataSourceID="SMDataSource">
+    <ItemTemplate>
+    <li class="sidebar-nav-item">
+        <asp:HyperLink ID="hlNav" runat="server" NavigateUrl='<%# Eval("url") %>' CssClass='<%# string.Format("sidebar-nav-link {0}", 
+    (string.Equals(Eval("url").ToString().TrimEnd(".aspx".ToCharArray()).TrimStart("~/".ToCharArray()), Page.AppRelativeVirtualPath.TrimEnd(".aspx".ToCharArray()).TrimStart("~/".ToCharArray()), StringComparison.OrdinalIgnoreCase) 
+        ? "mega-dropdown active" : "")) %>'>
+            <i class="<%# Eval("description") %>"></i>
+            <span><%# Eval("title") %></span>
+        </asp:HyperLink>
+    </li>
+    </ItemTemplate>
+</asp:Repeater>
+
+        </ul>
+
+
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpBreadcrumb" runat="server">
+    <asp:ContentPlaceHolder ID="cpNBreadcrumb" runat="server"><li class="breadcrumb-item"><a href="/">Home</a></li></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpTitle" runat="server">
+    <asp:ContentPlaceHolder ID="cpNTitle" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpMainContent" runat="server">
+    <asp:ContentPlaceHolder ID="cpNMainContent" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>

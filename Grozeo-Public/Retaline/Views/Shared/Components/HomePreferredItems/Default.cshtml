@@ -1,0 +1,73 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@model List<HomeValue>
+@{
+}
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var prefVCategory in Model)
+    {
+        <div class="section-grz_">
+            <div class="container">
+                <div class="row row_mb">
+                    <div class="col-12">
+                        <div class="titlewrap">
+                            <h2>@prefVCategory.ParentCategoryName</h2>
+                        </div>
+                        <div class="preferred_section-grid">
+
+                            @if (!String.IsNullOrEmpty(prefVCategory.ImageUrl))
+                            {
+                                <div class="preferred_banner">
+                                    <div class="swiper preferredbannerslider">
+                                        <div class="swiper-wrapper">
+                                            <a href="@($"/vc/{prefVCategory.Id}/{prefVCategory.ParentCategoryName}")" class="swiper-slide">
+                                                <img alt="main_banner_01" class="img-fluid" src="@prefVCategory.ImageUrl">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="prefered_listswrap">
+                                <!--data-scroll: true = scrolls every card visible, false = scrolls one by one-->
+                                <div class="preferedslistslider horizontal_scroll" data-scroll="true">
+                                    <div class="slider-controll">
+                                        <span class="slider-controll_prev-arrow slider-controll-arrow prev">
+                                            <i class="fa-solid fa-angle-left"></i>
+                                        </span>
+                                        <span class="slider-controll_next-arrow slider-controll-arrow next ">
+                                            <i class="fa-solid fa-angle-right"></i>
+                                        </span>
+                                    </div>
+                                    <div class="scroll-content">
+                                        <div class="btnautoloadmore product-card" navlink="" contenttype="6" pagenum="1" subcatId="@prefVCategory.Id" brandid="-1" catlevel="-1" searchkey="@prefVCategory.Id">Loading...</div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@* <script>
+    //Takes the outer width of a product card fro DOM and then assigns the width to the product card inside the preferref lists
+    function syncProductCardWidth() {
+        var referenceWidth = $('.product-itemview .product-card').first().outerWidth();
+        $('.scroll-content .product-card').css('max-width', `${ referenceWidth }px`);
+    }
+
+    $(document).ready(syncProductCardWidth);//Runs once the dom ins ready
+    $(window).resize(syncProductCardWidth);//Runs again if only actively resized.
+</script> *@
+
+  @*
+  //Show hide the next prev buttons    
+  $('.horizontal_scroll').on('scroll', function () {
+        updateArrowVisibility($(this));
+    });
+    $('.horizontal_scroll').on('mouseenter', function () {
+        updateArrowVisibility($(this));
+    });*@

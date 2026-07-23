@@ -1,0 +1,348 @@
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.t-right{
+    text-align: right;
+}
+main{
+    padding-bottom: 10px;
+}
+
+a {
+    color: #0087C3;
+    text-decoration: none;
+}
+
+body {
+    position: relative;
+    width: 22cm;  
+    height:26.7cm; 
+    margin: 0 auto; 
+    color: #555555;
+    background: #FFFFFF; 
+    line-height: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px; 
+}
+
+header {
+    margin-top: 30px;
+}
+#logo {
+    float: left;
+    margin-right: 25px;
+}
+.text-area-padding{
+
+}
+
+.wid{
+    width: 44%;
+}
+.col-b{
+    color: #000;
+}
+.pad-btm-20{
+    padding-bottom: 20px;
+}
+.last-td {
+    width: 100px;
+}
+.last-td-width {
+    width: 170px;
+}
+.txt-area-right{
+    text-align: right;
+}
+.wd-250{
+    width: 250px;
+}
+
+.pad-td{
+    padding: 10px 10px 20px 0px !important;
+}
+/*#logo img {
+  height: 70px;
+}*/
+.top-area-wrap {
+    border: 0;
+    background: transparent;
+}
+.top-area-wrap td{
+    padding: 0;
+    border: 0;
+    background: transparent;
+    padding: 5px;
+    width: 50%;
+}
+.pr-10{
+    padding-right: 10px !important;
+}
+#company {
+    float: left;
+    text-align: left;
+}
+.ten{
+    color: #000;
+    font-size: 28px;
+}
+.totall{
+    font-size: 14px;
+    font-weight: bold;
+}
+.totall-txt{
+    font-size: 11px;
+    font-weight: bold;
+    text-transform:capitalize;
+}
+.wid-34{
+    width: 35px !important;
+}
+.wid-13 {
+    width: 13% !important;
+    border-right: 1px solid #fff !important;
+    border-top: 1px solid #ececec !important;
+    border-left: 1px solid #ececec !important;
+    border-bottom: 1px solid #ececec !important;
+}
+
+.t-left{
+    text-align: left;
+}
+#details {
+    margin-bottom: 20px;
+}
+
+#client {
+    padding-left: 6px;
+    border-left: 6px solid #01afee;
+    float: left;
+}
+
+.bo-r{
+    border: 1px solid #ececec !important;
+}
+
+#client .to {
+    color: #777777;
+}
+
+h1.head {
+    text-align: right;
+    text-transform: uppercase;
+    font-size: 35px;
+    letter-spacing: 10px;
+    color: #8f8f8f;
+    /* padding-bottom: 20px; */
+    margin-right: -10px;
+} 
+
+h2.name {
+    font-size: 15px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.ship-detail th, .ship-detail  td{
+    border: 1px solid #cccccc5e!important;
+}
+.ship-detail tbody tr:last-child td{
+    border: 1px solid #cccccc5e;
+}
+.ship-detail th{
+    text-align: left;
+    font-weight: 800;
+}
+.ship-detail td{
+    text-align: left;
+    width: 43%;
+}
+#invoice {
+    float: right;
+    text-align: right;
+}
+.left-area-block{
+    width: 100%;
+    float: left;
+}
+.left-area-block td{
+    width: 50%;
+}
+.address-block{
+    width: 32%;
+    float: right;
+}
+.bal{
+    font-size: 14px;
+}
+
+#invoice h1 {
+    color: #0087C3;
+    font-size: 2.4em;
+    line-height: 1em;
+    font-weight: normal;
+    margin: 0  0 10px 0;
+}
+
+#invoice .date {
+    font-size: 1.1em;
+    color: #777777;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+}
+
+table th,
+table td {
+    padding: 10px 15px;
+    background: #fff;
+    text-align: left;
+
+}
+.t-right{
+    text-align: right;
+    margin-top: -65px;
+}
+
+div {
+    color: black;
+}
+
+table th {
+    white-space: nowrap;        
+    font-weight: normal;
+}
+
+table td {
+    text-align: left;
+    border:1px solid #ececec;
+}
+
+table td h3{
+    color: #8f8f8f;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 0.2em 0;
+}
+
+table .no {
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #ececec;
+}
+
+table .desc {
+    text-align: left;
+}
+
+table .unit {
+    background: #DDDDDD;
+}
+
+table .qty {
+}
+
+table .total {
+    background: #57B223;
+    color: #FFFFFF;
+}
+
+table td.unit,
+table td.qty,
+table td.total {
+    font-size: 1.2em;
+}
+
+
+
+table tfoot td {
+    padding: 10px 20px;
+    background: #FFFFFF;
+    border-bottom: none;
+    font-size: 1.2em;
+    white-space: nowrap; 
+    border-top: 1px solid #AAAAAA; 
+}
+
+table tfoot tr:first-child td {
+    border-top: none; 
+}
+
+table tfoot tr:last-child td {
+    color: #57B223;
+    font-size: 1.4em;
+    border-top: 1px solid #cccccc2b; 
+
+}
+
+table tfoot tr td:first-child {
+    border: none;
+}
+.sign div{
+    text-align: right;
+    padding-top: 40px;
+}
+#thanks{
+    font-size: 2em;
+    margin-bottom: 50px;
+}
+.c19 ol li {
+    line-height: 22px;
+}
+#notices{
+    padding-left: 6px;
+    border-left: 6px solid #cccccc2b;  
+}
+
+#notices .notice {
+    font-size: 1.2em;
+}
+.c36 {
+    color: #000000;
+    font-weight: 700;
+    text-decoration: none;
+    vertical-align: baseline;
+    font-size: 11pt;
+    font-style: normal;
+}
+.c45 {
+    color: #000000;
+    font-weight: 700;
+    text-decoration: none;
+    vertical-align: baseline;
+    font-size: 11pt;
+    font-style: normal;
+}
+.total-right{
+    text-align: right!important;
+    white-space: nowrap;
+}
+.c19 p, .c18 p, .c32 p{
+    padding: 0;
+    margin: 0;
+}
+footer {
+    color: #777777;
+    width: 100%;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid #AAAAAA;
+    padding: 8px 0;
+    text-align: center;
+}
+
+
+.cash{
+    text-align: center;
+    padding: 10px !important;
+    border: 1px solid #ececec !important;
+}
+

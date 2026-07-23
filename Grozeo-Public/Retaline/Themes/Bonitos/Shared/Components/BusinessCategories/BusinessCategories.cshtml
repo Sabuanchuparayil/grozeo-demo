@@ -1,0 +1,47 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@using Retaline.Core.ViewModel.Catalog;
+@using Retaline.Core.BusinessModel.Catalog;
+
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+
+@{
+    int retailerId = 0;
+    string businessTypeLinkTrigger = string.IsNullOrEmpty(ViewBag.IsHomePage) ? "hide" : ""; List<BusinessType> businessTypes = new List<BusinessType>();
+    if (!string.IsNullOrEmpty(ViewBag.UrlTypeId) && (ViewBag.UrlType == "/rc" || ViewBag.UrlType == "/bt"))
+    {
+        retailerId = Convert.ToInt32(ViewBag.UrlTypeId.Split("/")[1]);
+        // businessTypes = catalogService.GetBusinessTypes(retailerId).Result;
+    }
+    var retailers = catalogService.GetRetailerTypes().Result;
+    if (retailers != null && retailers.Count(r => r.StoreGroupId > 0) > 1)
+    {
+        retailers = retailers.Where(r => r.StoreGroupId > 0).ToList();
+    }
+    if (retailers != null && retailers.Count > 0)
+        retailers = retailers.DistinctBy(r => r.Name).ToList();
+}
+
+@if (retailers?.Count > 0)
+{
+     <aside class="header_menu_nav">
+        <div class="overlay" onclick="closeMobileNav()"></div>
+        <div class="header_menu_nav-wrap">
+            <ul class="header_menu-items">
+            @foreach (var btype in retailers.Take(4))
+            {
+                <li class="@(retailerId == btype.Id ? "active" : "")" data-id=@btype.Id>
+                    <a href="/rc/@btype.Id">
+                        @*  <img class="img-fluid" src="~/images/boutique.png">*@
+                        @btype.Name
+                    </a>
+                    @*<div id="retailer-type-@btype.Id">
+            </div>*@
+                </li>
+            }
+
+            </ul>
+        </div>
+    </aside>
+
+    <!--nav_wrap-->
+}

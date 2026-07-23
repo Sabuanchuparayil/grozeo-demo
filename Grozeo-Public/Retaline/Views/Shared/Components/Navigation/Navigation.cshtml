@@ -1,0 +1,77 @@
+﻿@using Retaline.Core.ViewModel.Home;
+@using  Retaline.Core.BusinessModel.Catalog;
+@model CatalogRoot;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@{
+    Retaline.Core.BusinessModel.UserDetails.User odoUser = customAuthService.GetUserFromClaims();
+    if (odoUser == null) {
+        odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        //odoUser.PrimaryAddress = new Retaline.Core.BusinessModel.UserDetails..PrimaryAddress();
+    }
+    List<CategoryData> categoryList=new List<CategoryData>();
+    if(Model != null && Model.Data != null)
+        categoryList=Model.Data.ToList();
+}
+
+<nav id="main-navigation">
+    <a class="close-menu-btn d-lg-none"><i class="fa fa-times" aria-hidden="true"></i></a>
+    <div class="container">
+        <div class="row ">
+            <div class="col-lg-12">
+                <ul class="menu">
+                    @*<li>
+                        <a href="/">Home</a>
+                    </li>*@
+                    @foreach (CategoryData item in categoryList)
+                    {
+                        <li class="parent">
+                            <a href="#">@item.CategoryName</a>
+                            <div class="content">
+                                <div class="container">
+                                    <div class="inner">
+                                        <div class="row three-col justify-content-between">
+                                            @foreach (SubcategoryMaster data in item.Subcategories)
+                                            {
+                                                <div class="col-lg-4 col-md-6 column">
+                                                    <h2>@data.CategoryName</h2>
+                                                    <ul class="list">
+                                                        @foreach (SubCategory subCategory in data.Subcategory)
+                                                        {
+                                                            <li><a href="@String.Format("/pc/{0}/{1}", subCategory.SubCategoryId, subCategory.SubCategoryName)">@subCategory.SubCategoryName</a></li>
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+                </ul>
+            </div>
+            @*<div class="col-lg-3 p-0 locres">
+                <div class="allright">
+                    <a href="@(User.Identity.IsAuthenticated ? "javascript:void(0)" : "/Address")" id="@(User.Identity.IsAuthenticated ? (odoUser != null && odoUser.AddressCount > 0 ? "choose-location" : "btn-show-address-popup") : "")" class="@(!User.Identity.IsAuthenticated || odoUser == null || odoUser.AddressCount < 1 ? "" : "btn-show-address-popup")">
+                        <span class="iconimg"><img src="~/images/location.png" class="alname"></span>
+                        <span><span class="textc">Deliver to </span>: <b>@(odoUser.PrimaryAddress!=null? String.Format("{0} - {1}", odoUser.PrimaryAddress.Type, odoUser.PrimaryAddress.PINCode):"")</b></span>
+                        <p class="textunder">Change location</p>
+                    </a>
+                </div>
+            </div>*@
+        </div>
+    </div>
+</nav>
+<script type="text/javascript">
+    var primaryAddr = '@(User.Identity.IsAuthenticated && odoUser != null && odoUser.PrimaryAddress == null ? (odoUser.AddressCount > 0?"showaddr":"newaddr") : "")';
+        $(document).ready(function () {
+            if (primaryAddr == 'newaddr') {
+                address.triggerAddAddress();
+            }
+            else if (primaryAddr == 'showaddr') {
+                $("#choose-location-modal").modal('show');
+                $("#choose-location-modal").find('.model-left').css('width', '100%');
+            }
+        });
+</script>

@@ -1,0 +1,40 @@
+name: grozeo-bizadmin
+region: fra1
+
+services:
+  - name: bizadmin
+    source_dir: /
+    github:
+      repo: Grozeo-International/Grozeo-Bizadmin
+      branch: main
+      deploy_on_push: true
+    environment_slug: php-8-2
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-1gb
+
+    envs:
+      - key: DB_HOST
+        scope: RUN_TIME
+        value: REPLACE_WITH_MANAGED_DB_HOST
+      - key: DB_USER
+        scope: RUN_TIME
+        value: REPLACE_WITH_DB_USER
+      - key: DB_PASS
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_DB_PASSWORD
+      - key: DB_NAME
+        scope: RUN_TIME
+        value: grozeo_bizadmin
+      - key: APP_ENV
+        scope: RUN_TIME
+        value: production
+
+    http_port: 8080
+    routes:
+      - path: /
+
+    health_check:
+      http_path: /modules/auth/login.php
+      initial_delay_seconds: 30
+      period_seconds: 30

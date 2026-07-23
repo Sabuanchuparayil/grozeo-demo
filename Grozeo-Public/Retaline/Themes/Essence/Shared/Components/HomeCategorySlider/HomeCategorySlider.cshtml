@@ -1,0 +1,126 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@{
+    int homeBannersAdded = 0;
+}
+<div class="section-grz_catogeryslider">
+    <div class="container">
+        <div class="row row_mb">
+            <div class="col-12">
+                <div class="sec_card">
+                    <div class="titlewrap">
+                        <h2>Shop By Categories</h2>
+                        <div class="slideraction">
+                            <div class="swiper-button-prev swiper-button"></div>
+                            <div class="swiper-button-next swiper-button"></div>
+                        </div>
+                    </div>
+                    <div class="catogery-slider-wrap catogery-slider__home">
+                        <div class="catogerysliderhome swiper">
+                            <div class="swiper-wrapper">
+
+                                @for (int i = 0; i < Model.Count && i < 12; i++)
+                                {
+                                    if (Model[i].CategoryType == 4)
+                                    {
+                                        @if (string.IsNullOrEmpty(ViewBag.UrlType))
+                                        {
+                                            <a href="@($"/vc/{Model[i].Id}/{Model[i].ParentCategoryName}")" class="catogery-slider__items swiper-slide">
+                                                <div class="catogery-slider__img">
+                                                    <img alt="category img" src="@(Model[i].ThumbImage??Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                                </div>
+                                                <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                            </a>
+
+                                            <!--swiper-slide-->
+                                        }
+                                        else
+                                        {
+                                            <a href="@($"{ViewBag.UrlType}/vc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}")" class="catogery-slider__items swiper-slide">
+                                                <div class="catogery-slider__img">
+
+                                                    <img src="@(Model[i].ThumbImage??Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                                </div>
+                                                <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                        <a href="@(Model[i].CategoryType == 2?$"{ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}":(Model[i].CategoryType == 3?$"{@ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].ParentCarId??Model[i].CategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}":$"{@ViewBag.UrlType}/pc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}"))" class="catogery-slider__items swiper-slide">
+                                            <div class="catogery-slider__img">
+
+                                                <img src="@(Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                            </div>
+                                            <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                        </a>
+
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const $swiperContainer = $('.catogerysliderhome');
+    const $swiperWrapper = $swiperContainer.find('.swiper-wrapper');
+    const slidesPerViewCount = 9;
+    const centerClass = 'slider-align_center';
+    // Conditionally add/remove centering class based on slide count
+    $swiperWrapper.toggleClass(centerClass, $swiperWrapper.find('.swiper-slide').length < slidesPerViewCount);
+    // Initialize Swiper
+    var show_items = 6;
+    const catogerysliderhome = new Swiper('.catogerysliderhome', {
+        // Optional parameters
+        slidesPerView: show_items,
+        spaceBetween: 25,
+        navigation: {
+            nextEl: '.slideraction .swiper-button-next',
+            prevEl: '.slideraction .swiper-button-prev',
+        },
+
+        breakpoints: {
+            320: {  // when window width is >= 320px
+                slidesPerView: "auto",
+                spaceBetween: 10,
+            },
+            567: {  // when window width is >= 567px
+                slidesPerView: "auto",
+                spaceBetween: 10,
+            },
+            767: {  // when window width is >= 767px
+                slidesPerView: 5,
+                spaceBetween: 10,
+            },
+            850: {  // when window width is >= 991px
+                slidesPerView: 5,
+            },
+            1099: { // when window width is >= 1199px
+                slidesPerView: 6,
+            },
+            1200: { // when window width is >= 1200px
+                slidesPerView: 6,
+            },
+        },
+        on: {
+            init: function () {
+                if (@Model.Count > show_items) {
+                    setTimeout(() => {
+                        $('.catogery-slider__home .swiper-button-next').removeClass("swiper-button-disabled")
+                    }, 1000); // small delay after Swiper finalizes
+                }
+            }
+        }
+
+    });
+
+</script>

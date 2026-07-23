@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Models;
+
+use BackOffice\Models\Item;
+use App\Models\BlockedItems;
+use BackOffice\Models\BranchInventory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class OrderItem extends Model
+{
+    use SoftDeletes;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'retaline_customer_order_items';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'item_id';
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at', 'updated_at', 'deleted_at'
+    ];
+
+    public function order()
+    {
+        return $this->belongsTo('App\Models\Order', 'item_order_id', 'order_order_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo('App\Product', 'item_product_id', 'product_id');
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_product_id', 'stit_ID');
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(StockItemImage::class, 'item_product_id', 'product_id');
+    }
+
+    public function price()
+    {
+        return $this->belongsTo(BranchInventory::class, 'item_product_id', 'stit_ID');
+    }
+
+    public function blockedItems1()
+    {
+        return $this->hasOne(BlockedItems::class, 'order_item_id');
+    }
+
+
+    public function orderUniqueItem()
+    {
+        return $this->belongsTo('App\Models\StockUniqueItem', 'item_group_id', 'fsi_uid');
+    }
+    public function barcodes()
+    {
+        return $this->hasMany(OrderItemBarcodes::class, 'item_id');
+    }
+
+}

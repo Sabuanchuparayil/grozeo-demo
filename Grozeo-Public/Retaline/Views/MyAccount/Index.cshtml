@@ -1,0 +1,264 @@
+﻿@using Retaline.Web.Models.Order;
+@using Retaline.Web.Service;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@model MyOrders;
+@{
+    Retaline.Core.BusinessModel.UserDetails.User odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+
+    try
+    {
+        odoUser = customAuthService.GetUserFromClaims();
+
+        if (odoUser == null)
+        {
+            odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+
+}
+
+<div class="container">
+
+<div class="row">
+    @await Component.InvokeAsync("MyAccountSideMenu", "account")
+
+    <div class="col-12 col-lg-9">
+
+        <div class="titlewrap ">
+            <h2>My Orders</h2>
+        </div>
+
+
+        <div class="myorder-tabwrap">
+
+
+            <div class="tabnavwrap">
+                <nav class="myordertab">
+                    <div class="nav nav-tabs myordertab_nav" id="nav-myorder-tab" role="tablist">
+                        <button class="nav-link active" id="myorder-tab" data-bs-toggle="tab" data-bs-target="#myorder" type="button"
+                                role="tab" aria-controls="myorder" aria-selected="true">
+                            Success Order
+                        </button>
+                        <button class="nav-link" id="failedorders-tab" data-bs-toggle="tab" data-bs-target="#failedorders" type="button"
+                                role="tab" aria-controls="failedorders" aria-selected="false">
+                            Failed Order
+                        </button>
+                    </div>
+                </nav>
+                <a href="/contact" class="Support-btn"><i class="fa-light fa-headset"></i><span>Get Support</span></a>
+            </div>
+            <div class="tab-content myordertab_content" id="myorder-tabContent">
+                <div class="tab-pane fade show active" id="myorder" role="tabpanel" aria-labelledby="myorder-tab">
+
+                    <div class="checkout-listing myorder-listing">
+                        @if (Model.SuccessOrders.Count > 0)
+                        {
+                            @foreach (var item in Model.SuccessOrders)
+                            {
+                                <div class="product-card">
+                                    <div class="product-card_thumb">
+                                        <a href="#">
+                                            <img src="@(item.TopImageUrl??"/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="product-card_info">
+                                        <h4>
+                                            @if (item.ItemsCount > 1)
+                                            {
+                                                <a href="#">
+                                                    @item.TopItemName
+                                                    + @(item.ItemsCount - 1)
+                                                    More @(item.ItemsCount >= 3 ? "Items" : "Item")
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#">
+                                                    @item.TopItemName
+                                                </a>
+                                            }
+                                        </h4>
+                                        <div class="checkout-listing_info">
+                                            <div class="checkout-listing_info-pro">
+
+                                                <ul>
+                                                    <li>
+                                                        <span>Order ID :</span>
+                                                        <span>@item.OrderKey</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Order Date :</span>
+                                                        <span>@item.CreatedOn</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Order Amount :</span>
+                                                        <span>@(_configuration["CurrencySymbol"])@item.OrderTotal</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Sold by :</span>
+                                                        <span>@item.BranchName, @item.BranchLocation</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Delivery Type :</span>
+                                                        <span>@item.DeliveryType</span>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div><!--product-card_info-->
+
+                                    <div class="btn-field">
+                                        <span class="order-status text-success">@(item.OrderHistories != null && item.OrderHistories.Length > 0 && item.OrderHistories[item.OrderHistories.Length - 1].Status != null ? item.OrderHistories[item.OrderHistories.Length - 1].Status.Status : item.Status)</span>
+                                        <a class="btn btn-outline-secondary orderdtils" href="/orderdetails/@item.OrderKey">View Details</a>
+
+                                        @{
+                                            bool showCancel = false;
+                                            try
+                                            {
+                                                var apiDateTime = Convert.ToDateTime(item.CurAPITime);
+                                                var cancelTime = Convert.ToDateTime(item.CancelTime);
+                                                TimeSpan theTimeDifference = cancelTime - apiDateTime;
+                                                showCancel = (cancelTime > apiDateTime && theTimeDifference.TotalSeconds > 0);
+                                            }
+                                            catch { }
+                                        }
+                                        @if (item.CanCancel == "true" && showCancel)
+                                        {
+                                            @if (!String.IsNullOrEmpty(item.TrackUrl) && (new int[] { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20 }).Contains(item.StatusId))
+                                            {
+                                                <a class="btn btn-outline-secondary trackorder" target="_blank" href="@(item.TrackUrl??"#")">Track Order</a>
+
+                                            }
+                                           @*  @if (!(new int[] { 56, 52, 19 }).Contains(item.StatusId)) //57 Refund Initiated,52 Refunded,19 Cancelled
+                                            {
+                                                <a class="btn btn-outline-secondary cancel-order" ordernum="@item.OrderKey" orderid="@item.OrderId">Cancel Order</a>
+
+                                            } *@
+                                        }
+                                        else if (item.Status != "Cancelled" && !String.IsNullOrEmpty(item.TrackUrl) && (new int[] { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20 }).Contains(item.StatusId))
+                                        {
+                                            <a class="btn btn-outline-secondary trackorder" target="_blank" href="@(item.TrackUrl??"#")">Track Order</a>
+
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="product-card">
+                                No Orders To Show
+                            </div>
+                        }
+
+
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="failedorders" role="tabpanel" aria-labelledby="failedorders-tab">
+
+                    <div class="checkout-listing myorder-listing">
+                        @if (Model.FailedOrders.Count > 0)
+                        {
+                            @foreach (var item in Model.FailedOrders)
+                            {
+                                <div class="product-card">
+                                    <div class="product-card_thumb">
+                                        <a href="#">
+                                            <img src="@(item.TopImageUrl??"/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                                        </a>
+                                    </div>
+
+                                    <div class="product-card_info">
+                                        <h4>
+                                            @if (item.ItemsCount > 1)
+                                            {
+                                                <a href="#">
+                                                    @item.TopItemName
+                                                    + @(item.ItemsCount - 1)
+                                                    More @(item.ItemsCount >= 3 ? "Items" : "Item")
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#">
+                                                    @item.TopItemName
+                                                </a>
+                                            }
+                                        </h4>
+                                        <div class="checkout-listing_info">
+                                            <div class="checkout-listing_info-pro">
+
+                                                <ul>
+                                                    <li>
+                                                        <span>Order ID :</span>
+                                                        <span>@item.OrderKey</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Order Date :</span>
+                                                        <span>@item.CreatedOn</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Order Amount :</span>
+                                                        <span>@(_configuration["CurrencySymbol"])@item.OrderTotal</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Sold by :</span>
+                                                        <span>@item.BranchName, @item.BranchLocation</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Delivery Type :</span>
+                                                        <span>@item.DeliveryType</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!--product-card_info-->
+
+
+                                    <div class="btn-field">
+                                        <span class="order-status text-danger">@item.Status</span>
+                                        @* <a class="btn btn-outline-secondary reorder_btn" href="">Reorder</a> *@
+                                        <a class="btn btn-outline-secondary trackorder" target="_blank" href="/orderdetails/@item.OrderKey">View Details</a>
+
+
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="product-card">
+                                No Orders To Show
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!--myorder-tabwrap-->
+
+
+    </div><!--col-lg-9-->
+    </div>
+</div>
+
+
+<environment include="Development">
+    <script src="~/js/custom/order.js" asp-append-version="true"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/custom/order.min.js" asp-append-version="true"></script>
+</environment>

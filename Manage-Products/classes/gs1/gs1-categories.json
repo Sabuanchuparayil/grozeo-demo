@@ -1,0 +1,199 @@
+{
+    "status": true,
+    "data": {
+        "categories": [
+            {
+                "id": "26",
+                "name": "Agricultural Supplies"
+            },
+            {
+                "id": "31",
+                "name": "Assistive Devices"
+            },
+            {
+                "id": "25",
+                "name": "Audio Visual Media"
+            },
+            {
+                "id": "29",
+                "name": "Automotive Accessories"
+            },
+            {
+                "id": "40",
+                "name": "Baby Care"
+            },
+            {
+                "id": "47",
+                "name": "Beverage Base"
+            },
+            {
+                "id": "2",
+                "name": "Beverages"
+            },
+            {
+                "id": "20",
+                "name": "Books & Media"
+            },
+            {
+                "id": "36",
+                "name": "Chemicals"
+            },
+            {
+                "id": "33",
+                "name": "Cleaning and Hygiene Products"
+            },
+            {
+                "id": "38",
+                "name": "Construction"
+            },
+            {
+                "id": "22",
+                "name": "Coupons/Vouchers"
+            },
+            {
+                "id": "19",
+                "name": "Electrical Equipment & Supplies"
+            },
+            {
+                "id": "6",
+                "name": "Electronics"
+            },
+            {
+                "id": "32",
+                "name": "Festive Decor"
+            },
+            {
+                "id": "1",
+                "name": "Food"
+            },
+            {
+                "id": "15",
+                "name": "Footwear"
+            },
+            {
+                "id": "30",
+                "name": "Gifts & Crafts"
+            },
+            {
+                "id": "34",
+                "name": "Hardware and Tools"
+            },
+            {
+                "id": "16",
+                "name": "Health Care"
+            },
+            {
+                "id": "10",
+                "name": "Home & Kitchen Appliances"
+            },
+            {
+                "id": "4",
+                "name": "Household"
+            },
+            {
+                "id": "43",
+                "name": "Household/Office Furniture/Furnishings"
+            },
+            {
+                "id": "41",
+                "name": "Industrial Appliances"
+            },
+            {
+                "id": "37",
+                "name": "Industrial Parts & Fabrication Services"
+            },
+            {
+                "id": "42",
+                "name": "Instruments"
+            },
+            {
+                "id": "13",
+                "name": "Kids Clothing"
+            },
+            {
+                "id": "46",
+                "name": "Kitchenware and Tableware"
+            },
+            {
+                "id": "23",
+                "name": "Lubricants"
+            },
+            {
+                "id": "35",
+                "name": "Machinery"
+            },
+            {
+                "id": "11",
+                "name": "Men's Clothing"
+            },
+            {
+                "id": "14",
+                "name": "Men's Footwear"
+            },
+            {
+                "id": "48",
+                "name": "Motion Sensor"
+            },
+            {
+                "id": "24",
+                "name": "Paper & Packaging Materials"
+            },
+            {
+                "id": "9",
+                "name": "Personal Accessories"
+            },
+            {
+                "id": "3",
+                "name": "Personal Care"
+            },
+            {
+                "id": "18",
+                "name": "Pet Care"
+            },
+            {
+                "id": "44",
+                "name": "Rubber & Plastics"
+            },
+            {
+                "id": "28",
+                "name": "Safety/Protection"
+            },
+            {
+                "id": "17",
+                "name": "Sports Equipment"
+            },
+            {
+                "id": "8",
+                "name": "Stationery"
+            },
+            {
+                "id": "45",
+                "name": "Technical Textiles/Textiles/Fabrics"
+            },
+            {
+                "id": "27",
+                "name": "Telecommunication"
+            },
+            {
+                "id": "21",
+                "name": "Tobacco/Smoking Products"
+            },
+            {
+                "id": "7",
+                "name": "Toys/Games"
+            },
+            {
+                "id": "39",
+                "name": "Transportation"
+            },
+            {
+                "id": "49",
+                "name": "Unisex Clothing"
+            },
+            {
+                "id": "12",
+                "name": "Women's Clothing"
+            }
+        ]
+    }
+}

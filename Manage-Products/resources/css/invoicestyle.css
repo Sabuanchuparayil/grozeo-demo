@@ -1,0 +1,272 @@
+/*
+    @media print {
+        body {
+            width: 21cm;
+            height: 29.7cm;
+            margin: 30mm 45mm 30mm 45mm;
+        }
+     }
+
+  * {
+      border-radius: 0px 0px 0px 0px;
+  }
+  th {
+      height: 20px;
+  } 
+  td {
+      height: 20px;
+  } 
+  .tg {
+      border-color:#000000;
+      border-spacing:0;
+      border:1 1 1 1;
+      border-collapse:collapse;
+  }
+  .tg td {
+    background-color:#ffffff;
+      border:1 1 1 1;
+      border-color:#000000;
+      border-spacing:0;
+      border-style:solid;
+      border-width:1px;
+      font-weight: normal; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-style:normal;
+      color:"#669";
+      padding:2px 3px 0px 3px;
+  }
+  .tg th {
+      background-color:#ffffff;
+      border:1 1 1 1;
+      border-color:#000000;
+      border-spacing:0;
+      border-style:solid;
+      border-width:1px;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-style:normal;
+      color:"#669";
+      padding:2px 3px 0px 3px;
+  }
+
+  .ti {
+      border-color:#000000;
+      border-spacing:0;
+      border-collapse:collapse;
+  }
+  
+  .ti td {
+      background-color:#ffffff;
+      border:0 0 0 0;
+      border-color:#000000;
+      border-spacing:0;
+      border-style:solid;
+      border-width:0px;
+      font-weight: normal; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-style:bold;
+      text-align:left;
+      vertical-align:top;
+      color:"#669";
+      padding:0px 0px 0px 0px;
+  }
+  .ti th {
+      background-color:#ffffff;
+      border:0 0 0 0;
+      border-color:#000000;
+      border-spacing:0;
+      border-style:solid;
+      border-width:0px;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-style:normal;
+      text-align:left;
+      vertical-align:top;
+      color:"#669";
+      padding:0px 0px 0px 0px;
+  }
+  
+  .tg th.slno{
+      width:6%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.desc{
+      width:33%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+  
+  .tg th.hsn{
+      width:5%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.qty{
+      width:5%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.rate{
+      width:6%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.taxval{
+      width:9%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.cgst{
+      width:10%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.sgst{
+      width:10%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+  .tg th.kfc{
+      width:10%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+  .tg th.tot{
+      width:12%;
+      font-weight: bold; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 80%;
+  }
+
+
+
+
+
+  .tg td.slno{
+      width:6%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 75%;
+  }
+
+  .tg td.desc{
+      width:33%;
+      font-weight: normal; 
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  
+  .tg td.hsn{
+      width:5%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+
+  .tg td.qty{
+      width:5%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;                
+  }
+
+  .tg td.rate{
+      width:6%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+
+  .tg td.taxval{
+      width:9%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+
+  .tg td.cgstrate{
+      width:2%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.cgstamt{
+      width:8%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.sgstrate{
+      width:2%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.sgstamt{
+      width:8%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.kfcrate{
+      width:2%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.kfcamt{
+      width:8%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }
+  .tg td.tot{
+      width:12%;
+      font-weight: normal; 
+      text-align: right;
+      font-family:Belleza, Arial, Helvetica, sans-serif;
+      font-size: 65%;
+  }*/
+  
+   body{
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {padding: 25px;}
+        .logo{width: 150px;}
+        .logo img {width: 100%; height: auto;}
+        h1 {font-size: 30px;}
+        ul {padding: 0px;}
+        .address li {width: 50%; float: left; list-style: none; padding: 0px;}
+        .txt_r {text-align: right; padding-right: 20px!important;}
+        .txt_c {text-align: center;}
+        .txt_l {text-align: left;}
+        .pad {padding: 8px!important;}
+        .valign {vertical-align: top!important;}

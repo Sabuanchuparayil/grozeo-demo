@@ -1,0 +1,79 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/main.css",
+      "wwwroot/css/style.css"
+    ]
+  },
+
+  //{
+  //  "outputFileName": "wwwroot/js/custom/site.min.js",
+  //  "inputFiles": [
+  //    "wwwroot/js/main.js",
+  //    "wwwroot/js/custom/master.js",
+  //    "wwwroot/js/custom/cart.js",
+  //    "wwwroot/js/custom/wishlist.js"
+  //  ]
+  //},
+  {
+    "outputFileName": "wwwroot/js/custom/order.min.js",
+    "inputFiles": [
+      "wwwroot/js/custom/order.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Dhanya/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Dhanya/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Consumerfed/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Consumerfed/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/DhanyaNew/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/DhanyaNew/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/916Cart/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/916Cart/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Grozeo/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Grozeo/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Matsyafed/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Matsyafed/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Retaline/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Retaline/css/theme.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/customthemes/Villagebites/css/theme.min.css",
+    "inputFiles": [
+      "wwwroot/customthemes/Villagebites/css/theme.css"
+    ]
+  }
+]

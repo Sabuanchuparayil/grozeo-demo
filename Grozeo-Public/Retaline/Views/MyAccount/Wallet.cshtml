@@ -1,0 +1,197 @@
+﻿@model Retaline.Core.BusinessModel.UserDetails.Wallet;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject IJsonHelper _jsonHelper;
+
+<div class="container">
+
+<div class="row">
+    @await Component.InvokeAsync("MyAccountSideMenu", "mywallet")
+    <div class="col-12 col-lg-9">
+
+        <div class="titlewrap">
+            <h2>My Wallet</h2>
+        </div>
+
+        <div class="mywallet-card">
+            <div class="mywallet-card_current-balance">
+                <div class="current-balance_img">
+                    <img src="~/images/current-balance_img.svg">
+                </div>
+                <div class="current-balance">
+                    <h6>Your Current Wallet Balance</h6>
+                    <span>@(_configuration["CurrencySymbol"])@Model.Balance</span>
+                </div>
+            </div>
+
+            <div class="mywallet-card_activity">
+                <div class="sub_title">
+                    <h6>Wallet Transactions</h6>
+                </div>
+                <form class="datdepicker-wrap" action="/mywallet" method="post" id="my-wallet-search-form">
+
+                    <div class="form-group date" id="fromdatepicker">
+                        <label for="date" class="date-label">From</label>
+                        <input type="text" class="form-control" id="fromDate" name="fromDate" value="@Model.FromDate" placeholder="DD/MM/YYYY" autocomplete="off" />
+                        <span class="input-group-append hide">
+                            <span class="input-group-text bg-light d-block calndricons">
+                                <img src="images/icons/calander_icon.svg">
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="form-group date" id="todatepicker">
+                        <label for="date" class="date-label">To</label>
+                        <input type="text" class="form-control" id="toDate" name="toDate" value="@Model.ToDate" placeholder="DD/MM/YYYY" autocomplete="off">
+
+                        <span class="input-group-append hide">
+                            <span class="input-group-text bg-light d-block calndricons">
+                                <img src="images/icons/calander_icon_end.svg">
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="btn-field">
+                        <input type="submit" class="btn btn-outline-secondary" value="Show Activity">
+                        <a id="" class="cleardatbtn" href="">Clear</a>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="mywallet-card_transaction-period">
+                <div class="sub_title">
+                    <h6>Wallet Transaction Period</h6>
+                </div>
+                <ul class="transaction-balance">
+                    @{
+                        double closingBal = 0, openingBal = 0;
+                        if (Model.WalletDetails != null && Model.WalletDetails.Count > 0)
+                        {
+                            closingBal = Model.WalletDetails.FirstOrDefault().ClosingBalance;
+                            openingBal = Model.WalletDetails.Last().ClosingBalance;
+
+                        }
+                    }
+                    <li>
+                        <div class="transaction-balance_label">Opening Balance</div>
+                        <div class="transaction-balance_value">@(_configuration["CurrencySymbol"])@openingBal</div>
+                    </li>
+                    <li>
+                        <div class="transaction-balance_label">Closing Balance</div>
+                        <div class="transaction-balance_value">@(_configuration["CurrencySymbol"])@closingBal</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mywallet-card_transaction">
+
+                <div class="item-summary-table">
+                    <div class="summary-table-head">
+                        <div class="summary-table-list">
+                            <div class="summary-table-date mobile_hide">Date &amp; Time</div>
+                            <div class="summary-table-disc">Transaction Details</div>
+                            <div class="summary-table-price mobile_hide">Amount</div>
+                            <div class="summary-table-tprice mobile_hide">Balance</div>
+                        </div>
+                    </div>
+                    <div class="summary-table-body w-100">
+                        @if (Model.WalletDetails.Count > 0)
+                        {
+                            @for (int i = 0; i < Model.WalletDetails.Count; i++)
+                            {
+                                <div class="summary-table-list">
+                                    <div class="summary-table-date mobile_hide">20 December 2024<span>05:30</span></div>
+                                    <div class="summary-table-disc">
+
+                                        <h4>
+                                            @if (!String.IsNullOrEmpty(Model.WalletDetails[i].BranchName))
+                                            {
+                                                @Html.Raw(String.Format("{0} (#<strong>{1}</strong>) from <strong>{2}</strong>", Model.WalletDetails[i].OrderNum, Model.WalletDetails[i].BranchName, Model.WalletDetails[i].Reason))
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(String.Format("{0} (#<strong>{0}</strong>)", Model.WalletDetails[i].OrderNum, Model.WalletDetails[i].BranchName, Model.WalletDetails[i].Reason))
+                                            }
+                                        </h4>
+
+                                        <div class="summary-m-lbel">
+                                            <div class="summary-table-date">
+                                                <span>Date &amp; Time</span>
+                                                <span>
+                                                    @* 20 December 2024<span class="time">05:30</span> *@
+                                                    @Model.WalletDetails[i].OrderDate
+                                                </span>
+                                            </div>
+                                            <div class="summary-table-price">
+                                                <span>Amount</span>
+                                                <span>@(_configuration["CurrencySymbol"])@Model.WalletDetails[i].AmountAdded</span>
+                                            </div>
+                                            <div class="summary-table-tprice">
+                                                <span>Balance</span>
+                                                <span>@(_configuration["CurrencySymbol"])@Model.WalletDetails[i].ClosingBalance</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-table-price mobile_hide">
+                                        <span>@(_configuration["CurrencySymbol"])@Model.WalletDetails[i].AmountAdded </span>
+                                    </div>
+                                    <div class="summary-table-tprice mobile_hide">
+                                        <span>@(_configuration["CurrencySymbol"])@Model.WalletDetails[i].ClosingBalance</span>
+                                    </div>
+                                </div>
+
+                                <!--summary-table-list-->
+                            }
+                        }
+                        else
+                        {
+                            <div class="summary-table-list">
+                                No Transactions Found
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div><!--col-lg-9-->
+    @await Component.InvokeAsync("FloatingViewCart")
+</div>
+</div>
+<link rel="stylesheet" href="~/css/bootstrap-datepicker.min.css">
+<script src="~/js/bootstrap-datepicker.min.js"></script>
+<script src="~/js/main.js"></script>
+
+<script>
+
+
+
+
+    // Listen for changes to any radio button, including the "Other" option
+    $("input[name='RadioAddressType']").change(function () {
+        // Check if the "Other" radio button is selected
+        if (this.checked && this.value === "other") {
+            // Show the "Other" address field
+            $('.other-address-Type').removeClass('hide');
+        } else {
+            // Hide the "Other" address field
+            $('.other-address-Type').addClass('hide');
+        }
+    });
+
+
+</script>
+
+
+<script type="text/javascript" src="~/js/custom/wallet.js" asp-append-version="true"></script>
+<script type="text/javascript">
+    wallet.properties.recieveDetails = @Html.Raw(_jsonHelper.Serialize(Model.RecieveDetails));
+    wallet.properties.spendDetails = @Html.Raw(_jsonHelper.Serialize(Model.SpendDetails));
+</script>
+

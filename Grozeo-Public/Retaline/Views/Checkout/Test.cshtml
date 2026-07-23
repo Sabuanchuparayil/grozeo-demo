@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    string url = "https://test.instamojo.com/@vishnu_6bcbb/753e92e4c49d4c5c937b7047fb9a73d8/?embed=form";//"https://test.instamojo.com/@vishnu_6bcbb/80d300e52bc94db3aa443795f9614da4/?embed=form";//"https://www.instamojo.com/@vedhavyas/l2f75c124f0404203994242d1a6d1566c/?embed=form";
+}
+<script src="https://js.instamojo.com/v1/checkout.js"></script>
+<style>
+    iframe.iframe {
+        width: 350px;
+        margin: auto!important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+</style>
+<div class="modal" id="payment-modal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 390px; height:900px;">
+            <!-- Modal Header -->
+            <div class="modal-header" style="border: none;">
+                <button type="button" id="changeaddrclosepop" class="close" data-dismiss="modal"><img src="~/images/cancel.png" class="alcancel"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="">
+                @*<a href="javascript:void(0)" onclick="invokepayment()">Payment</a>*@
+                @*<iframe width="350" name="iframe" src="@url" style="border: none; top: 0px; position: absolute" height="900" id="ifrmpayment"></iframe>*@
+            </div>
+        </div>
+    </div>
+</div>
+@*<a href="@url" rel="im-checkout" data-behaviour="remote" data-style="light" data-text="Checkout With Instamojo"></a>
+<script src="https://d2xwmjc4uy2hr5.cloudfront.net/im-embed/im-embed.min.js"></script>*@
+<br /><br />
+@*<div style="display:none;">
+    <form id="frmchild" target="iframe" method="POST" action="/Checkout/Payment">
+        <input type="hidden" id="url" name="url" value="@url" />
+    </form>
+        </div>*@
+<script type="text/javascript">
+    //document.domain = "test.instamojo.com";
+    @*$(document).ready(function () {
+        $("#payment-modal").modal('show');
+        //$("#frmchild").submit();
+        //$("#ifrmpayment").attr("src", "@url");
+
+    });*@
+    //var frm = document.getElementById("ifrmpayment");
+    //new MutationObserver(function (mutations) {
+    //    mutations.some(function (mutation) {
+    //        if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+    //            alert(mutation);
+    //            alert(mutation.target.src);
+    //            //alert(mutation.oldValue);
+    //            //console.log(mutation);
+    //            //console.log('Old src: ', mutation.oldValue);
+    //            //console.log('New src: ', mutation.target.src);
+    //            return true;
+    //        }
+
+    //        return false;
+    //    });
+    //}).observe(frm, {
+    //    attributes: true,
+    //    attributeFilter: ['src'],
+    //    attributeOldValue: true,
+    //    characterData: false,
+    //    characterDataOldValue: false,
+    //    childList: false,
+    //    subtree: true
+    //});
+    //if (window.parent != window.top) {
+    //    window.top && window.top.__Cypress__ ? r = window.parent === window.top ? window : window.parent : window.top && (r = window.top, window.top, window.self)
+    //}
+    //setTimeout(function () {
+    //    document.getElementsByTagName('iframe')[0].src = 'http://jsfiddle.net/';
+    //}, 3000);
+
+    @*function invokepayment() {
+        Instamojo.open("@url");
+    }*@
+
+    $(document).ready(function () {
+        Instamojo.open("@url");
+    });
+
+</script>

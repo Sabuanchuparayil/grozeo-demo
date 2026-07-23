@@ -1,0 +1,33 @@
+﻿@{
+}
+<div class="modal fade" id="order-notes-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h5 class="modal-title" id="delivery_adress-popupLabel">Instruction to the Seller</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Provide your instructions for the seller here. Please note that many sellers do not adhere to the special instrictions hence if this note is not carried out, it will not be accpeted as a reason for cancellation </p>
+                <textarea id="noteToSeller" maxlength="200" type="type" name="name" class="form-control" rows="5" value="" placeholder="Note to seller" oninput="document.getElementById('charCount').textContent = `${this.value.length}/${this.maxLength}`; this.classList.remove('error');"></textarea>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-field">
+                    <button class="btn btn-primary order-notes-btn confirm-add-note">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#noteToSeller').attr('maxlength', cart.properties.notesLength);
+ 
+    // Reset the value of textarea when modal is hidden
+     $('#order-notes-modal').on('hide.bs.modal', function () {
+         $('#noteToSeller').val('');
+         $('#charCount').text('0/200');
+     });
+</script>

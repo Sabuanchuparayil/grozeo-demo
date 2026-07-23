@@ -1,0 +1,26 @@
+﻿@model bool
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+    string strThemeTitle = "Grozeo";
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.Name))
+    {
+        strThemeTitle = tenant.Value.Name;
+    }
+}
+<div class="section_copyright">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="copyright">
+                    <p>2025 @strThemeTitle. All rights reserved</p>
+					<div class="product-share-social footer_social_link">
+						<span>Follow Us</span>
+                        @await Component.InvokeAsync("SocialMediaLinks")
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,18 @@
+.catogery-slider__items, .catogery-slider__title {
+    color: var(--bs-text-primary);
+    background-color: var(--bs-bg);
+}
+
+.catogery-slider__items {
+    padding:10px 0 20px 0 ;
+}
+
+.pt-6{
+    padding-top: 20px;
+}
+
+.catogery-slider__img {
+    width: unset;
+    height: unset;
+    border: unset;
+}

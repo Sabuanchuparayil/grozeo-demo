@@ -1,0 +1,74 @@
+name: Grozeo-Partner CI/CD
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for exposed credentials
+        shell: bash
+        run: |
+          if grep -rn "ZfDwOaOfDSUi\|fhGpLLpsjaQW\|Password_123\|db_a10c8b" \
+            --include="*.config" --include="*.cs" --include="*.json" . 2>/dev/null; then
+            echo "CRITICAL: Exposed credentials found!"
+            exit 1
+          fi
+          echo "No credentials found."
+
+  build:
+    name: Build
+    runs-on: windows-latest
+    needs: security
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1
+
+      - name: Restore NuGet packages
+        run: nuget restore RetalineProAgent/RetalineProAgent.csproj
+
+      - name: Build (Release)
+        run: |
+          msbuild RetalineProAgent/RetalineProAgent.csproj \
+            /p:Configuration=Release \
+            /p:DeployOnBuild=true \
+            /p:WebPublishMethod=Package \
+            /p:PackageAsSingleFile=true \
+            /p:SkipInvalidConfigurations=true \
+            /p:PackageLocation="${{ github.workspace }}/publish"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: partner-release
+          path: ${{ github.workspace }}/publish/
+
+  deploy:
+    name: Deploy to Azure App Service
+    runs-on: windows-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: partner-release
+          path: ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: grozeo-partner
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish

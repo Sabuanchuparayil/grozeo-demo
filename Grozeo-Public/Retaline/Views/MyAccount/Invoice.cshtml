@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "";
+}
+@model Retaline.Core.BusinessModel.API.APIModel<string>;
+<html>
+    <head></head>
+    <body>
+    @if (Model == null || Model.Status != "Success")
+    {
+        <h1>Invalid Operation</h1>
+        <br />
+        <p>Sorry! the operation failed or invalid request or you don't have access. Please contact support for more details'</p>
+    }
+    else
+    {
+        @(new Microsoft.AspNetCore.Html.HtmlString(Model.Data))
+        
+    }
+</body>
+</html>

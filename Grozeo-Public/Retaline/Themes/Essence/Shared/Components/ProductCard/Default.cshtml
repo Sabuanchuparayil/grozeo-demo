@@ -1,0 +1,287 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Retaline.Core.BusinessModel.Home;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<Product>;
+@{
+    int topProductsCount = 0;
+    double? lowestPrice = 0;
+    double? highestPrice = 0;
+    int storegroupid = 0; try { storegroupid = (tenant?.Value == null || String.IsNullOrEmpty(tenant?.Value.StoreId) ? 0 : Convert.ToInt32(tenant?.Value.StoreId)); } catch { storegroupid = 0; }
+    string addButtonBehaviour = "add-to-cart"; // !User.Identity.IsAuthenticated ? "open-login-modal" : "add-to-cart";
+    List<Product> groupedItems = new List<Product>();
+    List<KeyValuePair<int, int>> variantGroup = new List<KeyValuePair<int, int>>();
+
+    int totalItems = 0; //try { totalItems = Model.Sum(c => c.ItemMaster.Count); } catch { totalItems = 0; }
+    try
+    {
+        totalItems = Model.Where(g => g.IsGroupItem != 1).Count() + Model.Where(g => g.IsGroupItem == 1).GroupBy(n => n.GroupId).Sum(n => n.Count());
+    }
+    catch { }
+
+    var curUser = customAuthService.GetUserFromClaims();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    GuestData guestUser = HttpHelper.GuestUser;
+}
+
+
+@foreach (Product item in Model)
+{
+    //var items = item.ItemMaster.Where(m => (i == 0 && m.StockAvailable > 0) || (i == 1 && m.StockAvailable <= 0)).ToList();
+    if (item.IsGroupItem == 1)
+    {
+
+        if (groupedItems.Any(g => g.GroupId == item.GroupId))
+            continue;
+
+        var mgroupitems = Model.Where(gi => gi.GroupId == item.GroupId).Select(g => { g.IsGroupItem = 1; return g; }).ToList();
+        groupedItems.AddRange(mgroupitems.Select(g => { g.IsGroupItem = 1; return g; }).ToList());
+        //items = new List<ItemMaster> { new ItemMaster { ItemName = item.GroupDisplayName, MainImage = new List<MainImage> { new MainImage { ImageUrl = item.GroupImage } } } };
+    }
+    @if (true)
+    {
+        if (topProductsCount >= 12)
+            break;
+
+        if (item.VariantGroupId > 0)
+        {
+            if (variantGroup.Any(k => k.Key == item.VariantGroupId && k.Value == item.StoreGroupId))
+            {
+                continue;
+            }
+            else
+            {
+                variantGroup.Add(new KeyValuePair<int, int>(item.VariantGroupId.Value, item.StoreGroupId));
+            }
+        }
+
+
+        topProductsCount++;
+        string strHref = (item.IsGroupItem > 0 ?
+                String.Format("/groupitem/{0}/{1}", item.GroupId, item.GroupDisplayName.Replace("\"", "").Replace("\\", ""))
+            : String.Format("/pd/{0}/{1}/{2}/{3}", item.StitId, item.BranchId, item.BranchTypeId, (String.IsNullOrEmpty(item.SKU) ? "-" : Retaline.Web.Service.Common.EncodeUrl(item.SKU)))
+            );
+        bool isOutOfStock = (item.StockAvailable > 0 && (item.SellingPrice <= 0 || item.StockAvailable <= 0));
+        bool isSoldOut = (item.StockAvailable <= 0 && item.SellingPrice > 0);
+        bool isNotDeliverable = (item.BranchTypeId <= 0 && guestUser.GuestLatitude != null);
+
+        var requiresAgeVerification = item.HasAgeVerification == 1;
+        var isUserVerified = curUser?.AgeVerified == 1;
+        var verificationNeeded = (!isUserVerified && requiresAgeVerification ? 1 : 0);
+
+        <div class="product-card  @(item.IsGroupItem == 1 || item.VariantGroupId > 0 ?"product_group": (isSoldOut ? "product_soldout" : (isOutOfStock ? "product_outofstock" : (isNotDeliverable ? "product_not_deliverable" : ""))))">
+            <div class="product-card_thumb">
+                <a href="@strHref">
+                    <img src="@(item.MainImage != null && item.MainImage.Length > 0 ? item.MainImage[0].ImageUrl : "/customthemes/Essence/images/p-no-image.png")" alt="" onerror="this.src='/customthemes/Essence/images/p-no-image.png'" class=" img-fluid" alt="">
+                </a>
+                @if (item.IsGroupItem != 1)
+                {
+                    <div class="product-label @(item.Percentage <= 0 ?"hide" : "")">
+                        <span>@(item.Percentage <= 0 ? "" : item.Percentage + "% off ")</span>
+                       
+                    </div>
+                    <div class="action-icon">
+                        <a href="javascript:void(0)" title="Add to Wishlist" class="label_wishlist wishlist-block wishlist-@item.StitId-@item.StitFsiUId" data-isAuthenticated="@User.Identity.IsAuthenticated" data-productid="@item.StitId" data-groupid="@item.StitFsiUId" data-productid="@item.StitId" data-groupid="@item.StitFsiUId" data-branchid=@item.BranchId data-branchtypeid=@item.BranchTypeId data-source="1">
+                            <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    @if (item.SellingPrice > 0)
+                    {
+                        <span class="label_delivery_mode @(item.IsCourier == 1 ? "courierdelivery" : "expressdelivery") " title="@(
+                                item.BranchTypeId == 0
+                                ? "Not Deliverable"
+                                : (item.IsCourier == 1
+                                ? "Courier Delivery"
+                                : "Express Delivery"))">
+                            <i class="@(
+                            item.BranchTypeId == 0
+                            ? "fa fa-exclamation-triangle"
+                            : (item.IsCourier == 1
+                            ? "fa-regular fa-truck"
+                            : "fa-regular fa-moped")
+                            )" aria-hidden="true"></i>
+                            @(
+                                item.BranchTypeId == 0
+                                ? "Not Deliverable"
+                                : (item.IsCourier == 1
+                                ? "Courier Delivery"
+                                : "Express Delivery")
+                                )
+                        </span>
+                    }
+                    else if (isNotDeliverable)
+                    {
+                        <span class="label_delivery_mode" title="Not Deliverable">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Not Deliverable
+                        </span>
+                    }
+                }
+
+
+            </div>
+            <div class="product-card_info">
+
+                <h4>
+                    @if (item.IsGroupItem == 1 && !String.IsNullOrEmpty(item.GroupDisplayName))
+                    {
+                        <a href="@strHref">@item.GroupDisplayName</a>
+                    }
+                    else if (!String.IsNullOrEmpty(item.SKU))
+                    {
+                        <a href="@strHref">@item.SKU</a>
+                    }
+                    else
+                    {
+                        <a href="@strHref">
+                            @((!String.IsNullOrEmpty(item.SKU) && item.SKU.Contains(item.Variant ?? "") && item.SKU.EndsWith(item.Quantity ?? "")) ? item.SKU : String.Format("{0} {1} {2}", item.SKU ?? item.SKU, item.PackageName ?? item.Variant, ((item.SKU ?? "").EndsWith(item.Quantity ?? "") ? "" : item.Quantity)))
+                        </a>
+                    }
+                </h4>
+               @*  <span class="prod_quty">
+                    @(item?.Quantity?.ToString() ?? "")
+                    @if (item.FoodType == 1)
+                    {
+                        <div class="label_veg_nonveg">
+                            <img src="/images/organic_icon.svg">
+                        </div>
+
+                    }
+                    else if (item.FoodType == 2)
+                    {
+                        <div class="label_veg_nonveg">
+                            <img src="images/Nonveg_icon.svg">
+                        </div>
+
+                    }
+                    else if (item.FoodType == 3)
+                    {
+                        <div class="veg_novgsymple d-flex justify-content-center align-item-center">
+
+                            <img src="/images/Vege_icon.svg">
+                        </div>
+
+                    }
+                </span>
+ *@
+                <div class="product_btn_group">
+                    <div class="product-price_wrap">
+                        @if (item.SellingPrice <= 0)
+                        {
+                            <span class="product-price_info">Price Not Available</span>
+                        }
+                        else
+                        {
+                            @if (item.Percentage > 0)
+                            {
+                                @if (item.MRP > 0 && item.MRP > item.SellingPrice)
+                                {
+                                    <del class="product-price_regular">
+                                        @(_configuration["CurrencySymbol"])@item.MRP
+                                    </del>
+                                }
+                                else
+                                {
+
+                                    <span class="product-price_regular">
+                                        @(_configuration["CurrencySymbol"])@item.MRP
+                                    </span>
+
+                                }
+                            }
+                            <span class="product-price_discount">@(_configuration["CurrencySymbol"])@item.SellingPrice</span>
+
+
+
+                        }
+
+                    </div>
+                    @if (item.IsGroupItem > 0)
+                    {
+                        <div class="product-action addunit_infowrap">
+                            <a href="@strHref" class="btn viewgroup_btn">View</a>
+                        </div>
+
+                    }
+                    @if (item.VariantGroupId > 0 && item.IsGroupItem != 1)
+                    {
+                        <div class="product-action addunit_infowrap">
+
+                            <div class="form-qty-block">
+                                <a href="@strHref" class="btn-plus btn-add skip-addcart">
+                                    <span>View</span>
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    }
+                    else if (item.IsGroupItem != 1)
+                    {
+                        if (item.BranchTypeId > 0 && item.StockAvailable > 0 && item.SellingPrice > 0)
+                        {
+                            <div class="product-action addunit_infowrap">
+
+                                <div class="form-qty-block addunitWrap form-qty-full" data-productid="@item.StitId" data-groupid="@item.StitFsiUId">
+                                    <button type="button" id="product-minus-@item.StitId-@item.StitFsiUId" class="btn btn-sm btn-minus hide product-tile-minus-@item.StitId-@item.StitFsiUId" data-productid="@item.StitId" data-groupid="@item.StitFsiUId">-</button>
+                                    <input type="number" class="form-control form-control-sm form-qty hide product-tile-qty-@item.StitId-@item.StitFsiUId" step="1" min="0" max="@item.StockAvailable" value="0" id="product-qty-@item.StitId-@item.StitFsiUId" placeholder="Add">
+                                    @if (!User.Identity.IsAuthenticated && guestUser != null && guestUser.GuestLatitude == null && item.BranchTypeId == 3)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-plus-no-action btn-add product-tile-plus-@item.StitId-@item.StitFsiUId" data-bs-toggle="modal" data-bs-target="#search-address-modal"><span>Add</span>+</button>
+
+                                    }
+                                    else
+                                    {
+                                        <button type="button" id="product-plus-@item.StitId-@item.StitFsiUId" class="btn btn-sm btn-plus btn-add product-tile-plus-@item.StitId-@item.StitFsiUId" data-productid="@item.StitId" data-groupid="@item.StitFsiUId" data-brid="@item.BranchId" data-brtypeid="@item.BranchTypeId" data-needageverification="@verificationNeeded"><span>Add</span>+</button>
+
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+
+                                @if (isSoldOut || isOutOfStock)
+                                {
+                                    <div class="product-action addunit_infowrap">
+
+                                        <div class="form-qty-block wishlist-notify-@item.StitId-@item.StitFsiUId" data-productid="@item.StitId" data-groupid="@item.StitFsiUId" data-productid="@item.StitId" data-groupid="@item.StitFsiUId" data-branchid=@item.BranchId data-branchtypeid=@item.BranchTypeId data-source="2">
+                                            <a href="" class="btn-plus btn-add skip-addcart">
+                                                <i class="fa-light fa-bell"></i>
+                                                <span>Notify</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <!--product-card-->
+    }
+}
+
+
+

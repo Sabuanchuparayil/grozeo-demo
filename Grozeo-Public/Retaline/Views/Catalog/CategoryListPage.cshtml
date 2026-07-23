@@ -1,0 +1,702 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Retaline.Core.BusinessModel.Cart;
+@using Microsoft.AspNetCore.Http;
+@using Retaline.Core.Services.Wishlist;
+@using System.Collections.Generic;
+@using Retaline.Core.BusinessModel.Wishlist;
+@model Retaline.Core.ViewModel.Catalog.CategoryItemViewModel
+@inject IHttpContextAccessor _httpContextAccessor
+@inject Retaline.Core.Services.Cart.ICartService _cartService;
+@inject IWishlistService _wishList;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _customAuthenticationService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+
+@{
+    WishlistInfo _wishlistIds = _wishList.WishlistIds();
+    if (_wishlistIds == null)
+    {
+        _wishlistIds = new WishlistInfo();
+    }
+    List<CartDetails> _cartItems = _cartService.CartItems().Result;
+    if (_cartItems == null)
+        _cartItems = new List<CartDetails>();
+
+    string strCartItems = string.Join(",", _cartItems.Select(c => string.Join(",", c.Item.ItemMaster.Select(i => "{" + string.Format("\"id\":{0}, \"grp\":{1}, \"qty\":{2} ", i.StitID, i.StitFsiuid, c.CartOrderQty) + "}").ToArray())).ToArray());
+    string strWishList = ""; //string.Join(",", _wishlistIds.Wishlist.Select(c => string.Join(",", c.ItemMaster.Select(i => "{" + string.Format("\"id\":{0}, \"grp\":{1}", i.StitID, i.StitFsiuid) + "}").ToArray())).ToArray());
+    if (_wishlistIds != null && _wishlistIds.Wishlist != null)
+    {
+        strWishList = string.Join(",", _wishlistIds.Wishlist.Select(i => "{" + string.Format("\"id\":{0}, \"grp\":{1}", i.StitId, i.StitFsiUId) + "}").ToArray());
+    }
+
+    List<Retaline.Core.BusinessModel.Catalog.CategoryData> categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    try
+    {
+        categories = catalogService.FilteredCategories().Result;
+    }
+    catch
+    {
+        categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    }
+
+    string strSelctedCatId = (Model.ParentCatId > 0 ? Model.ParentCatId.ToString() : "") + (Model.CatId > 0 ? "_" + Model.CatId : ""); // + (Model.SubCatId > 0 ? "_" + Model.SubCatId.ToString() : "");
+    if (Model.CatId < 0 && Model.Categories.Where(c => c.Categorylevel == 3).Count() > 0)
+        Model.CatId = Model.Categories.Where(c => c.Categorylevel == 3).FirstOrDefault().CategoryId;
+
+    string offerUrl = Model.IsOffersView ? Retaline.Web.Service.Common.OfferUrl(new Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo { AdvOffer = Model.OfferType, AdvOfferValue = Model.OfferTypeValue }, Model.CurrentPage.Value + 1) : ""; //Model.IsOffersView ? $"/offers/{Model.CurrentPage.Value + 1}" : "";
+    bool hasCategoryId = (Model.ParentCatId > 0 || Model.CatId > 0 || Model.SubCatId > 0);
+
+    var attributes = categories.Where(a => hasCategoryId && (
+        // if sub category id is available then go with sub category id.
+        (Model.SubCatId > 0 && a.Categorylevel == 3 && a.Id == Model.SubCatId)
+        // Category attributes, Applicable only if subcategory id is <= 0
+        || (Model.SubCatId <= 0 && a.Categorylevel == 2 && a.Id == Model.CatId)
+        // Parent category attributes, if category id is <= 0
+        || (Model.SubCatId <= 0 && Model.CatId <= 0 && a.Categorylevel == 1 && a.Id == Model.ParentCatId)
+    )
+        && a.Attributes != null).SelectMany(a => a.Attributes)
+            .Where(a => a.Values != null).ToList();
+    //var groupedAttributes = attributes.GroupBy(a => a.Name, a => a);
+
+    string selectedAttributes = "";
+    if (_httpContextAccessor.HttpContext.Request.Query.Any(r => r.Key == "_atr"))
+        selectedAttributes = _httpContextAccessor.HttpContext.Request.Query.Where(r => r.Key == "_atr").FirstOrDefault().Value.FirstOrDefault();
+
+}
+
+
+
+
+<script type="text/javascript">
+    function OpenFilterBy() {
+        $(".filter-search-wrap").addClass('open-filter');
+    }
+
+    function closeFilterBy() {
+        $(".filter-search-wrap ").removeClass('open-filter');
+    }
+    function filterResult() {
+        var chkparams = '';
+        $('input[type="checkbox"].ctlfilter:checked').each(function () {
+            var checkboxValue = $(this).val();
+            if (checkboxValue && checkboxValue != '')
+                chkparams += (chkparams == '' ? '' : '|') + checkboxValue;
+        });
+
+        const url = new URL(location.href);
+        url.searchParams.set('_atr', chkparams);
+        location.assign(url.search);
+
+    }
+
+    $(document).ready(function () {
+        cart.properties.cartItems = { "items": [@(new Microsoft.AspNetCore.Html.HtmlString(strCartItems)) ] }
+        wishlist.properties.wishListItems = { "items": [@(new Microsoft.AspNetCore.Html.HtmlString(strWishList)) ] }
+
+        // Add value to div when checkbox is checked
+        $('input[type="checkbox"]').change(function () {
+            var checkboxValue = $(this).attr("atrname");
+            var checkboxId = $(this).attr("id")
+            if ($(this).prop('checked')) {
+                $('#resultDiv').append('<span id="' + $(this).attr('id') + '-data" class="badge text-dark tx-11 fw-normal me-1"> <span class="lh-sm">' + checkboxValue + '</span><button type="button" class="close p-0 bg-transparent border-0 text-white ms-1" style="top:1px; position: relative;" data-id="#' + $(this).attr('id') + '" ><i class="fa-solid fa-xmark tx-13"></i></button></span>');
+            } else {
+                // Remove value from div when checkbox is unchecked
+                $('#resultDiv').find('#' + checkboxId + '-data').remove();
+                console.log(checkboxValue);
+            }
+        });
+
+        // Remove selected values when the button is clicked
+        $('.clearallfilter').click(function () {
+            $('#resultDiv').empty();
+            $('.checkbox').prop("checked", false);
+        });
+        $(document).on("click", ".close", function () {
+            //alert("test");
+            var checkId = $(this).data("id");
+            $(checkId).prop("checked", false);
+            $(checkId + "-data").remove();
+            console.log(checkId);
+        });
+
+        $('.filter_menu').click(function () {
+            var menuId = $(this).data("target");
+            $(".fltr_checkwrap").removeClass("active");
+            $(menuId).addClass("active");
+            $(".filter_menu").removeClass("active");
+            $(this).addClass("active");
+        });
+
+
+    });
+
+    cart.url.addToCart = '@Url.Action("AddToCart", "Cart")';
+</script>
+
+<div class="container">
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="prodt-shop-control">
+            <div class="col-auto prodt-control-filter">
+                <div class="filterby_btn">
+                    <span class="filetropen-triger" onclick="OpenFilterBy()">
+                        <i class="fa-thin fa-filter"></i>Filters
+                    </span>
+                    <!-- <a href="javascript:void(0)" class="clearallfilter">Clear All</a> -->
+                </div>
+
+                <!-- <aside class="filter-search-wrap">
+                    <div class="overlay" onclick="closeFilterBy()"></div>
+                    <div class="filter-search">
+                        <div class="filter-card">
+                            <div class="filter-card_heead">
+                                <div class="fltr_head d-flex align-items-center justify-content-between">
+                                    <div class="">
+                                        <span class="lh-sm filetropen-triger">
+                                            <i class="fa-thin fa-filter"></i>
+                                            Filters
+                                        </span>
+                                    </div>
+                                    <div class="btn-sec">
+                                        <button class="btn btn-primary apply_filterbtn">Apply</button>
+                                        <a href="javascript:void(0)" class="ms-2 text-primary clearallfilter">Clear All</a>
+                                        <a href="javascript:void(0)" class="ms-2 text-dark lh-sm" onclick="closeFilterBy()">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="filter-card_body">
+
+                                <div class="widget-dropdownslider">
+
+
+                                    <div class="dropdownslider-card">
+                                        <div class="dropdownslider-card_head">
+                                            <h6>Availability</h6>
+                                            <i class="accordion-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <div class="dropdownslider-card_body">
+
+                                            <ul>
+                                                <li>
+                                                    <a class="" href="#">Availability</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Availability 1</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Availability 2</a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="dropdownslider-card">
+                                        <div class="dropdownslider-card_head">
+                                            <h6>Brand</h6>
+                                            <i class="accordion-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <div class="dropdownslider-card_body">
+
+
+                                            Brand list
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="dropdownslider-card">
+                                        <div class="dropdownslider-card_head">
+                                            <h6>Color</h6>
+                                            <i class="accordion-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <div class="dropdownslider-card_body">
+
+
+                                            <ul>
+                                                <li>
+                                                    <a class="" href="#">Red<span class="prodt-count">(2)</span></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"><a href="#">Blaxk<span class="prodt-count">(2)</span></a></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Orange<span class="prodt-count">(5)</span></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">XL<span class="prodt-count">(20)</span></a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="dropdownslider-card">
+                                        <div class="dropdownslider-card_head">
+                                            <h6>Size</h6>
+                                            <i class="accordion-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </i>
+                                        </div>
+                                        <div class="dropdownslider-card_body">
+
+                                            <ul>
+                                                <li>
+                                                    <a class="" href="#">S<span class="prodt-count">(31)</span></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">M<span class="prodt-count">(9)</span></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">L<span class="prodt-count">(23)</span></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">XL<span class="prodt-count">(20)</span></a>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside> -->
+                <!--filter-search-wrap-->
+            </div>
+
+            
+
+            <div class="col-auto prodt-control-sorting">
+               @* <div class="sorting_wrap">
+                    <label>
+                        <i class="fa-regular fa-arrow-down-wide-short me-1"></i>
+                        <span>Sort by</span>
+                    </label>
+                    <select class="form-select form-select-sm sortbyfilter">
+                        <option value="1">Featured</option>
+                        <option value="2">Availability</option>
+                        <option value="3">Low to High</option>
+                        <option value="4">High to Low</option>
+                        <option value="5">All Products</option>
+                    </select>
+                </div>
+                *@
+                <div class="prodt-control-layout">
+                    <div class="prodt-view-layout-switch">
+
+
+
+                        <button type="button" data-view="list" aria-label="Switch to list view" class="view-switch-button">
+                            <svg width="19" height="13" viewBox="0 0 19 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <rect x="7" y="2" width="12" height="1" fill="currentColor"></rect>
+                                <rect x="7" y="10" width="12" height="1" fill="currentColor"></rect>
+                            </svg>
+                        </button>
+
+                        <button type="button" data-view="grid-two" aria-label="Switch to grid view 2" class="view-switch-button">
+                            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                            </svg>
+                        </button>
+
+                        <button type="button" data-view="grid-three" aria-label="Switch to grid view 3" class="view-switch-button is-active">
+                            <svg width="22" height="13" viewBox="0 0 22 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                            </svg>
+                        </button>
+
+                        <button type="button" data-view="grid-four" aria-label="Switch to grid view 4" class="view-switch-button" style="display: none;">
+                            <svg width="30" height="13" viewBox="0 0 30 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                            </svg>
+                        </button>
+
+                        <button type="button" data-view="grid-five" aria-label="Switch to grid view 5" class="view-switch-button" style="display: none;">
+                            <svg width="38" height="13" viewBox="0 0 38 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="35.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="35.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                            </svg>
+                        </button>
+
+                        <button type="button" data-view="grid-six" aria-label="Switch to grid view 6" class="view-switch-button" style="display: none;">
+                            <svg width="46" height="13" viewBox="0 0 46 13" fill="none">
+                                <circle cx="2.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="35.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="43.4375" cy="2.4375" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="2.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="10.5625" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="18.6875" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="26.8125" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="35.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                                <circle cx="43.4375" cy="10.5625" r="2.4375" fill="currentColor"></circle>
+                            </svg>
+                        </button>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        <div id="" class="fltr_selct filterresult"></div>
+
+
+        <div class="prodt-utility-wrap">
+            <div class="col-auto utility-sidebar-wrap">
+
+                <aside class="filter-search-wrap">
+                    <div class="overlay" onclick="closeFilterBy()"></div>
+                    <div class="filter-search">
+                        <div class="filter-card">
+                            <div class="filter-card_heead">
+                                <a href="#" id="categoriesLink" class="filter-card_link active">Categories</a>
+                                @*<a href="#" id="filterLink" class="filter-card_link">Filter</a>*@
+                            </div>
+                            <div class="filter-card_body">
+                                <div id="menuCategories" class="widget-dropdownslider menu_categories">
+                                    @foreach (CategoryData item in categories.Where(c => c.Categorylevel == 1).OrderBy(c => c.CategoryName))
+                                    {
+                                        <div class="dropdownslider-card">
+                                            <div class="dropdownslider-card_head active">
+                                                <h6>@(new string(item.CategoryName.Take(28).ToArray()))</h6>
+                                                <i class="accordion-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                        <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </i>
+                                            </div><!--Subcategory_menu_list_triger-->
+                                            <div class="dropdownslider-card_body" style="display: none;">
+
+                                                <ul>
+                                                    @foreach (CategoryData data in categories.Where(c => c.ParentCategoryId == item.Id && (c.Categorylevel == 2 || c.Categorylevel == 4)).OrderBy(c => c.CategoryName))
+                                                    {
+                                                        <li>
+                                                            @if (data.Categorylevel == 4)
+                                                            {
+                                                                <a class="" href="@String.Format("{2}/vc/{0}/{1}{3}", data.Id, data.CategoryName.Replace("/", "%2F").Replace("\\", "%2F"),ViewBag.UrlType,ViewBag.UrlTypeId)">
+                                                                    @(new string(data.CategoryName.Take(28).ToArray()))
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <a class="" href="@String.Format("{3}/pc/{0}/{1}/{2}{4}", item.Id, data.Id, data.CategoryName.Replace("/", "%2F").Replace("\\", "%2F"),ViewBag.UrlType,ViewBag.UrlTypeId)">
+                                                                    @(new string(data.CategoryName.Take(28).ToArray()))
+                                                                </a>
+                                                            }
+                                                        </li>
+
+                                                    }
+                                                </ul>
+
+                                            </div><!--dropdownslider-card_body-->
+                                        </div>
+
+                                        <!--dropdownslider-card-->
+                                    }
+                                </div>
+                                @*Enablt this after implementing filter api*@
+                                @*<div id="menuFilter" class="widget-dropdownslider menu_filter hide">
+
+
+                                    <div class="dropdownslider-card">
+                                        <div class="dropdownslider-card_head active">
+                                            <h6>Brand</h6>
+                                            <i class="accordion-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </i>
+                                        </div><!--Subcategory_menu_list_triger-->
+                                        <div class="dropdownslider-card_body" style="display: none;">
+
+                                            <ul>
+                                                <li>
+                                                    <div class="fltr-checkbox_wrap">
+                                                        <input class="fltr-checkbox_input" type="checkbox" name="brand-ecomus" value="Ecomus" id="brand-ecomus">
+                                                        <label for="brand-ecomus">
+                                                            <span class="fltr-checkbox_custom">
+                                                                <svg focusable="false" width="24" height="24" viewBox="0 0 24 24" role="presentation"><path fill="currentColor" d="M9 20l-7-7 3-3 4 4L19 4l3 3z"></path></svg>
+                                                            </span>
+                                                            <span class="hdt-facets-label hdt-base hdt-normal">
+                                                                <span>Ecomus</span> <span> (14)</span>
+                                                            </span>
+                                                        </label>
+                                                    </div> <!--fltr-checkbox_wrap-->
+                                                </li>
+                                            </ul>
+
+                                        </div><!--dropdownslider-card_body-->
+                                    </div><!--dropdownslider-card-->
+                                </div>
+                                *@
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+
+                <div class="widget-dropdownslider" style="display: none;">
+
+                    <div class="dropdownslider-card">
+                        <div class="dropdownslider-card_head">
+                            <h6>Product categories</h6>
+                            <i class="accordion-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" viewBox="0 0 25 20" fill="none">
+                                    <path d="M6.5 9L12.5 15L18.5 9" stroke="black" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </i>
+                        </div><!--Subcategory_menu_list_triger-->
+                        <div class="dropdownslider-card_body">
+
+                            <ul>
+                                <li>
+                                    <a class="current-cate" href="#">Fashion<span class="prodt-count">(31)</span></a>
+                                </li>
+                                <li>
+                                    <a href="#">Men<span class="prodt-count">(9)</span></a>
+                                </li>
+                                <li>
+                                    <a href="#">Women<span class="prodt-count">(23)</span></a>
+                                </li>
+                                <li>
+                                    <a href="#">Denim<span class="prodt-count">(20)</span></a>
+                                </li>
+                                <li>
+                                    <a href="#">Dress<span class="prodt-count">(23)</span></a>
+                                </li>
+                            </ul>
+
+                        </div><!--dropdownslider-card_body-->
+                    </div><!--dropdownslider-card-->
+                </div>
+            </div>
+            <div class="col-auto utility-content-wrap">
+                <div class="col-auto prodt-collection-heading">
+                    <h6>Showing products in "@(String.IsNullOrEmpty(Model.CategoryName) && Model.IsOffersView ? "Offers" : Model.CategoryName)"</h6>
+                </div>
+                @if (Model.RelatedCategories != null)
+                {
+                <div class="catogery-slider-wrap catogery-slider__categoryList">
+                    <div class="catogeryslider__categoryList swiper">
+                        <div class="swiper-wrapper">
+                            @foreach (CategoryData category in (Model.RelatedCategories ?? (new List<CategoryData>())).Where(c => c.Categorylevel == 2))
+                            {
+
+                                @if (string.IsNullOrEmpty(ViewBag.UrlType))
+                                {
+                                    <a href="@(category.Categorylevel==4?String.Format("/vc/{0}/{1}", category.Id, category.CategoryName.Replace("/", "-")): String.Format("/pc/{0}/{1}/{2}", category.ParentCategoryId, category.Id, category.CategoryName.Replace("/", "-")))" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__img @((category.Categorylevel==4 && Model.VirtualCategoryId==category.Id) || (Model.CatId > 0 && category.Id == Model.CatId ) ?"active":"")">
+                                            <img alt="category img" src="@(string.IsNullOrEmpty(category.ImageUrl)?"/images/p-no-image.png":category.ImageUrl)" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                                <div class="catogery-slider__title"><span>@category.CategoryName</span></div>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@(category.Categorylevel==4?String.Format("{3}/vc/{0}/{1}{2}", category.Id,category.CategoryName.Replace("/", "-"),ViewBag.UrlTypeId,ViewBag.UrlType): String.Format("{4}/pc/{0}/{1}{2}/{3}", category.ParentCategoryId, category.Id,ViewBag.UrlTypeId, category.CategoryName.Replace("/", "-"),ViewBag.UrlType))">
+                                        <div class="catogery-slider__img  @((category.Categorylevel==4 && Model.VirtualCategoryId==category.Id) || (Model.CatId > 0 && category.Id == Model.CatId ) ?"active":"")">
+
+                                            <img src="@(string.IsNullOrEmpty(category.ImageUrl)?"/images/p-no-image.png":category.ImageUrl)" alt="category" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                                <div class="catogery-slider__title"><span>@category.CategoryName</span></div>
+                                    </a>
+                                }
+
+                            }
+                        </div>
+                    </div>
+                    <div class="slideraction">
+                        <div class="swiper-button-prev swiper-button"></div>
+                        <div class="swiper-button-next swiper-button"></div>
+                    </div>
+                </div>
+
+                }
+
+
+                @if (Model.Products == null || Model.Products.Count < 1)
+                {
+                    @if (Model.IsOffersView && Model.ContentTypeId == 2 && Model.BrandId != -2)
+                    {
+                        <div>Sorry, the offer was expired or out of stock.</div>
+
+
+
+                    }
+                    <div class="text-center"><img src="/images/No_Results.jpg" /></div>
+                }
+                else
+                {
+                    <div class="products-collection-view product-itemview">
+
+                        @await Component.InvokeAsync("ProductCard", Model.Products)
+                        @if (Model.CurrentPage < Model.LastPage)
+                        {
+                            string loadMoreUrl = "";
+                            if (Model.ContentTypeId == 2)
+                            {
+                                loadMoreUrl = $"/loadmoreoffers/{Model.BusinessTypeId}/{Model.RetailTypeId}/{(Model.CurrentPage + 1)}";
+                            }
+                            int curcatid = -1;
+                            if (Model.ContentTypeId == 1 && Model.CategoryLevel > 0){
+                                curcatid = (Model.CategoryLevel == 1 ? Model.ParentCatId : (Model.CategoryLevel == 2 ? Model.CatId : Model.SubCatId));
+                            }
+                            else if (Model.ContentTypeId == 6)
+                            {
+                                curcatid = Model.VirtualCategoryId;                               
+                            }
+                            <div class="btnautoloadmore product-card" navlink="@loadMoreUrl"
+                                 contenttype="@Model.ContentTypeId" pagenum="@(Model.CurrentPage + 1)" subcatId="@(Model.IsBrandView ? -2 : ( Model.IsOffersView ? -1 : curcatid))" brandid="@(Model.IsBrandView ? Model.BrandId : "-1")" catlevel="@Model.CategoryLevel" searchkey="@(Model.ContentTypeId==5? Model.GroupId.ToString() : Model.CategoryName)"
+                                 href="javascript:void(0)">
+                                Load more Products
+                            </div>
+                        }
+                    </div>
+
+                    <!--product-itemview-->
+                }
+
+            </div>
+        </div><!--groz-ctg-list-wrap-->
+    </div><!--col-12-->
+    @await Component.InvokeAsync("FloatingViewCart")
+</div>
+</div>
+<script src="/js/custom/catalog.js"></script>
+<script>
+
+    master.url.offerLoadMore = '@offerUrl';
+</script>
+<script>
+    var show_items = 9;
+    var relatedCategoryCount = @Model.RelatedCategories?.Count ?? 0;
+
+    const catogerysliderCategoryList = new Swiper('.catogeryslider__categoryList', {
+        // Optional parameters
+        slidesPerView: show_items,
+        spaceBetween: 18,
+        navigation: {
+            nextEl: '.catogery-slider__categoryList .swiper-button-next',
+            prevEl: '.catogery-slider__categoryList .swiper-button-prev',
+        },
+
+        breakpoints: {
+            320: {  // when window width is >= 320px
+                slidesPerView: "auto",
+                spaceBetween: 10,
+            },
+            567: {  // when window width is >= 567px
+                slidesPerView: "auto",
+                spaceBetween: 10,
+            },
+            767: {  // when window width is >= 767px
+                slidesPerView: 4,
+                spaceBetween: 10,
+            },
+            850: {  // when window width is >= 991px
+                slidesPerView: 5,
+            },
+            1099: { // when window width is >= 1199px
+                slidesPerView: 5,
+            },
+            1200: { // when window width is >= 1200px
+                slidesPerView: 7,
+            },
+        },
+        on: {
+            init: function () {
+                if (relatedCategoryCount > show_items) {
+                    setTimeout(() => {
+                        $('.catogery-slider__categoryList .swiper-button-next').removeClass("swiper-button-disabled")
+                    }, 1000); // small delay after Swiper finalizes
+                }
+            }
+        }
+
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoriesLink = document.getElementById('categoriesLink');
+       // const filterLink = document.getElementById('filterLink');
+        const menuCategories = document.getElementById('menuCategories');
+        const menuFilter = document.getElementById('menuFilter');
+
+        // 2. Define the main toggle function
+        function toggleContent(showElement, hideElement, activateLink, deactivateLink) {
+            // Show the desired content div
+            showElement.classList.remove('hide');
+            // Hide the other content div
+            hideElement.classList.add('hide');
+
+            // Update active class on links
+            activateLink.classList.add('active');
+            deactivateLink.classList.remove('active');
+        }
+        // 3. Attach Event Listeners
+        categoriesLink.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior (page jump/reload)
+            toggleContent(menuCategories, menuFilter, categoriesLink, filterLink);
+        });
+        // filterLink.addEventListener('click', function (event) {
+        //     event.preventDefault(); // Prevent default link behavior
+        //     toggleContent(menuFilter, menuCategories, filterLink, categoriesLink);
+        // });
+
+        // Optional: Initial state setup (already handled by HTML and CSS, but good for dynamic content)
+        // If you wanted to programmatically set the initial state:
+        // toggleContent(menuCategories, menuFilter, categoriesLink, filterLink);
+    });
+</script>

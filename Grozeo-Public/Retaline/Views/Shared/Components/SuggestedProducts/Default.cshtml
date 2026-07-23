@@ -1,0 +1,39 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Retaline.Core.ViewModel.Home;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<HomePageViewModel>;
+<div class="section-grz_">
+    <div class="container">
+        <div class="row row_mb">
+            <div class="col-12">
+                <div class="titlewrap">
+                    <h2>Suggested Products for you</h2>
+                </div>
+                <div class="product-itemview">
+
+                    @if (Model.Count < 2 || Model[2].Products == null || Model[2].Products.Count <= 0)
+                    {
+                        <div class="itemsListingWrap">
+
+                            <div class="text-center"><img src="/images/No_Results.jpg"></div>
+                        </div>
+                    }
+                    else
+                    {
+                        @await Component.InvokeAsync("ProductCard", Model[2].Products)
+
+                    }
+                </div>
+
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</div><!--section-grz_-->

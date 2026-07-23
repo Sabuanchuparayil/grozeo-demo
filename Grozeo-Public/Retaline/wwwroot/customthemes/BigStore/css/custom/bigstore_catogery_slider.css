@@ -1,0 +1,14 @@
+.catogery-slider__img {
+    border: 1px solid var(--bs-border-color);
+}
+
+.catogery-slider__items, .catogery-slider__title {
+    color: var(--bs-text-primary);
+    font-size: 0.75rem;
+}
+@media (min-width: 992px) {
+    .catogery-slider__img {
+        width: 93px;
+        height: 93px;
+    }
+}

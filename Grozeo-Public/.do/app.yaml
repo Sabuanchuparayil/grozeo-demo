@@ -1,0 +1,63 @@
+name: grozeo-public
+region: fra1
+
+services:
+  - name: storefront
+    source_dir: /Retaline
+    github:
+      repo: Grozeo-International/Grozeo-Public
+      branch: main
+      deploy_on_push: true
+    build_command: dotnet publish -c Release -o ./publish
+    run_command: dotnet ./publish/Retaline.dll
+    environment_slug: dotnet
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-1gb
+
+    envs:
+      - key: ASPNETCORE_ENVIRONMENT
+        scope: RUN_TIME
+        value: Production
+      - key: ASPNETCORE_URLS
+        scope: RUN_TIME
+        value: http://+:8080
+      - key: ConnectionStrings__DefaultConnection
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_AZURE_SQL_CONNECTION_STRING
+      - key: AppSettings__PostalCodeAPIKey
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_POSTAL_CODE_API_KEY
+      - key: AppSettings__RevolutPublicToken
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_REVOLUT_TOKEN
+      - key: AppSettings__GoogleAPI
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_GOOGLE_API_KEY
+      - key: AppSettings__SecretKey
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_TOKEN_SECRET_KEY
+      - key: Recaptcha__Secret
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_RECAPTCHA_SECRET
+      - key: Recaptcha__Key
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_WITH_RECAPTCHA_KEY
+      - key: AppSettings__BizapiUrl
+        scope: RUN_TIME
+        value: https://bizapi.grozeo.in
+
+    http_port: 8080
+    routes:
+      - path: /
+
+    health_check:
+      http_path: /
+      initial_delay_seconds: 45
+      period_seconds: 30

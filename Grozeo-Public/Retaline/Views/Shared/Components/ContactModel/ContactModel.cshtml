@@ -1,0 +1,70 @@
+﻿@model Retaline.Core.BusinessModel.UserDetails.User
+@{
+}
+<div class="form-container">
+    <h3 class="title pt-2">
+        Contact Us
+    </h3>
+    <div class="row">
+        <div class="col-lg-7" style="border-right: solid 1px lightgray;">
+            <div class="tab-content" id="contactSubmit">
+                <form method="post" action="/contactus-submit" class="form-horizontal" id="frmContactSubmit">
+                    <div class="row mt-3 mb-3">
+                        <div class="col-lg-12">
+                            <div class="form-group form-group1">
+                                <div class="form-group loglabel">
+                                    <label>Your Email</label>
+                                </div>
+                                <input type="email" required class="form-control" id="txtEmail" value="@(User.Identity.IsAuthenticated && Model != null ? Model.Email:"")">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group form-group1">
+                                <div class="form-group loglabel">
+                                    <label>Your Phone</label>
+                                </div>
+                                <input type="tel" required class="form-control" pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$" id="txtPhone" value="@(User.Identity.IsAuthenticated && Model != null ? Model.Mobile:"")">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group form-group1">
+                                <div class="form-group loglabel">
+                                    <label>Message</label>
+                                </div>
+                                <textarea class="form-control" style="height: 80px !important;" placeholder="Enter your message" id="txtMessage"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 ">
+                            <input type="hidden" id="hidOrderId" /><input type="hidden" id="hidOrderNum" /><input type="hidden" id="hidOrderBranch" /><input type="hidden" id="hidOrderDate" />
+                            <button class="btn btn-dark h60 " data-dismiss="modal">CANCEL</button>
+                            <input type="submit" class="btn btn-success h60 fright" value="Submit" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-content" id="contactResult" style="display:none;">
+                <div class="row mt-3 mb-3">
+                    <div class="col-lg-12">
+                        <div id="contactResultText">Thanks. We'll contact you shortly.</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 ">
+
+                    </div>
+                    <div class="col-lg-6 ">
+                        <button class="btn btn-success h60 fright" data-dismiss="modal" value="Close">Close</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        @await Component.InvokeAsync("ContactAddress")
+
+    </div>
+
+
+</div>

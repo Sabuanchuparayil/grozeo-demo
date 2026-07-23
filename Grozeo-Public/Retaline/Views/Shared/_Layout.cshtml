@@ -1,0 +1,288 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.Home.IHomePageService _homePageService;
+
+@{
+    var curUser = customAuthService.GetUserFromClaims();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+
+    string captchaKey = _configuration["Recaptcha:Key"];
+
+    string countryCode = string.IsNullOrEmpty(_configuration["CountryCode"]) ? "IN" : _configuration["CountryCode"];
+    string addressKey = _configuration["PostalCodeAPIKey"];
+
+
+    // Logic that enables to select address while a user logs in
+    bool showAddrAlert = false;
+    try
+    {
+        if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.Session != null)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                _httpContextAccessor.HttpContext.Session.Remove("SHOWADDRALERT");
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("SHOWADDRALERT")) || _httpContextAccessor.HttpContext.Session.GetString("SHOWADDRALERT") == "TRUE")
+                {
+                    showAddrAlert = true;
+                    _httpContextAccessor.HttpContext.Session.SetString("SHOWADDRALERT", "FALSE");
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        showAddrAlert = false;
+    }
+
+    var retailerTypes = catalogService.GetRetailerTypes().Result;
+
+    string strDefLat = _httpContextAccessor.HttpContext.Session.GetString("CURSEARCHLAT");
+    string strDefLng = _httpContextAccessor.HttpContext.Session.GetString("CURSEARCHLNG");
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!--HTML head component-->
+@await Html.PartialAsync("_Head", curUser)
+
+<body class="home ribbon_version @(retailerTypes != null && retailerTypes.Count > 1 ? "businesscat_menu" : "")">
+    @await Component.InvokeAsync("TagManager", false)
+
+    <div id="site-wrapper">
+
+        @await Component.InvokeAsync("Header")
+
+        @if (User.IsInRole("impersonated"))
+        {
+            <div class="admin-header-links">
+                @if (true)
+                {
+                    <div class="impersonate">
+                        <span>@string.Format("Impersonated as {0}", User.Identity.Name)</span>
+                        <a href="/endimpersonation" class="finish-impersonation" style="color: #fff;" title="End Impersonation">End Impersonation</a>
+                    </div>
+                }
+            </div>
+        }
+        @RenderSection("ThemeBanner", required: false)
+        <!-- Body contents are rendered here -->
+        <section class="contentsection">
+            @* <div class="container"> *@
+                @RenderBody()
+            @* </div> *@
+        </section>
+
+        @await Component.InvokeAsync("Footer")
+
+        <!--Modals are imported here-->
+        @await Component.InvokeAsync("LoginModel")
+        @await Component.InvokeAsync("GuestLocationModal")
+        @await Component.InvokeAsync("AddressModel", (curUser == null ? 0 : curUser.AddressCount))
+        @await Component.InvokeAsync("AgeVerificationModal")
+        @await Component.InvokeAsync("OrderNotesModal")
+        @if (User.Identity.IsAuthenticated)
+        {
+            @await Component.InvokeAsync("AddressList")
+        }
+
+        @if (showAddrAlert && curUser.PrimaryAddress != null)
+        {
+            //@await Component.InvokeAsync("ConfirmAddressModel")
+            <script>
+                $(document).ready(function () {
+                    $('#adressDropdown').modal('show');
+                    $('#adressDropdown').on('shown.bs.modal', function (e) {
+                        $(this).find('.btn-close').remove();
+                        $(this).find('.remove_adress').remove();
+                    });
+                });
+
+            </script>
+        }
+        <!--Modal imports end here-->
+
+
+        <script>
+
+            authentication.url.getOtp = '@Url.Action("GetOtp", "Authentication")';
+            authentication.url.verifyOtp = '@Url.Action("VerifyOtp", "Authentication")';
+            authentication.url.signUp = '@Url.Action("SignUp", "Authentication")';
+            authentication.url.redirectUrl = '@(String.IsNullOrEmpty(_httpContextAccessor.HttpContext.Request.Query["ReturnUrl"]) ? "" : _httpContextAccessor.HttpContext.Request.Query["ReturnUrl"])';
+            authentication.properties.captchaKey = '@captchaKey';
+            authentication.url.fedRedirectUrl = '@(String.Format("{0}/[source]?redirect=https://{1}", _configuration["FedRedirectUrl"], _httpContextAccessor.HttpContext.Request.Host))';
+            //authentication.properties.fedAuthFLKey = '@_configuration["FedAuthClientId"]';
+            //authentication.properties.fedGoogleAuthClientId = '@_configuration["FedGoogleAuthClientId"]';
+
+            cart.properties.currencySymbol = '@Html.Raw(_configuration["CurrencySymbol"])';
+            //  cart.url.addToCart = '@Url.Action("AddToCart", "Cart")';
+            address.url.addAddress = '@Url.Action("AddAddress", "Address")';
+            master.properties.countryCode = '@countryCode';
+            address.properties.addressKey = '@addressKey';
+
+            var loggedIn = '@User.Identity.IsAuthenticated';
+
+        </script>
+        @if (!String.IsNullOrEmpty(strDefLat) && !String.IsNullOrEmpty(strDefLng))
+        {
+            <script>
+                address.properties.deflatitude = '@strDefLat';
+                address.properties.deflongitude = '@strDefLng';
+
+            </script>
+        }
+        else
+        {
+            <script>
+                address.properties.deflatitude = '@_configuration["DefLatitude"]';
+                address.properties.deflongitude = '@_configuration["DefLongitude"]';
+            </script>
+        }
+
+        @if (_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "ReturnUrl"))
+        {
+            <script>
+                $(document).ready(function () {
+                    //if (loggedIn === 'False') {
+                    $("#login-modal").modal('show');
+                    //}
+
+                });
+            </script>
+        }
+    </div>
+
+    <div class="modal " id="resultsModal" role="dialog">
+        <div class="modal-dialog" style="max-width: 400px;">
+            <div class="modal-content  pb-4 pd20">
+                <div class=" col-md-12  col-sm-12">
+                    <a href="javascript:void(0)" onclick="$('#resultsModal').modal('hide');" class="close pt-2"><img src="/images/cancel.png" class="imgclose" style="width: 21px; float: right; padding: 5px;"></a>
+                    <div class="form-container" style=" text-align: center;">
+                        <h3 class="modal-header resulthead" style="display: block;">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                        </h3>
+                        <div class="tab-content" style="padding: 0px;">
+                            <div class="resultcontent">
+                                <img src="~/images/loadingbig.gif" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade login-modal-popup" id="address-change-confirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="closepopup" data-bs-dismiss="modal" aria-label="Close"><img src="/images/icons/close.svg"></div>
+
+                    <div class="profilepopuwrap creatnewaccount-popup-toggle">
+                        <div class="titlewrapprofile">
+                            <h4 id="h-loginHead">Warning</h4>
+                        </div>
+                        <div class="editprofile-popup-wrap">
+                            Address change will clear cart items if any, and moved to wishlist
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-address-change" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirm-address-change">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/x-handlebars" id="retailer-link-template">
+            <div class="business_cat_megamenu">
+            <div class="container">
+                <div class="row">
+                    <div class="co-12">
+                        <ul class="navsublist d-flex justify-content-center">
+                           {{#each this}}
+                            <li> <a href="/bt/{{id}}/{{business_type_id}}">{{business_type_name}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div><!--business_cat_megamenu-->
+    </script>
+
+    <script type="text/javascript">
+        var primaryAddr = '@(User.Identity.IsAuthenticated && curUser != null && curUser.PrimaryAddress == null ? (curUser.AddressCount > 0 ? "showaddr" : "newaddr") : "")';
+        $(document).ready(function () {
+            let observer;
+
+            function startObserving() {
+                const config = { childList: true, subtree: true };
+
+                observer = new MutationObserver(() => {
+                    const targetElement = document.querySelector('#address-modal'); // Check for ID
+                    const shouldTrigger = !targetElement ||
+                        (getComputedStyle(targetElement).display === 'none' && address.properties.logoutOnClose);
+
+                    if (shouldTrigger) {
+                        address.triggerAddAddress(true);
+                    }
+
+                });
+
+                // Observe changes in the body (or any specific element)
+                observer.observe(document.body, config);
+            }
+
+            // Function to stop observing changes
+            function stopObserving() {
+                if (observer) {
+                    observer.disconnect();
+                }
+            }
+            if (primaryAddr == 'newaddr') {
+                address.properties.logoutOnClose = true;
+                address.triggerAddAddress(true);
+                startObserving();
+
+            }
+            else if (primaryAddr == 'showaddr') {
+                showSelAddress();
+                stopObserving();
+                //address.properties.logoutOnClose = true;
+                //address.showSelAddress(true);
+
+
+                //$("#choose-location-modal").modal({ backdrop: 'static', keyboard: false });
+                //$("#choose-location-modal").modal('show');
+                //$("#choose-location-modal").find('.model-left').css('width', '100%');
+            }
+        });
+    </script>
+
+
+    @await Component.InvokeAsync("EuCookieLaw")
+
+</body>
+</html>

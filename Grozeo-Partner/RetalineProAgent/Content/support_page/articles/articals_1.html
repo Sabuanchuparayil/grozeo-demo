@@ -1,0 +1,31 @@
+<div class="col-12 mb-4">
+  <div class="title_sec d-flex align-items-center justify-content-between">
+    <div class="support_title_wrap d-flex align-items-center">
+      <span class="titleicon wd-50 ht-50 rounded-circle bg-light d-flex justify-content-center align-items-center mr-3">
+        <i class="fa-thin fa-cart-shopping tx-24"></i>
+      </span>
+      <div class="support_title">
+        <h6 class="mb-1 w-100 tx-14 tx-medium ">Order Fulfilment</h6>
+        <p class="mb-0">Lorem ipsum dolor sit</p>
+      </div>
+    </div>
+    <a href="javascript:void(0)" class="backbtn"><i class="fa fa-reply mr-2" aria-hidden="true"></i>Back</a>
+  </div>
+</div><!--col-12-->
+
+<div class="col-12 mb-3">
+  <h3 class="mb-3 tx-dark tx-14">Articles title comes here</h3>
+  <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+  <img class="mb-3" src="/Content/images/article_01..png">
+  <p><strong>Denouncing pleasure</strong> and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. Expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+  <p><strong>Expound the actual</strong> teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+</div><!--col-12-->
+
+<script>
+  var loader = '<div class="d-flex align-items-center justify-content-center w-100"><div class="loader"></div></div>';
+     $('.backbtn').click(function(e) {
+         e.preventDefault();
+         $("#suportcontent").html(loader);
+         $("#suportcontent").load("/content/support_page/external_1.html");
+     });
+</script>

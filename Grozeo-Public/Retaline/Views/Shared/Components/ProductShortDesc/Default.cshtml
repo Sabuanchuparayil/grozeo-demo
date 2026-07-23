@@ -1,0 +1,117 @@
+﻿@model Retaline.Core.BusinessModel.ProductDetails.ProductDetailsModel;
+@using Microsoft.AspNetCore.Http;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@inject IHttpContextAccessor _httpContextAccessor
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+
+
+@{
+    var curUrl = new Uri($"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.Path}{_httpContextAccessor.HttpContext.Request.QueryString}");
+    var curUser = customAuthService.GetUserFromClaims();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    GuestData guestUser = HttpHelper.GuestUser;
+}
+@if (Model?.Product?.SellingPrice > 0)
+{
+    <div class="product_btn_group">
+        <div class="product-price_wrap">
+            <!-- <span class="product-price_info text-danger">Out of stock</span> -->
+            @if (Model?.Product?.MRP > Model?.Product?.SellingPrice)
+            {
+                <del class="product-price_regular">@(_configuration["CurrencySymbol"])@Model?.Product?.MRP</del>
+
+            }
+            <span class="product-price_discount">@(_configuration["CurrencySymbol"])@Model?.Product?.SellingPrice</span>
+
+        </div>
+        @if (Model?.BranchTypeId > 0 && Model?.Product?.StockAvailable > 0)
+        {
+            var requiresAgeVerification = Model?.Product?.HasAgeVerification == 1;
+            var isUserVerified = curUser?.AgeVerified == 1;
+            var verificationNeeded = (!isUserVerified && requiresAgeVerification ? 1 : 0);
+
+            <div class="product-action addunit_infowrap">
+
+                <div class="form-qty-block addunitWrap form-qty-full" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId">
+                    <button type="button" id="product-minus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" class="btn btn-sm btn-minus hide product-tile-minus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId">-</button>
+                    <input type="number" class="form-control form-control-sm form-qty hide product-tile-qty-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" step="1" min="0" max="@Model?.Product?.StockAvailable" value="0" id="product-qty-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" placeholder="Add">
+                    @if (!User.Identity.IsAuthenticated && guestUser != null && guestUser.GuestLatitude == null && Model.BranchTypeId == 3)
+                    {
+                        @if (Model?.Product?.IsCourier == 1)
+                        {
+                            <button type="button" id="product-plus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" class="btn btn-sm btn-plus btn-add product-tile-plus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId" data-brid="@Model?.Product?.BranchId" data-brtypeid="@Model?.Product?.BranchTypeId" data-needageverification="@verificationNeeded"><span>Add</span>+</button>
+                        }
+                        else
+
+                        {
+                            <button type="button" class="btn btn-sm btn-plus-no-action btn-add product-tile-plus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-bs-toggle="modal" data-bs-target="#search-address-modal"><span>Add</span>+</button>
+
+                        }
+
+                    }
+                    else
+                    {
+                        <button type="button" id="product-plus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" class="btn btn-sm btn-plus btn-add product-tile-plus-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId" data-brid="@Model?.BranchId" data-brtypeid="@Model?.BranchTypeId" data-needageverification="@verificationNeeded"><span>Add</span>+</button>
+
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+<div class="short-description">
+    <p>@Html.Raw(Model?.Product?.ShortDesc)</p>
+</div>
+
+<div class="delivery_mode_wrap">
+    <span class="label_delivery_mode @(Model.MasterData.IsCourier == 1 ? "courierdelivery" : "expressdelivery") " title="@(Model.MasterData.IsCourier == 1 ? "Courier Delivery" : "Express Delivery")">
+        <i class="@(Model.BranchTypeId == 0
+        ? "fa fa-exclamation-triangle"
+        : (Model.MasterData.IsCourier == 1
+        ? "fa-regular fa-truck"
+        : "fa-regular fa-moped")
+        )" aria-hidden="true"></i>
+        @(
+            Model.BranchTypeId == 0
+            ? "Not Deliverable"
+            : (Model.MasterData.IsCourier == 1
+            ? "Courier Delivery"
+            : "Express Delivery")
+            )
+    </span>
+   @*  @if (!String.IsNullOrEmpty(Model.ReturnDetails))
+    { *@
+        <div class="returnableinfo">
+            <p><i><img class="img-fluid" src="/images/prod_return_icon.svg"></i>@(Model.Product.ReturnTime > 0 ? Model.Product.ReturnTime + " Days Return" : "Not Returnable")</p>
+        </div>
+    @* } *@
+
+</div>
+
+<div class="product-share-social">
+    <span>Share:</span>
+
+
+    <a href="https://www.addtoany.com/add_to/facebook?linkurl=@System.Net.WebUtility.UrlEncode(curUrl.AbsoluteUri)&amp;linkname=" target="_blank" class="ShareFacbook"><i class="fa-brands fa-facebook-f"></i></a>
+    <a href="https://www.addtoany.com/add_to/twitter?linkurl=@System.Net.WebUtility.UrlEncode(curUrl.AbsoluteUri)&amp;linkname=" target="_blank" class="ShareTwitter"><i class="fa-brands fa-twitter"></i></a>
+    <a href="https://web.whatsapp.com/send?l=en&text=@System.Net.WebUtility.UrlEncode(curUrl.AbsoluteUri)" target="_blank" class="ShareGoogle"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="https://www.addtoany.com/add_to/email?linkurl=@System.Net.WebUtility.UrlEncode(curUrl.AbsoluteUri)&amp;linkname=" target="_blank" class="ShareGoogle"><i class="fa-solid fa-envelope"></i></a>
+
+</div>
+
+

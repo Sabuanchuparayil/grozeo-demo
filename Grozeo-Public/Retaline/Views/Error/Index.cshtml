@@ -1,0 +1,48 @@
+﻿@model int
+@{
+    string strError = "";
+    switch (Model)
+    {
+        case 404:
+            strError = "Sorry, this page could not be found";
+            break;
+        case 405:
+            strError = "Method not allowed. Please contact administrator";
+            break;
+        case 401:
+            strError = "You do not have acccess to this page. Please make sure you are logged in, or contact your administrator.";
+            break;
+        case 500:
+            strError = "Internal Server Error. Please contact administrator.";
+            break;
+        case 403:
+            strError = "Forbidden. Please contact administrator.";
+            break;
+        case 503:
+            strError = "Service unavailable. Please contact administrator";
+            break;
+        case 504:
+            strError = "Gateway Timeout. Please contact administrator";
+            break;
+        case 001:
+            strError = "This link has expired.";
+            break;
+    }
+
+
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="error_pg_wrap">
+                <div class="error_pg_img">
+                    <img class="img-fluid" src="/images/error_page_infographic.svg">
+                </div>
+                <div class="error_pg_cont">
+                    <h4>Aaaah! Something went wrong</h4>
+                    <p>Please <a href="/">Refresh</a> the Page or Go to <a href="/">Home</a></p>
+                </div>
+            </div>
+        </div><!--col-12-->
+    </div>
+</div>

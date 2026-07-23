@@ -1,0 +1,149 @@
+/* I'm not happy to have to include this hack but since we're using floating elements */
+/* this is needed, if anyone have a better solution, please keep me posted! */
+.x-grid3-body:after { content: "."; display: block; height: 0; font-size: 0; clear: both; visibility: hidden; }
+.x-grid3-body { display: inline-block; }
+/* Hides from IE Mac \*/
+* html .x-grid3-body { height: 1%; }
+.x-grid3-body { display: block; }
+/* End Hack */
+
+.x-grid-group-body-floatcontainer:after {
+	content: ".";
+	display: block;
+	height: 0;
+	font-size: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+
+.x-grid3-row-selected { width:auto !important; }
+.x-grid3-row-over { width:auto !important; }
+span {
+	font-family: Arial, Helvetica, sans-serif;;
+	font-size: 11px;
+	color: #000000;
+}
+.stylesett{
+    color: #FFFFFF;
+}
+.tile-nm {
+/*	font-size: 9px;
+	font-weight: bolder;
+*/
+	font-family:arial,tahoma,helvetica,sans-serif;
+	font-size:11px;
+}
+
+.tile-tp {
+	font-size: 10px;
+	font-weight: normal;
+}
+
+/* Hides from IE Mac \*/
+* html .x-grid-group-body-floatcontainer { height: 1%; }
+.x-grid-group-body-floatcontainer { display: block; }
+/* End Hack */
+
+.ux-explorerview-item {
+	float: left; display: block; border: none;
+}
+
+
+
+/* Large Icons */
+.ux-explorerview-large-item { width: 100px; height: 100px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.ux-explorerview-large-item .ux-explorerview-icon { width: 100px; height: 80px; }
+.ux-explorerview-large-item .ux-explorerview-icon td { padding-top: 8px; }
+.ux-explorerview-large-item .ux-explorerview-text { text-align: center; padding: 0 5px; white-space: nowrap; overflow: hidden; }
+
+/* Medium Icons */
+.ux-explorerview-medium-item { width: 80px; height: 80px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.ux-explorerview-medium-item .ux-explorerview-icon { width: 80px; height: 60px; }
+.ux-explorerview-medium-item .ux-explorerview-icon td { padding-top: 8px; }
+.ux-explorerview-medium-item .ux-explorerview-text { text-align: center; padding: 0 5px; white-space: nowrap; overflow: hidden; }
+
+/* Small Icons */
+.ux-explorerview-small-item { width: 180px; height: 18px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.ux-explorerview-small-item .ux-explorerview-icon { float: left; width: 20px; height: 18px; }
+.ux-explorerview-small-item .ux-explorerview-text { float: left; width: 150px; padding-top: 2px; white-space: nowrap; overflow: hidden; }
+
+/* Tiles */
+.ux-explorerview-tiles-item { width: 180px; height: 48px; margin: 5px 0 8px 5px; -moz-user-select: none; }
+.ux-explorerview-tiles-item .ux-explorerview-icon { float: left; width: 50px; height: 50px; }
+.ux-explorerview-tiles-item .ux-explorerview-text { float: left; width: 120px; padding-top: 8px; white-space: nowrap; overflow: hidden; }
+.ux-explorerview-tiles-item .ux-explorerview-text span { color: #777; }
+
+.db-fg-grid .x-grid3-row {border:medium none;}
+
+.tile-fg { padding:4px; height: 48px; width: 170px; margin-right: 1px; margin-bottom: 15px;}
+.x-grid3-row-over .beautify-tile-corner { background: url(../images/view/vw-til.png) no-repeat scroll left top; }
+.x-grid3-row-selected .beautify-tile-corner { background: url(../images/view/vw-til.png) no-repeat scroll left bottom; }
+
+.ux-explorerview-tiles-item .folder { background: url(../images/icons/assets/tile/folder.gif) no-repeat; }
+.ux-explorerview-tiles-item .file { background: url(../images/icons/assets/tile/file.gif) no-repeat; }
+
+
+
+/* Thumbnail View */
+.ux-explorerview-thumb-item { /*width: 89px;*/ width:auto; height: 90px; margin: 10px 1px 20px 7px; -moz-user-select: none; overflow:hidden; }
+.ux-explorerview-thumb-item .ux-explorerview-icon { float: left; width: 80px; height: 60px; }
+.ux-explorerview-thumb-item .thumb-holder { background-color:#FFFFFF; background-position:center center; background-repeat:no-repeat; border:1px solid #E0E0E0; height:60px; overflow:hidden; width:80px; }
+.ux-explorerview-thumb-item .ux-explorerview-text { float: left; width: 80px; padding: 4px 0 0 0; white-space: nowrap; overflow: hidden; }
+.ux-explorerview-thumb-item .ux-explorerview-text span { color: #777; }
+.thumb-fg { height:82px; overflow:hidden; padding:4px 3px 4px 2px; width:85px;}
+
+.x-grid3-row-over .beautify-thumb-corner { background: url(../images/view/vw-thumb.png) no-repeat scroll left top; }
+.x-grid3-row-selected .beautify-thumb-corner { background: url(../images/view/vw-thumb.png) no-repeat scroll left bottom; }
+
+.ux-explorerview-thumb-item .folder { background: url(../images/icons/assets/tile/folder.gif) center no-repeat; }
+.ux-explorerview-thumb-item .User .folder { background: url(../images/icons/assets/tile/user_folder.gif) center no-repeat; }
+.ux-explorerview-thumb-item .file { background: url(../images/icons/assets/tile/file.gif) center no-repeat; }
+.ux-explorerview-thumb-item .spacer { background: url(../images/s.gif) center no-repeat; }
+
+
+.ux-explorerview-thumb-item .ux-explorerview-text span{
+    font-size: 9px;
+}
+
+/* ================================================================ */
+/*                         jOB BASKET LISTING                       */
+/* ---------------------------------------------------------------- */
+
+.x-grid-group-body-floatcontainer { display: inline-block; }
+/* Hides from IE Mac \*/
+* html .x-grid-group-body-floatcontainer { height: 1%; }
+.x-grid-group-body-floatcontainer { display: block; }
+/* End Hack */
+
+.ux-explorerview-item {
+	float: left; display: block; border: none;
+}
+.ux-explorerview-text-label {
+    font:normal 11px Raleway,tahoma, arial, helvetica, sans-serif;
+}
+
+/* Large Icons */
+.job_basket .ux-explorerview-large-item { width: 100px; height: 130px; margin: 5px 0 0 5px; -moz-user-select: none; border: 1px solid #EFEFEF; }
+.job_basket .ux-explorerview-large-item .ux-explorerview-icon { width: 100px; height: 100px; }
+.job_basket .ux-explorerview-large-item .ux-explorerview-icon td { padding-top: 8px; }
+.job_basket .ux-explorerview-large-item .ux-explorerview-text { text-align: center; padding: 0 5px; white-space: nowrap; overflow: hidden; }
+
+/* Medium Icons */
+.job_basket .ux-explorerview-medium-item { width: 80px; height: 80px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.job_basket .ux-explorerview-medium-item .ux-explorerview-icon { width: 80px; height: 60px; }
+.job_basket .ux-explorerview-medium-item .ux-explorerview-icon td { padding-top: 8px; }
+.job_basket .ux-explorerview-medium-item .ux-explorerview-text { text-align: center; padding: 0 5px; white-space: nowrap; overflow: hidden; }
+
+/* Small Icons */
+.job_basket .ux-explorerview-small-item { width: 180px; height: 18px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.job_basket .ux-explorerview-small-item .ux-explorerview-icon { float: left; width: 20px; height: 18px; }
+.job_basket .ux-explorerview-small-item .ux-explorerview-text { float: left; width: 150px; padding-top: 2px; white-space: nowrap; overflow: hidden; }
+
+/* Tiles */
+.job_basket .ux-explorerview-tiles-item { width: 180px; height: 48px; margin: 5px 0 0 5px; -moz-user-select: none; }
+.job_basket .ux-explorerview-tiles-item .ux-explorerview-icon { float: left; width: 50px; height: 50px; }
+.job_basket .ux-explorerview-tiles-item .ux-explorerview-text { float: left; width: 120px; padding-top: 8px; white-space: nowrap; overflow: hidden; }
+.job_basket .ux-explorerview-tiles-item .ux-explorerview-text span { color: #777; }
+
+/* ================================================================ */

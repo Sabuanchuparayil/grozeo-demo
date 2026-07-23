@@ -1,0 +1,12 @@
+﻿@model string;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor _httpContextAccessor
+@{
+    Layout = null;
+    //var payUrl = _httpContextAccessor.HttpContext.Request.Query["url"];
+    
+}
+<script src="https://js.instamojo.com/v1/checkout.js"></script>
+<script>
+    Instamojo.open("@Model");
+</script>

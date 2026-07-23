@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <!--
+  <siteMapNode icon="fa-thin" url="Default.aspx" title="Home"  description="Dashboard">
+    <siteMapNode icon="fa-thin" url="ManageStore.aspx" title="Manage Store"  description="Manage Store" roles="SuperAdmin" />    
+  </siteMapNode>
+-->
+
+  <siteMapNode icon="fa-thin" url="~/" title="Home" description="icon ion-ios-speedometer-outline">
+    <siteMapNode icon="fa-thin" url="~/default" title="Home" description="icon ion-ios-speedometer-outline" />
+    <siteMapNode icon="fa-thin" url="~/manage" title="Admin" description="icon ion-ios-cart-outline" roles="SuperAdmin,RetalineProAgent,Agent,Admin">
+      
+      <siteMapNode icon="fa-thin fa-gauge-max" url="~/manage/default" title="Dashboard" description="fa-gauge-max" />
+      <siteMapNode icon="fa-thin fa-cart-flatbed-boxes" url="~/manage/customdomain" title="Custom Domain" description="fa-cart-flatbed-boxes" />
+      <siteMapNode icon="fa-thin fa-bags-shopping" url="~/manage/mystores" title="Stores" description="fa-bags-shopping" />
+      <siteMapNode icon="fa-thin fa-box-taped" url="~/manage/supportticket" title="Tickets" description="fa-box-taped" />
+      <siteMapNode icon="fa-thin fa-moped" url="~/manage/manageuser" title="Manage Users" description="fa-moped" roles="SuperAdmin" />
+
+    </siteMapNode>
+
+    <siteMapNode icon="fa-thin" url="~/tenant" title="Merchant" description="icon ion-social-dropbox-outline" roles="SuperAdmin,RetalineProAgent,Agent,StoreAdmin,StoreManager,BranchManager">
+      <siteMapNode icon="fa-thin fa-gauge-max" url="~/Tenant/default" title="Dashboard" description="fa-gauge-max" />
+		<siteMapNode icon="fa-thin fa-box-taped" url="~/Tenant/PendingOrders" title="Orders" description="fa-box-taped" />
+		<siteMapNode icon="fa-thin fa-moped" url="~/Tenant/MerchantDelivery" title="Delivery" description="fa-moped" />
+		<siteMapNode icon="fa-light fa-arrow-right-arrow-left" url="~/Tenant/Salesreturns" title="Returns" description="fa-arrow-right-arrow-left" />
+		<siteMapNode icon="fa-light fa-thin fa-calculator" url="~/Navigations/Settlement" title="Settlements" description="fa-calculator" />
+		<siteMapNode icon="fa-thin fa-thin fa-print" url="~/Navigations/Accounts" title="Reports" description="fa-thin fa-print" />
+		<siteMapNode icon="fa-light fa-thin fa-megaphone" url="~/Navigations/Marketing" title="Marketing" description="fa-thin fa-megaphone" />
+		<siteMapNode icon="fa-light fa-thin fa-user-headset" url="~//Navigations/crm" title="CRM" description="fa-thin fa-user-headset" />
+      <siteMapNode icon="fa-thin fa-cart-flatbed-boxes" url="~/Navigations/Products" title="Products" description="fa-cart-flatbed-boxes" />
+		<siteMapNode icon="fa-light fa-thin fa-frame" url="~/Navigations/Appearance" title="Appearance" description="fa-thin fa-frame" />
+		<!--><siteMapNode icon="fa-thin fa-bags-shopping" url="~/Tenant/SaleAndReturnOrders" title="Sales &amp; Orders" description="fa-bags-shopping" /><!-->
+		<!--><siteMapNode icon="fa-thin fa-headset" url="~/Navigations/Support"  title="Support Center" description="fa-headset" /><!-->
+		<!--><siteMapNode icon="fa-thin fa-chart-mixed" url="~/Tenant/Analytics" title="Analytics" description="fa-chart-mixed" /><!-->
+      <siteMapNode icon="fa-thin fa-gear" url="~/Navigations/SettingsMenu" title="Settings" description="fa-gear" />
+    </siteMapNode>
+
+    <siteMapNode icon="fa-thin" url="~/business" title="Associate" description="icon ion-ios-calculator" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate,MarketingAdmin,MarketingManager,GeneralManagerMarketing,JointGMMarketing,DeputyGMMarketing,DirectorMarketing,VPMarketing,CMOMarketing,AssociateGMMarketing,SeniorManagerMarketing,GroupManagerMarketing,AssistantGMMarketing,AssociateManagerMarketing,ManagerMarketing,ExecutiveGraphics,ConsultantMarketing,OfficerMarketing">
+      <siteMapNode icon="fa-thin" url="~/business/default" title="Dashboard" description="Dashboard" />
+      <!--<siteMapNode icon="fa-thin" url="~/Business/Contacts" title="Contacts" description="Contacts" />
+      <siteMapNode icon="fa-thin" url="~/Business/AssociateLeads" title="Leads" description="Leads" />-->
+      <!--><siteMapNode icon="fa-thin" url="~/Business/Prospects" title="Prospects" description="Prospects" />-->
+		<siteMapNode icon="fa-thin" url="~/Business/ClientManagement?type=contact" title="Contacts" description="Contacts" />
+		<siteMapNode icon="fa-thin" url="~/Business/ClientManagement?type=lead" title="Leads" description="Leads" />
+		
+      <siteMapNode icon="fa-thin" url="~/Business/CRMRetailers" title="Retailers / Merchants" description="Retailers/Merchants" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+      <siteMapNode icon="fa-thin" url="~/Business/BSponsoredItems" title="Sponsored Items" description="Sponsored Items" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+      <siteMapNode icon="fa-thin" url="~/Business/#" title="Contact Support" description="Contact Support" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+      <siteMapNode icon="fa-thin" url="~/Business/BusinessNavigations/BusinessAccounts" title="Accounts" description="Accounts" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+      <siteMapNode icon="fa-thin" url="~/Business/BusinessNavigations/Resources" title="Resources" description="Resources" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+      <siteMapNode icon="fa-thin" url="~/Business/Area" title="Settings" description="Settings" roles="SuperAdmin,RetalineProAgent,Agent,BusinessAssociate" />
+		<siteMapNode icon="fa-thin" url="~/Business/Report" title="Report" description="Report" roles="SuperAdmin,MarketingAdmin, MarketingManager,GeneralManagerMarketing, JointGMMarketing, DeputyGMMarketing, DirectorMarketing, VPMarketing, CMOMarketing, AssociateGMMarketing, SeniorManagerMarketing, GroupManagerMarketing, AssistantGMMarketing, AssociateManagerMarketing, ManagerMarketing, ExecutiveGraphics, ConsultantMarketing, OfficerMarketing" />
+
+	</siteMapNode>
+
+    <siteMapNode icon="fa-thin" url="~/fleet" title="Fleet Manager" description="icon ion-ios-chatboxes-outline" roles="SuperAdmin,RetalineProAgent,Agent,FleetManager">
+      <siteMapNode icon="fa-thin" url="~/fleet/default" title="Dashboard" description="Dashboard" />
+      <siteMapNode icon="fa-thin" url="~/fleet/#Fulfilment" title="Fulfilment" description="Fulfilment" />
+      <siteMapNode icon="fa-thin" url="~/fleet/#Resources" title="Resources" description="Resources" />
+      <siteMapNode icon="fa-thin" url="~/fleet/#Orders" title="Orders" description="Orders" />
+      <siteMapNode icon="fa-thin" url="~/fleet/#Accounts" title="Accounts" description="Accounts" />
+      <siteMapNode icon="fa-thin" url="~/fleet/#Reports" title="Reports" description="Reports" />
+    </siteMapNode>
+
+    <siteMapNode icon="fa-thin" url="~/finance" title="Finance" description="icon ion-ios-cog-outline" roles="SuperAdmin,FinanceAdmin,FinanceUser,OfficerAccountsFinance,ExecutiveAccountsFinance,SeniorExecutiveAccountsFinance,AssociateManagerAccountsFinance,ManagerAccountsFinance,AssistantGMAccountsFinance,AssociateGMAccountsFinance,GeneralManagerAccountsFinance">
+      <siteMapNode icon="fa-thin" url="~/finance/default" title="Dashboard" description="Dashboard" />
+      <siteMapNode icon="fa-thin" url="~/Finance/Navigations/Accounting" title="Accounting" description="Accounting" />
+	 <siteMapNode icon="fa-thin" url="~/Finance/FinanceSubscriptions" title="Subscriptions" description="Subscriptions" />
+	 <siteMapNode icon="fa-thin" url="~/Finance/Navigations/AccountBooks" title="Account Books" description="Account Books" />
+      <siteMapNode icon="fa-thin" url="~/Finance/Navigations/Reports" title="Reports" description="Reports" />
+      <siteMapNode icon="fa-thin" url="~/Finance/Navigations/TaxesandDuties" title="Taxes &amp; Duties" description="Taxes &amp; Duties" />
+      <siteMapNode icon="fa-thin" url="~/Finance/Navigations/Costallocationandautoposting" title="Masters" description="Masters" />
+      <siteMapNode icon="fa-thin" url="~/Finance/Navigations/ChartofAccounts" title="Settings" description="Settings" />
+	</siteMapNode>
+
+    <!--<siteMapNode icon="fa-thin" url="~/marketing" title="Marketing" description="icon ion-ios-chatboxes-outline" roles="SuperAdmin,MarketingAdmin,MarketingManager,GeneralManagerMarketing,JointGMMarketing,DeputyGMMarketing,DirectorMarketing,VPMarketing,CMOMarketing,AssociateGMMarketing,SeniorManagerMarketing,GroupManagerMarketing,AssistantGMMarketing,AssociateManagerMarketing,ManagerMarketing,ExecutiveGraphics,ConsultantMarketing,OfficerMarketing">
+      <siteMapNode icon="fa-thin" url="~/marketing/default" title="Dashboard" description="Dashboard" />
+      <siteMapNode icon="fa-thin" url="~/marketing/ClientManagement?type=contact" title="Contacts" description="Contacts" />
+      <siteMapNode icon="fa-thin" url="~/marketing/ClientManagement?type=lead" title="Leads" description="Leads" />
+      <siteMapNode icon="fa-thin" url="~/marketing/Report" title="Report" description="Report" />
+    </siteMapNode>-->
+	  
+    <siteMapNode icon="fa-thin" url="~/sales" title="Sales" description="icon ion-ios-chatboxes-outline" roles="SuperAdmin,SalesAdmin,SalesManager,GeneralManagerSales,GeneralManagerAdminPR,JointGMPresales,JointGMSales,DeputyGMPresales,DeputyGMSales,VPSales,AssociateGMPre-sales,AssociateGMSales,DeputyGMAdminPR,SeniorManagerPresales,SeniorManagerSales,AssistantGMPre-sales,AssistantGMSales,ManagerPre-sales,ManagerSales,SeniorExecutivePresales,SeniorExecutiveSales,SeniorExecutiveAdminPR,ExecutiveAdminPR,ExecutivePresales,ExecutiveSales,OfficerSales,OfficerAdminPR">
+      <siteMapNode icon="fa-thin" url="~/sales/default" title="Dashboard" description="Dashboard" />
+      <siteMapNode icon="fa-thin" url="~/sales/#Fulfilment" title="Report" description="Report" />
+    </siteMapNode>
+    <siteMapNode icon="fa-thin" url="~/operation" title="Operation" description="icon ion-ios-chatboxes-outline" roles="SuperAdmin,OperationAdmin,OperationManager,CallSupportAgent,ChatSupportAgent,CallSupportExecutive,ChatSupportExecutive,CallSupportTeamLeader,ChatSupportTeamLeader,OfficerOperations,OfficerHR,ExecutiveHR,ExecutiveOperations,ExecutiveSupport,SeniorExecutiveOperations,ManagerOperations,ManagerSupport,ManagerProducts,ManagerGraphics,SeniorManagerAdminPR,AssociateManagerProducts,ManagerAdminPR,ManagerHR,SeniorExecutiveGraphics,GroupExecutiveAdminPR,GroupExecutiveOperations, SeniorGroupExecutiveAdminPR, SeniorGroupExecutiveOperations,AssistantManagerOperations,AssistantGMOperations,SeniorManagerProducts,AssociateGMOperations,AssociateGMAdminPR,AssociateGMHR,AssistantGMAdminPR,AssistantGMHR,COOOperations,GeneralManagerHR,DeputyGMOperations,AssistantGMSupport,DeputyGMHR,JointGMAdminPR,JointGMHR,JointGMOperations,GeneralManagerOperations">
+      <siteMapNode icon="fa-thin" url="~/operation/default" title="Dashboard" description="Dashboard" />
+      <siteMapNode icon="fa-thin" url="~/operation/packingdelay" title="Packing Delay" description="Packing Delay" />
+      <siteMapNode icon="fa-thin" url="~/operation/deliverydelay" title="Delivery Delay" description="Delivery Delay" />
+      
+      <siteMapNode icon="fa-thin" url="~/operation/#Fulfilment" title="Report" description="Report" />
+    </siteMapNode>
+
+
+  </siteMapNode>
+</siteMap>

@@ -1,0 +1,169 @@
+.westTree {
+    overflow: auto;
+}
+
+#topheader {
+    height: 50px;
+    background: url("../images/default/topbg.gif") repeat-x;
+}
+#ext-gen12{
+	height: 0px;
+}
+.x-layout-collapsed-west{
+/*	background: url("../images/hc-logo.gif") no-repeat center;*/
+}
+
+.check{
+	background:transparent url(../images/default/icons/check.gif) no-repeat scroll center 0;
+	cursor:pointer;
+	height:16px;
+	width:20px;
+}
+
+.check-over{
+	background: transparent url(../images/default/icons/check.gif) no-repeat center -32px;
+}
+
+.check-on{
+	background:transparent url(../images/default/icons/check.gif) no-repeat scroll center -16px;
+}
+
+.loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position:top left;
+    padding-left:20px;
+	height:18px;
+	text-align:left;
+}
+
+
+#loading{
+/*	position:absolute;*/
+/*	left:45%;
+	top:40%;*/
+/*	left:25%;
+	top:25%;
+	padding:2px;
+	z-index:20001;
+    height:auto;*/
+	position:absolute;
+	left:44%;
+	top:40%;
+	padding:2px;
+	z-index:20001;
+    height:auto;
+    
+}
+
+#loading img {
+    margin-bottom:5px;
+}
+#loading .loading-indicator{
+/*	background:white;
+	color:#555;
+	font:bold 13px tahoma,arial,helvetica;
+	padding:10px;
+	margin:0;
+    text-align:center;
+    height:auto;*/
+background:white;
+	color:#555;
+	font:bold 13px tahoma,arial,helvetica;
+	padding:10px;
+	margin:0;
+    text-align:center;
+    height:auto;
+    
+}
+.required .x-form-item-label {font-weight:normal;color:#00008B;}
+
+/*css for template to show job details*/
+td.job-label {
+    background-color: #DDDDDD;
+    border: 1px solid #BBBBBB;
+    font:normal 12px Raleway,tahoma, arial, helvetica, sans-serif;
+    text-align: left;
+    width: 110px;
+    padding: 0px 10px 0px 0px;
+}
+td.main-label {
+    background-color: #DDDDDD;
+    border: 1px solid #BBBBBB;
+    font:bold 12px Raleway,tahoma, arial, helvetica, sans-serif;
+    text-align: left;
+    width: 750px;
+    padding: 0px 10px 0px 0px;
+}
+td.job-view{
+    font-family: verdana,arial,sans-serif;
+    font-size: 12px;
+	width:200px;	
+	
+}
+/*CSS for template to show Applicants' Details*/
+.datalabel{
+ font:12px Raleway,tahoma, arial, helvetica, sans-serif ;
+ color:#DDDDDD;
+ background-color:#666666;
+ text-align: left;
+ padding:5px;  
+}
+.datadatah{
+ font:12px Raleway,tahoma, arial, helvetica, sans-serif;
+ text-align: left;
+ padding:5px ;
+ background-color:#DDDDDD;
+ border:1px solid #ffffff ;
+ color:#666666;
+ text-align: left;
+}
+.datadata{
+ font:12px Raleway,tahoma, arial, helvetica, sans-serif;
+ text-align: left;
+ padding:5px ;
+ background-color:#F7F7F7;
+ border:1px solid #ffffff ;
+ color:#666666;
+ text-align: left;
+}
+
+/*CSS for multi select*/
+.ux-mselect{
+    overflow:auto;
+    background:white;
+    position:relative; /* for calculating scroll offsets */
+    zoom:1;
+    overflow:auto;	
+}
+.ux-mselect-item{
+    font:normal 12px Raleway,tahoma, arial, helvetica, sans-serif;
+    padding:2px;
+    border:1px solid #fff;
+    white-space: nowrap;
+    cursor:pointer;
+}
+.ux-mselect-selected{
+	border:1px dotted #a3bae9 !important;
+    background:#DFE8F6;
+    cursor:pointer;
+}
+
+.x-view-drag-insert-above { 
+    border-top:1px dotted #3366cc; 
+} 
+.x-view-drag-insert-below { 
+    border-bottom:1px dotted #3366cc; 
+}
+.welcomTXT{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+}
+.loggedNameTXT{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+}

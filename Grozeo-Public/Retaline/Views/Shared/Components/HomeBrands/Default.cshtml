@@ -1,0 +1,26 @@
+﻿@using Retaline.Core.ViewModel.Catalog
+@using System.Linq;
+@model BrandMenuViewModel
+
+@for (int i = 0; i < Model.MenuIterations; i++)
+{
+    var brands = Model.Brands.Skip(i * 9).Take(9).ToList();
+    <div class="col-12 col-lg-2 pt-5">
+        @if (i == 0)
+        {
+            <h2>Brand</h2>
+        }
+        <ul class="footermenu @(i > 0 ?" pt-4":"")">
+            @for (int j = 0; j < brands.Count(); j++)
+            {
+                <li>
+                    <a href="/brand/@brands[j].Id/@brands[j].Name">
+                        @brands[j].Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!--col-12-->
+}

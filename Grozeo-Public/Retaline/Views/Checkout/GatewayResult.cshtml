@@ -1,0 +1,14 @@
+﻿@model string
+@{
+    Layout = "";
+    string strUrl = "/";
+    if (!String.IsNullOrEmpty(Model))
+        strUrl = Model;
+}
+<script>
+    self.close();
+    if (opener)
+        opener.location.href = '@strUrl';//opener.location.href;
+    //window.close(); // or self.close();
+</script>
+Gateway result..

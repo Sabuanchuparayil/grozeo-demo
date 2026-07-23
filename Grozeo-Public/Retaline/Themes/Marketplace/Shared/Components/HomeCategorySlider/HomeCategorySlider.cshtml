@@ -1,0 +1,70 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@{
+    int homeBannersAdded = 0;
+}
+<div class="section-grz_catogeryslider">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @* <div class="titlewrap">
+                <h2>Top categories</h2>
+                </div> *@
+                <div class="catogery-slider-wrap catogery-slider__home">
+                    <div class="horizontal_scroll-catogery">
+                        <div class="scroll-content">
+                            @for (int i = 0; i < Model.Count && i < 13; i++)
+                            {
+                                if (Model[i].CategoryType == 4)
+                                {
+                                    @if (string.IsNullOrEmpty(ViewBag.UrlType))
+                                    {
+                                        <a href="@($"/vc/{Model[i].Id}/{Model[i].ParentCategoryName}")" class="catogery-slider__items swiper-slide">
+                                            <div class="catogery-slider__img">
+                                                <img alt="category img" src="@(Model[i].ThumbImage??Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                            </div>
+                                            <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@($"{ViewBag.UrlType}/vc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}")" class="catogery-slider__items swiper-slide">
+                                            <div class="catogery-slider__img">
+
+                                                <img src="@(Model[i].ThumbImage??Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                            </div>
+                                            <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+
+                                    <a href="@(Model[i].CategoryType == 2?$"{ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}":(Model[i].CategoryType == 3?$"{@ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].ParentCarId??Model[i].CategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}":$"{@ViewBag.UrlType}/pc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}"))" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__img">
+
+                                            <img src="@(Model[i].ImageUrl??Model[i].Image??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                        <div class="catogery-slider__title">@Model[i].ParentCategoryName</div>
+                                    </a>
+
+                                }
+
+                            }
+                            @*   @if (Model.Count >= 10)
+                            {
+                            <a href="/" class="catogery-slider__items more_catogery_items">
+                            <div class="catogery-slider__title">View All</div>
+                            </a>
+                            } *@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

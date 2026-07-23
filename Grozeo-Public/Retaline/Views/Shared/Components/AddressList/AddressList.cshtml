@@ -1,0 +1,135 @@
+﻿@using Retaline.Core.BusinessModel.UserDetails;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor _httpContextAccessor;
+@model List<Address>;
+@using Newtonsoft.Json
+
+@{
+    string strDeliveryMethod = _httpContextAccessor.HttpContext.Session.GetString("DELIVERYMETHOD");
+    var addressList = Model;
+    var grouped = addressList
+    .Where(a => !string.IsNullOrWhiteSpace(a.Type))
+    .GroupBy(a => a.Type.Trim(), StringComparer.OrdinalIgnoreCase)
+    .OrderBy(g => g.Key.ToLower()); // Sort groups by Type
+    var groupedaddress = JsonConvert.SerializeObject(grouped);
+}
+<script type="text/javascript">
+    address.properties.needDelivery = @(strDeliveryMethod == "2" ? "false" : "true");
+    var addressList = @Html.Raw(groupedaddress);
+    //console.log(addressList);
+</script>
+@* <ul class="delivery_adress_wap">
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <li class="address-tile-@Model[i].Id address-tile @(Model[i].IsPrimary==1?"active":"") ">
+            <span class="adress_cat">@Model[i].Type</span>
+            <div class="delivery_adresslist">
+                <div class="delivery_adress @(Model[i].IsPrimary==1?"active":"") " data-addrid="@Model[i].Id">
+                    <span class="delivery_location">
+                        @Model[i].HouseNumber  @Model[i].HouseName @Model[i].DeliveryAddress
+                        @Model[i].City @Model[i].State
+                    </span>
+                    @if (Model[i].Post.Length > 1)
+                    {
+                        <span class="adress_postcod">@Model[i].Post</span>
+
+                    }
+                </div>
+                <div class="remove_adress" data-id="@Model[i].Id" data-primary="@Model[i].IsPrimary">
+                    <i class="fa-regular fa-trash-can"></i>
+                </div>
+            </div>
+        </li>
+        <!--li-->
+    }
+</ul> *@
+<!--delivery_adress_wap-->
+
+
+<div class="modal fade" id="adressDropdown" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delivery_adress-popupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h5 class="modal-title" id="delivery_adress-popupLabel">Select Address</h5>
+                    <p>Click on your desired address to make it default</p>
+                </div>
+                <div class="btn-field">
+                    <button class="btn btn-sm btn-outline-primary add_new_delvadress" data-bs-target="#address-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Add new address</button>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        @foreach (var group in Model
+                        .Where(a => !string.IsNullOrWhiteSpace(a.Type))
+                        .GroupBy(a => a.Type.Trim(), StringComparer.OrdinalIgnoreCase)
+                        .OrderByDescending(g => g.Any(a => a.IsPrimary == 1)) // Primary group on top
+                        .ThenBy(g => g.Key.ToLower()))
+                        {
+                            <div class="delivery_adress_sec">
+                                <h6>@(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(group.Key))</h6>
+                                <ul class="delivery_adress_wap">
+                                    @foreach (var addr in group)
+                                    {
+                                        <li class="delivery_adress_list @(addr.IsPrimary==1?"active":"")" >
+                                            <div class="delivery_location delivery_adress" data-addrid="@addr.Id" data-primary="@addr.IsPrimary">
+                                                <span class="loc_address w-100 lh-sm">
+                                                    @addr.HouseNumber  @addr.HouseName 
+                                                    @if (!string.IsNullOrEmpty(addr.DeliveryAddress))
+                                                    {
+                                                        <br />
+                                                        @addr.DeliveryAddress
+                                                        <br />
+                                                    }
+                                                    @addr.City, @addr.State
+                                                </span>
+                                            </div>
+                                            @if (addr.IsPrimary == 1)
+                                            {
+                                                <div class="delivery_status">
+
+                                                    <span class="success_adress">
+                                                        <i class="fa-solid fa-circle-check"></i>
+                                                    </span>
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                <div class="delivery_status remove_adress">
+
+                                                    <span class="delete_adress" title="Delete Adress">
+                                                        <i class="fa-light fa-trash-can"></i>
+                                                    </span>
+                                                </div>
+                                            }
+
+                                        </li>
+
+                                        <!--li-->
+                                    }
+
+                                </ul>
+
+                                <!--ul-->
+                            </div>
+
+                            <!--delivery_adress_sec-->
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!--modal-body-->
+            <div class="modal-footer">
+                <div class="btn-field">
+                    <button class="btn btn-primary add_new_delvadress" data-bs-dismiss="modal">Continue with selected</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@using Retaline.Web.Service;
+@using Retaline.Core.BusinessModel.UserDetails;
+@using Newtonsoft.Json
+
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@{
+    GuestData guestUser = HttpHelper.GuestUser;
+    var guestUserJson = JsonConvert.SerializeObject(guestUser);
+
+}
+<div class="modal fade address-modal-popup" id="search-address-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addressLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- <div class="modal-header">
+
+            </div> -->
+            <div class="modal-body">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="address_welcomemsg_signup">
+                    <h4 class="modal-title">Welcome to Grozeo</h4>
+                    <div class="address_welcomemsg_signup_cont">
+                        <div class="address_welcomemsg_cont_sec">
+                            <p>Sign in and select/ create address to get all delivery modes</p>
+                        </div>
+                        <div class="address_welcomemsg_btn_sec">
+                            <button class="btn btn-primary add_new_delvadress guest-to-login" type="submit">
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                                Sign in
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search_address_location_sec">
+                    <div class="search_address_input_infogra">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="85" height="" viewBox="0 0 100 100" fill="none">
+                            <g clip-path="url(#clip0_4510_1209)">
+                                <path d="M22.6092 87.7809C13.941 87.7809 6.88929 80.7107 6.88929 72.0199C6.88929 63.329 13.941 56.2589 22.6092 56.2589V51.1973C11.1573 51.1973 1.84082 60.538 1.84082 72.0199C1.84082 83.5017 11.1573 92.8425 22.6092 92.8425H79.2318V87.7809H22.6092Z"
+                                      fill="black" />
+                                <path d="M79.2325 14.6135H32.3999V7.22656L20.3018 16.9135L32.3999 26.6005V19.6762H79.2325C87.9007 19.6762 94.9524 26.7463 94.9524 35.4372C94.9524 44.128 87.9007 51.1981 79.2325 51.1981V56.2598C90.6844 56.2598 100.001 46.919 100.001 35.4372C100.001 23.9553 90.6844 14.6145 79.2325 14.6145V14.6135Z"
+                                      fill="black" />
+                                <path d="M91.2027 100C96.0614 100 100 96.0512 100 91.1798C100 86.3084 96.0614 82.3594 91.2027 82.3594C86.344 82.3594 82.4053 86.3084 82.4053 91.1798C82.4053 96.0512 86.344 100 91.2027 100Z"
+                                      fill="#027F51" />
+                                <path d="M10.8168 32.7584C4.85258 32.7584 0 27.8932 0 21.9133C0 20.7947 0.903675 19.8887 2.01939 19.8887C3.1351 19.8887 4.03877 20.7947 4.03877 21.9133C4.03877 25.661 7.07997 28.7091 10.8168 28.7091C14.5537 28.7091 17.5949 25.66 17.5949 21.9133C17.5949 20.7947 18.4986 19.8887 19.6143 19.8887C20.73 19.8887 21.6337 20.7947 21.6337 21.9133C21.6337 27.8932 16.7811 32.7584 10.8168 32.7584Z"
+                                      fill="black" />
+                                <path d="M11.8964 22.7825C14.2318 19.8528 19.5569 12.7513 19.5569 8.76273C19.5569 3.9248 15.6423 0 10.817 0C5.99169 0 2.07812 3.9248 2.07812 8.76273C2.07812 12.7513 7.40425 19.8528 9.73867 22.7825C10.299 23.481 11.336 23.481 11.8964 22.7825ZM10.817 5.84216C12.4255 5.84216 13.73 7.15009 13.73 8.76273C13.73 10.3754 12.4255 11.6833 10.817 11.6833C9.20858 11.6833 7.90405 10.3754 7.90405 8.76273C7.90405 7.15009 9.20858 5.84216 10.817 5.84216Z"
+                                      fill="#B70404" />
+                                <path d="M50.6071 72.6113L29.8721 61.4756V41.0488L50.6071 52.1845V72.6113Z" fill="black" />
+                                <path d="M30.8818 38.2204L52.4731 49.3874L61.1615 45.1144L40.1286 34.5527" fill="black" />
+                                <path d="M42.5674 32.7331L64.1587 43.9002L72.8471 39.6271L51.8141 29.0645" fill="black" />
+                                <path d="M64.1794 46.5468C64.1805 46.5741 64.1835 46.6015 64.1835 46.6298V51.2703C64.1835 52.1075 63.507 52.7858 62.672 52.7858C61.837 52.7858 61.1605 52.1075 61.1605 51.2703V48.1675L53.6807 52.1845V72.6113L74.4157 61.4756V41.0488L64.1784 46.5468H64.1794Z"
+                                      fill="black" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_4510_1209">
+                                    <rect width="100" height="100" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="search_address_input_text">
+                        <p>Choose your location to see the quick delivery is supported</p>
+                    </div>
+                    <div class="search_address_input_wrap">
+                        <div class="search_address_input">
+                            <div class="form-group">
+                                <div class="input-field form-floating col">
+                                    <input type="text" id="search-txt-location" class="pac-target-input form-control floating-input" name="txt-location" placeholder="Search for a location" autocomplete="off">
+                                    <label for="search-txt-location" class="form-label">Enter a location</label>
+                                </div>
+                            </div>
+                            <div class="addressmap hide">
+                                <div id="searchmap"></div>
+                            </div>
+                        </div>
+                        <div class="ordiv">or</div>
+                        <div class="btn_sec">
+                            <button class="btn btn-primary detect-location" type="submit">Get location</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #login-modal + script + #search-address-modal {
+        z-index: 1051;
+    }
+
+    .modal-backdrop + .pac-container + .modal-backdrop {
+        z-index: 1052;
+    }
+</style>

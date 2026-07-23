@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+.git/
+.github/
+.do/
+Retaline.Web.Selenium.Tests/
+*.md
+azure-pipelines*.yml

@@ -1,0 +1,105 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@{
+    int homeBannersAdded = 0;
+}
+<div class="section-grz_catogery-slider">
+    <div class="container">
+        <div class="row row_mb">
+            <div class="col-12">
+                <div class="titlewrap titlewrap-text-center">
+                    <h2>Shop By Age</h2>
+                </div>
+                <div class="catogery-slider-wrap catogery-slider__home">
+                    <div class="catogerysliderhome swiper">
+                        <div class="swiper-wrapper">
+                            @for (int i = 0; i < Model.Count && i < 6; i++)
+                            {
+                                if (Model[i].CategoryType == 4)
+                                {
+                                    @if (string.IsNullOrEmpty(ViewBag.UrlType))
+                                    {
+                                        <a href="@($"/vc/{Model[i].Id}/{Model[i].ParentCategoryName}")" class="catogery-slider__items swiper-slide">
+                                            <div class="catogery-slider__title">
+                                                <span class="years">@Model[i].ParentCategoryName</span>
+                                            </div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@($"{ViewBag.UrlType}/vc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}")" class="catogery-slider__items swiper-slide">
+                                            <div class="catogery-slider__title">
+                                                <span class="years">@Model[i].ParentCategoryName</span>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+
+                                    <a href="@(Model[i].CategoryType == 2?$"{ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}":(Model[i].CategoryType == 3?$"{@ViewBag.UrlType}/pc/{Model[i].ParentId??Model[i].ParentCategoryId}/{Model[i].ParentCarId??Model[i].CategoryId}/{Model[i].Id}/{Model[i].ParentCategoryName}":$"{@ViewBag.UrlType}/pc/{Model[i].Id}/{Model[i].ParentCategoryName}{ViewBag.UrlTypeId}"))" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__title">
+                                            <span class="years">@Model[i].ParentCategoryName</span>
+                                        </div>
+                                    </a>
+
+                                }
+                            }
+                        </div>
+                    </div>
+                  @*   <div class="slideraction">
+                        <div class="swiper-button-prev swiper-button"></div>
+                        <div class="swiper-button-next swiper-button"></div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const $swiperContainer = $('.catogerysliderhome');
+    const $swiperWrapper = $swiperContainer.find('.swiper-wrapper');
+    const slidesPerViewCount = 6;
+    const centerClass = 'slider-align_center';
+    // Conditionally add/remove centering class based on slide count
+    $swiperWrapper.toggleClass(centerClass, $swiperWrapper.find('.swiper-slide').length < slidesPerViewCount);
+    // Initialize Swiper
+    const catogerysliderhome = new Swiper('.catogerysliderhome', {
+        // Optional parameters
+        slidesPerView: 6,
+        spaceBetween: 10,
+        navigation: {
+            nextEl: '.catogery-slider__home .swiper-button-next',
+            prevEl: '.catogery-slider__home .swiper-button-prev',
+        },
+
+        breakpoints: {
+            320: {  // when window width is >= 320px
+                slidesPerView: 3,
+                spaceBetween: 10,
+            },
+            567: {  // when window width is >= 567px
+                slidesPerView: 3,
+                spaceBetween: 10,
+            },
+            767: {  // when window width is >= 767px
+                slidesPerView: 4,
+                spaceBetween: 10,
+            },
+            850: {  // when window width is >= 991px
+                slidesPerView: 4,
+            },
+            1099: { // when window width is >= 1199px
+                slidesPerView: 5,
+            },
+            1200: { // when window width is >= 1200px
+                slidesPerView: 6,
+            },
+        }
+
+    });
+
+</script>

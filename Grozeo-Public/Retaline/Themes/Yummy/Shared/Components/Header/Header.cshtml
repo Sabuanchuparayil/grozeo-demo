@@ -1,0 +1,225 @@
+﻿@using Retaline.Core.ViewModel.Home;
+@using Retaline.Core.BusinessModel.Catalog;
+@using Microsoft.AspNetCore.Http;
+@using System.Linq;
+@using Retaline.Core.ViewModel.Catalog;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@model HeaderAndFooterViewModel;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@{
+    Retaline.Core.BusinessModel.UserDetails.User curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    bool loggedIn = (curUser != null && !string.IsNullOrEmpty(curUser.Name) ? true : false);
+}
+<header class="header main-header sticky-top">
+
+
+	<div class="header-content-wrap">
+		<div class="container">
+			<div class="row ">
+				<div class="col-12">
+
+					<div class="header-wrap">
+						<!--Can change the order of the components by changing the below order-->
+						<!--Logo 1st-->
+						@await Component.InvokeAsync("Logo")
+						<div class="header_mobilemenu-wrap">
+						
+							<span class="header_mobilemenu minicart_menu" onclick="OpenMobileMenu()">
+								<span class="navicon"></span>
+								<div class="cart-count">
+									<span class="cartnubr cartcount">0</span>
+								</div>
+							</span>
+							<aside class="mobilemenu_slider">
+								<div class="overlay" onclick="closeMobileMenu()"></div>
+								<div class="mobilemenu_wrap">
+									<div>
+										<div class="profile_drdn_info">
+											<div class="profile_drdn_info_container">
+												<p>Welcome</p>
+												<h6>@(loggedIn ? curUser.Name : "Guest")</h6>
+											</div>
+											<span class="header_mobilemenu minicart_menu" onclick="OpenMobileMenu()">
+												<span class="navicon"></span>
+												<div class="cart-count">
+													<span class="cartnubr cartcount">0</span>
+												</div>
+											</span>
+										</div>
+										<ul class="dropdown-menu_list">
+											 @if (loggedIn)
+											{
+												<li>
+													<a class="dropdown-item" href="/account">
+														<i class="fa-light fa-bag-shopping me-2" aria-hidden="true"></i>
+														My Orders
+													</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/mywallet">
+														<i class="fa-light fa-wallet me-2" aria-hidden="true"></i>
+														My Wallet
+													</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/address">
+														<i class="fa-light fa-location-dot me-2" aria-hidden="true"></i>
+														Manage Address
+													</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/wishlist">
+														<i class="fa-light fa-heart me-2" aria-hidden="true"></i>
+														My Wishlist
+													</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/contact">
+														<i class="fa-light fa-headphones me-2" aria-hidden="true"></i>
+														Support
+													</a>
+												</li>
+											}
+											<li>
+												<a class="dropdown-item" href="/install">
+													<i class="fa-light fa-mobile me-2" aria-hidden="true"></i>
+													Install App
+												</a>
+											</li>
+
+
+											<li><hr></li>
+
+
+											<li>
+												<a class="dropdown-item" href="/account">
+													<i class="fa-light fa-bullhorn me-2" aria-hidden="true"></i>
+													About Us
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/mywallet">
+													<i class="fa-light fa-scroll me-2" aria-hidden="true"></i>
+													How it works
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/address">
+													<i class="fa-light fa-comments-question-check me-2" aria-hidden="true"></i>
+													FAQ & Support
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/wishlist">
+													<i class="fa-light fa-memo me-2" aria-hidden="true"></i>
+													Terms & Conditions
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/contact">
+													<i class="fa-light fa-file-lines me-2" aria-hidden="true"></i>
+													Privacy Policy
+												</a>
+											</li>
+											<li>
+
+											<li><hr></li>
+												@if (loggedIn)
+												{
+												<li>
+													<a class="dropdown-item" href="/logout">
+														<i class="fa-light fa-arrow-right-from-bracket me-2" aria-hidden="true"></i>
+														Log out
+													</a>
+												</li>
+												}
+												else
+												{
+												<li>
+													<a class="dropdown-item open-login-modal" href="javascript:void(0)">
+														<i class="fa-light fa-arrow-right-from-bracket me-2" aria-hidden="true"></i>
+														Sign In
+													</a>
+												</li>
+												}
+											
+
+										</ul>
+									</div>
+								</div>
+							</aside>
+						</div>
+
+
+
+
+				
+						<!--SearchBar 3rd-->
+						@await Component.InvokeAsync("SearchBar")
+
+						@await Component.InvokeAsync("HeaderAddress", curUser)
+
+
+					</div><!--header-wrap-->
+
+				</div><!--col-12-->
+			</div><!--row-->
+		</div><!--container-->
+	</div>
+
+
+	@await Component.InvokeAsync("BusinessCategories")
+	@await Component.InvokeAsync("VerificationStrip")
+
+
+	<div class="floting_cart m-fixed-button mobileview">
+		<div class="cart-notification-items">
+			<div class="cart-notification-img">
+				<img class=" img-fluid" src="assets/images/product_img_01.png">
+			</div>
+			<div class="cart-notification-description">
+				<span class="itemscount">2 items</span>
+				<span>in cart</span>
+			</div>
+		</div>
+		<div class="cart-notification-btn">
+			<form method="get" action="cart.html">
+				<button class="btn btn-primary checkoutBTN">View Cart</button>
+			</form>
+		</div>
+	</div>
+
+</header><!--header-->
+
+
+
+<script>
+    //==== mobile menu ===//
+    function OpenMobileMenu() {
+        $(".mobilemenu_slider").addClass('open-mobilemenu');
+    }
+
+    function closeMobileMenu() {
+        $(".mobilemenu_slider").removeClass('open-mobilemenu');
+    }
+</script>

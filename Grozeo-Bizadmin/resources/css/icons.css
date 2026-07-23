@@ -1,0 +1,1006 @@
+
+/*-------------------------------------------*/
+/*========== SO Admin TBar ICONS ===============*
+/*-------------------------------------------*/
+.marketing-customers {height:16px;width:16px;background-image:url("../images/default/icons/marketingcustomers.png") !important;}
+.icon_config {height:auto;background-image:url("../images/default/tbaricons/tbar/config.gif") !important;}
+.icon_company {height:auto;background-image:url("../images/default/tbaricons/tbar/company.gif") !important;}
+.icon_site {height:auto;background-image:url("../images/default/tbaricons/tbar/site.gif") !important;}
+.icon_site_group {height:auto;background-image:url("../images/default/tbaricons/tbar/sitegroup.gif") !important;}
+.icon_role {height:auto;background-image:url("../images/default/tbaricons/tbar/roles.gif") !important;}
+.icon_users {height:16px;width:16px;background-image:url("../images/default/tbaricons/tbar/members_s.png") !important;}
+.icon_sysreq {height:auto;background-image:url("../images/default/tbaricons/tbar/sys_req.png") !important;}
+.icon_excel{
+    height:16px;width:16px;background-image:url("../images/default/tbaricons/menu/excel.gif") !important;
+}
+.icon_excell{height:auto;width:auto;background-image:url("../images/default/tbaricons/menu/excel.gif") !important;}
+
+/*-------------------------------------------*/
+/*=============== GENERAL  ==================*
+*/
+/*-------------------------------------------*/
+
+.b2bicon32x32 {height:16px;width:16px;;background-image:url("../images/default/icons/b2bicon32x32.png") !important;}
+.b2bicon24x24 {height:16px;width:16px;;background-image:url("../images/default/icons/b2bicon24x24.png") !important;}
+.b2bicon16x16 {height:16px;width:16px;;background-image:url("../images/default/icons/b2bicon16x16.png") !important;}
+.application_view_detail {height:auto;background-image:url("../images/submenuicons/application_view_detail.png") !important;}
+.show_linked_details {height:auto;background-image:url("../images/submenuicons/show_linked_details.png") !important;}
+.rate-settings  {height:auto;background-image:url("../images/submenuicons/rate-settings.png") !important;}
+.dc_16x16 {height:16px;width:16px;;background-image:url("../images/submenuicons/delivery_challan_16x16.png") !important;}
+.apikey {height:16px;width:24px;;background-image:url("../images/submenuicons/apikey_icon.png") !important;}
+.upload {
+    height: 16px;
+    margin-right: 3px;
+    background-image: url("../images/default/icons/upload.png") !important;
+}
+.my-icon1 {width:25px;height:auto;}
+.update {width:16px;height:auto;}
+.my-icon2 {height:16px;width:16px;;background-image:url("../images/default/icons/note.png") !important;}
+.my-icon3 {height:16px;width:16px;;background-image:url("../images/default/icons/pencil.png") !important;}
+.my-icon4 {height:auto;background-image:url("../images/default/icons/basket.png") !important;}
+.my-icon5 {height:auto;background-image:url("../images/default/icons/database_save.png") !important;}
+.my-icon6 {height:auto;background-image:url("../images/default/icons/status_away.png") !important;}
+.my-icon7 {height:auto;background-image:url("../images/default/icons/folder_wrench.png") !important;}
+.my-icon8 {height:auto;background-image:url("../images/default/icons/wrench_orange.png") !important;}
+.my-icon9 {height:auto;background-image:url("../images/default/icons/user_add.png") !important;}
+.my-icon10 {height:auto;background-image:url("../images/default/icons/user_suit.png") !important;}
+.my-icon11 {height:16px;background-image:url("../images/default/icons/pencil.png") !important;}
+.my-icon12 {height:16px;background-image:url("../images/default/icons/delete.png") !important;}
+.my-icon13 {height:16px;background-image:url("../images/default/icons/delete-all.gif") !important;}
+.my-icon14 {height:auto;background-image:url("../images/default/icons/wrench_orange.png") !important;}
+.my-icon15 {height:auto;background-image:url("../images/default/icons/cart_put.png") !important;}
+.my-icon17 {height:auto;background-image:url("../images/default/icons/adver.png") !important;}
+.my-icon18 {height:16px;background-image:url("../images/default/icons/book_next.png") !important;}
+.my-icon19 {height:16px;background-image:url("../images/default/icons/arrow_right.png") !important;}
+.vender-items {height:16px;background-image:url("../images/default/icons/vender-items.png") !important;}
+.marketing-contacts {height:16px;background-image:url("../images/default/icons/contact.png") !important;}
+.marketing-lead {height:16px;background-image:url("../images/default/icons/lead.png") !important;}
+.marketing-enquiry {height:16px;background-image:url("../images/default/icons/enquiry.png") !important;}
+.move-to-contacts {height:16px;background-image:url("../images/default/icons/right-arrow-forward.png") !important;}
+.move-to-contactss {height:16px;background-image:url("../images/default/icons/enquiry.png") !important;}
+.send_sms {height:16px;margin-right:2px;background-image:url("../images/default/icons/sms.png") !important;}
+.remove-enquiry {height:16px;background-image:url("../images/default/icons/delete-new.png") !important;}
+.assign {height:16px;background-image:url("../images/default/icons/assign-to-me.png") !important;}
+.my-icon20 {height:auto;background-image:url("../images/default/icons/com.png") !important;}
+.my-icon21 {height:auto;background-image:url("../images/default/icons/assetstatus.png") !important;}
+.my-icon22 {height:auto;background-image:url("../images/default/icons/role.png") !important;}
+.my-icon23 {height:auto;background-image:url("../images/default/icons/book_next.png") !important;}
+.my-icon24 {height:auto;background-image:url("../images/default/icons/user_edit.png") !important;}
+.my-icon25 {height:auto;background-image:url("../images/default/icons/user_comment.png") !important;}
+.my-icon26 {height:auto;background-image:url("../images/default/icons/user.png") !important;}
+.my-icon27 {height:auto;background-image:url("../images/default/icons/overlays.png") !important;}
+.my-icon28 {height:auto;background-image:url("../images/default/icons/page_white.png") !important;}
+.my-icon29 {height:auto;background-image:url("../images/default/icons/page_white_star.png") !important;}
+.my-icon30 {height:auto;background-image:url("../images/default/icons/house_link.png") !important;}
+.my-icon31 {height:auto;background-image:url("../images/default/icons/accept.png") !important;}
+.my-icon32 {height:auto;background-image:url("../images/default/icons/clock.png") !important;}
+.my-icon33 {height:auto;background-image:url("../images/default/icons/door_in.png") !important;}
+.my-icon34 {height:auto;background-image:url("../images/default/icons/chart_bar_edit.png") !important;}
+.my-icon35 {height:auto;background-image:url("../images/default/icons/key.png") !important;}
+.my-icon36 {height:auto;background-image:url("../images/default/icons/email.png") !important;}
+.my-icon37 {height:auto;background-image:url("../images/default/icons/email_go.png") !important;}
+.my-icon38 {height:auto;background-image:url("../images/default/icons/disk.png") !important;}
+.my-icon39 {height:auto;background-image:url("../images/default/icons/spellcheck.png") !important;}
+.my-icon40 {height:auto;background-image:url("../images/default/icons/printer.png") !important;}
+.my-icon41 {height:auto;background-image:url("../images/default/icons/page_attach.png") !important;}
+.my-icon42 {height:16px;width:16px;background-image:url("../images/default/icons/report_picture.png") !important;}
+.my-icon44 {height:16px;width:16px;background-image:url("../images/default/icons/attach.png") !important;}
+.my-icon45 {height:16px;width:16px;background-image:url("../images/default/icons/accept.png") !important;}
+.my-icon46 {height:16px;width:16px;background-image:url("../images/default/icons/Forward.png") !important;}
+.my-icon47 {height:48px;width:48px;background-image:url("../images/default/icons/Tick.png") !important;}
+.my-icon48 {height:48px;width:48px;background-image:url("../images/default/icons/Attach_large.png") !important;}
+.my-icon49 {height:48px;width:48px;background-image:url("../images/default/icons/Download.png") !important;}
+.my-icon50 {height:48px;width:48px;background-image:url("../images/default/icons/Filetype PDF.png") !important;}
+.my-icon51 {height:48px;width:48px;background-image:url("../images/default/icons/launch_dam.png") !important;}
+.my-icon52 {height:auto;background-image:url("../images/default/icons/launch_dam.png") !important;}
+.my-icon53 {height:auto;background-image:url("../images/default/icons/lock_edit.png") !important;}
+.my-icon54 {    height: auto;
+                background: url("../images/default/icons/image-attached.png") no-repeat !important;
+                margin: 0 25px 0 0;
+
+                padding-left: 15px !important;}
+.my-icon55{ padding-left: 15px !important;}
+.my-icon56 {height:16px;width:16px;background-image:url("../images/default/icons/page_key.png") !important;}
+.my-icon57 {height:16px;width:16px;background-image:url("../images/default/icons/remove.png") !important;}
+.my-icon58 {height:auto;background-image:url("../images/default/icons/Money.png") !important;}
+.my-icon59 {height:auto;background-image:url("../images/default/icons/voucher.png") !important;}
+
+
+
+.additem {height:auto;background-image:url("../images/default/icons/add item.png") !important;}
+.fund-approve {height:auto;background-image:url("../images/default/icons/fund_approve.png") !important;}
+.approve-reject {height:auto;background-image:url("../images/default/icons/approve or reject.png") !important;}
+.configur {height:auto;background-image:url("../images/default/icons/configuration.png") !important;}
+
+.approve {height:auto;background-image:url("../images/default/icons/approve.png") !important;}
+.reject {height:auto;background-image:url("../images/default/icons/reject.png") !important;}
+
+
+.view-billingdetails {height:16px;background-image:url("../images/default/icons/viewBillingDetails.png") !important;}
+.accountsgroup {height:auto;background-image:url("../images/default/icons/accountgroup.png") !important;}
+.csv {height:auto;background-image:url("../images/default/icons/import.png") !important;}
+
+.rollback{height:16px;background-image:url("../images/default/icons/restart.png") !important;}
+
+
+.view {height:auto;background-image:url("../images/default/icons/search.png") !important;}
+#ext-comp-1009-xcollapsed{background: url(../images/default/icons/help-ico.gif) center no-repeat;}
+.helpicon{float:left;background-image:url("../images/default/icons/Help-Icon-16-3.gif") !important;}
+.user_enabled {height:16px;width:16px;background-image:url("../images/default/icons/user_green.png") !important;}
+.user_disabled {height:16px;width:16px;background-image:url("../images/default/icons/status_offline.png") !important;}
+
+
+.margindistributin_active {height:16px;width:16px;background-image:url("../images/default/icons/setDefault_active.png") !important;}
+.margindistributin_inactive {height:16px;width:16px;background-image:url("../images/default/icons/setDefault_Inactive.png") !important;}
+.deliveryrules_inactive {height:16px;width:16px;background-image:url("../images/default/icons/deliveryRules_inactive.png") !important;}
+.deliveryrules_active {height:16px;width:16px;background-image:url("../images/default/icons/deliveryRules_active.png") !important;}
+.status_enabled {height:16px;width:16px;background-image:url("../images/default/icons/chk_tick.png")!important;}
+.status_disabled {height:16px;width:16px;background-image:url("../images/default/icons/chk_cross.png")!important;}
+.branch_icon{height:16px;background-image:url("../images/default/icons/branch-icon.png") !important;}
+.upload-icon {
+    background:transparent url(../images/default/icons/cog_edit.png) no-repeat scroll 0 0 !important;
+}
+.icon-del-table{height:auto;background-image:url("../images/default/icons/delete.png") !important;}
+.icon-add-table{height:auto;background-image:url("../images/default/icons/add.png") !important;}
+.arch{height:auto;background-image:url("../images/default/icons/cancel.png") !important;}
+.report {height:16px;width:16px;background-image:url("../images/default/icons/report.png") !important;}
+
+/* Toolbar Icons */
+.tbar-tile-view { background-image: url(../images/icons/tbar/tile.gif); }
+.tbar-detaiil-view { background-image: url(../images/icons/tbar/detail.gif); }
+.tbar-thumb-view { background-image: url(../images/icons/tbar/thumbnail.png); }
+
+.arrow-loading{
+    background:url(../images/icons/arrow-loading.gif) no-repeat left;
+    padding: 6px 0 0 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin-top: 30px;
+}
+
+/*-------------------------------------------*/
+/*============== DAM ICONS ==================*
+/*-------------------------------------------*/
+/* Context Menus */
+/*#gridCtxMenu *.x-menu-item { margin-left: 23px;}*/
+.menu-newfolder { background-image: url(../images/icons/menus/folder_add.png); }
+.menu-folderopen { background-image: url(../images/icons/menus/folder-open.png); }
+.menu-tag { background-image: url(../images/icons/menus/tag_blue_edit.png); }
+.menu-cut { background-image: url(../images/icons/menus/cut.png); }
+.menu-copy { background-image: url(../images/icons/menus/copy.png); }
+.menu-paste { background-image: url(../images/icons/menus/paste.png); }
+.menu-delete { background-image: url(../images/icons/menus/delete.png); }
+.menu-downloadH { background-image: url(../images/icons/menus/download-high.png); }
+.menu-downloadL { background-image: url(../images/icons/menus/download-low.png); }
+.menu-upload { background-image: url(../images/icons/menus/upload.png); }
+.menu-refresh { background-image: url(../images/icons/menus/refresh.png); }
+.menu-rename { background-image: url(../images/icons/menus/rename.png); }
+.menu-create-category { background-image: url(../images/icons/menus/create-category.gif); }
+.menu-edit-category { background-image: url(../images/icons/menus/edit-category.gif); }
+.menu-delete-category { background-image: url(../images/icons/menus/delete-this-category.gif); }
+.menu-upload-new { background-image: url(../images/icons/menus/upload_new_version.gif); }
+.menu-duplicate { background-image: url(../images/icons/menus/duplicate.gif); }
+.menu-metadata { background-image: url(../images/icons/menus/metadata.gif); }
+.menu-category { background-image: url(../images/icons/menus/category.gif); }
+.menu-all { background-image: url(../images/icons/menus/all.gif); }
+.menu-master { background-image: url(../images/icons/menus/master.gif); }
+.menu-latest { background-image: url(../images/icons/menus/latest.gif); }
+.menu-email { background-image: url(../images/icons/menus/e-mail.gif); }
+.menu-proof { background-image: url(../images/icons/menus/proof.gif); }
+.menu-copy-to-current-job { background-image: url(../images/icons/menus/copy-to-current-job.gif); }
+.menu-link-to-job { background-image: url(../images/default/icons/attach.png); }
+.menu-editfolder { background-image: url(../images/icons/menus/folder_edit.png); }
+.my-resetpass {height:auto;background-image:url("../images/default/icons/resetpass.png") !important;}
+.my-iconkey {height:auto;background-image:url("../images/default/icons/key.png") !important;}
+
+#SWFUpload_Console {z-index  : 11000; position:absolute;}
+
+.db-icn-add {
+    background-image: url(../images/icons/add.png) !important;
+}
+.db-icn-upload_ {
+    background-image: url(../images/icons/start.png) !important;
+}
+.db-icn-cross {
+    background-image: url(../images/icons/stop.png) !important;
+}
+.db-icn-trash {
+    background-image: url(../images/icons/reset.png) !important;
+}
+.db-icn-stop {
+    background-image: url(../images/icons/resume.png) !important;
+}
+
+
+
+.delete_disabled {
+    height:16px;background-image:url("../images/default/icons/delete-grey.png") !important;
+}
+.resetpass_disabled {
+    height:16px;background-image:url("../images/default/icons/resetpassdis.png") !important;
+}
+.create_branch_menu {
+    height:16px;background-image:url("../images/default/tbaricons/menu/create-branch.gif") !important;
+}
+.create_branch {
+    height:24px;background-image:url("../images/default/tbaricons/menu/create-branch.gif") !important;
+}
+.edit_branch {height:24px;background-image:url("../images/default/icons/pencil.png")  !important;}
+.viewfile {height:16px;background-image:url("../images/default/icons/viewfile.png") !important;}
+
+.icon_main_role {
+    width:16px;height:auto;background-image:url("../images/default/tbaricons/menu/roles.jpg") !important;
+}
+.icon_main_user {
+    height:16px!important;width:16px!important;background:url("../images/default/tbaricons/menu/glossy-topbar.png") repeat scroll -85px 0 transparent !important;
+}
+.icon_customer {
+    height:16px!important;width:16px!important;background:url("../images/default/tbaricons/menu/glossy-topbar.png") repeat scroll -171px 0 transparent !important;
+}
+.icon_mailtemplates {
+    width:16px;height:auto;background-image:url("../images/default/tbaricons/menu/mailtemplates.jpg") !important;
+}
+
+.icon_dashbrd {
+    width:16px;height:auto;background-image:url("../images/default/icons/dashboard.png") !important;
+}
+.icon_mailsettings {
+    width:16px;height:auto;background-image:url("../images/default/tbaricons/menu/mailsettings.jpg") !important;
+}
+.icon_reports {
+    height:32px;width:32px;background-image:url("../images/default/tbaricons/menu/reports.png") !important;
+}
+.icon_utility {
+    height:16px!important;width:16px!important;background:url("../images/default/tbaricons/menu/glossy-topbar.png") repeat scroll -628px 0 transparent !important;
+}
+.icon_report {
+    height:32px;width:32px;background-image:url("../images/default/tbaricons/menu/report.png") !important;
+}
+.icon_main_role {
+    height:32px;width:32px;background-image:url("../images/default/tbaricons/menu/roles.png") !important;
+}
+.icon_main_branch {
+    height:16px!important;width:16px!important;background:url("../images/default/tbaricons/menu/glossy-topbar.png") repeat scroll -266px 0 transparent !important;
+}
+
+.icon_download {
+    height:16px; width: 16px;background-image:url("../images/default/icons/download.png") !important;
+}
+
+.icon_customer_login {
+    height:16px; width: 16px;background-image:url("../images/default/icons/customer_login.png") !important;
+}
+
+
+.changed_style .x-grid-cell {
+    background-color: #FFCC00;
+    height:40px;
+}
+
+.unAudited {
+    color: #ffb6c1 !important;
+    background-color: #ffb6c1 !important;
+}
+
+.color-lightpink_small { background-color: #ffb6c1;
+                         width: 8%;
+                         height:10px;
+                         margin: 5px 2px 5px 5px;
+                         border: 2px solid #DDDDDD;
+                         float:left;}
+
+
+
+
+
+
+
+.indicateCOL {
+    background-color: #FFE0B2 !important;
+}
+.indicateCOL1 {
+    background-color: #CEF6F5 !important;
+
+}
+.indicateCOL2 {
+    background-color: #ffbebe !important;
+
+}
+.indicateCOL3 {
+    color: #ffffff;
+}
+.indicateCOL4 {
+    background-color: #98FB98 !important;
+
+}
+
+.indicateColGUMLEAFGREEN {
+    background-color: #AECCB6 !important;
+}
+
+.indicateColCASHMERE {
+    background-color: #D6B795 !important;
+}
+
+.indicateColLIGHTORANGE {
+    background-color: #FFE0B2 !important;
+}
+
+.indicateColLIGHTYELLOW {
+    background-color:  #FFFF99 !important;
+
+}
+
+.color_wrap{
+    width:100%;
+    float:left;
+}
+.text_class{
+    width:69%;
+    float:left;
+    padding: 4px 5px;
+}
+
+.color-light-green_small { background-color: #98FB98;
+                           width: 20px;
+                           height:10px;
+                           margin: 5px 2px 5px 5px;
+                           border: 2px solid #DDDDDD;
+                           float:left;}
+.color-light-orange_small{ background-color: #FFE0B2;
+                           width: 20px;
+                           height:10px;
+                           margin: 5px 2px 5px 5px;
+                           border: 2px solid #DDDDDD;
+                           float:left;}
+.color-light-yellow_small{ background-color: #FFFF99;
+                           width: 20px;
+                           height:10px;
+                           margin: 5px 2px 5px 5px;
+                           border: 2px solid #DDDDDD;
+                           float:left;}
+
+.color-light-red_small{ background-color: #ffbebe;
+                        width: 20px;
+                        height:10px;
+                        margin: 5px 2px 5px 5px;
+                        border: 2px solid #DDDDDD;
+                        float:left;}
+
+.color-cashmere_small{ background-color: #D6B795;
+                        width: 20px;
+                        height:10px;
+                        margin: 5px 2px 5px 5px;
+                        border: 2px solid #DDDDDD;
+                        float:left;}
+
+.color-gumleaf-green_small{ background-color: #AECCB6;
+                        width: 20px;
+                        height:10px;
+                        margin: 5px 2px 5px 5px;
+                        border: 2px solid #DDDDDD;
+                        float:left;}
+
+.color-light-white_small{ background-color: #ffffff;
+                          width: 20px;
+                          height:10px;
+                          margin: 5px 2px 5px 5px;
+                          border: 2px solid #DDDDDD;
+                          float:left;}
+
+.hideicon{display:none;}
+
+td.x-action-col-cell img.x-action-col-icon { width: 16px; height: 16px; }
+
+
+.details_view_table{ border-collapse:collapse;}
+.details_view_table td,.details_view_table th{border-bottom:1px solid #EDEDED; font-family: Source Sans Pro,Verdana,Geneva,sans-serif;
+                                              font-size: 13px;padding:3px;}
+.details_view_table th{ padding-left:15px;width:35%; vertical-align:top;}
+.details_view_table td{font-weight:bold;}
+.details_view_table td span{float:left; width:95%; text-align:justify; font-weight:normal;}
+.prod-master{height:100%; overflow:auto;}
+.details_view_table th[colspan="2"]{font-size:13px;  background: #f0f0f0 none repeat scroll 0 0;
+                                    border-color: #d7d7d7;}
+
+.hpa {
+    height:16px;background-image:url("../images/default/icons/hpa.png") !important;
+}
+
+.balancesheet {
+    height:16px;background-image:url("../images/default/icons/layout_content.png") !important;
+}
+
+.contra_entry{
+    height:16px;background-image:url("../images/default/icons/cntr.png") !important;
+}
+
+.journal_voucher{
+    height:16px;background-image:url("../images/default/icons/journal_voucher.png") !important;
+}
+
+.bank_receipt {
+    height:16px;background-image:url("../images/default/icons/bank_payment.png") !important;
+}
+.vehicle_payment {
+    height:16px;background-image:url("../images/default/icons/vehicle_payment.png") !important;
+}
+.ledger {
+    height:16px;background-image:url("../images/default/icons/receipt.png") !important;
+}
+.balance {
+    height:16px;background-image:url("../images/default/icons/balance.png") !important;
+}
+.loading {
+    height:16px;background-image:url("../images/default/icons/loading_vehicle.png") !important;
+}
+.unloading {
+    height:16px;background-image:url("../images/default/icons/unloading.png") !important;
+}
+.scheduled {
+    height:16px;background-image:url("../images/default/icons/scheduled.png") !important;
+}
+
+.show {height:16px;background-image:url("../images/default/icons/assign.png") !important;}
+.blue {height:auto;background-image:url("../images/default/icons/blue.jpeg") !important;}
+.red {height:auto;background-image:url("../images/default/icons/red.png") !important;}
+.green {height:auto;background-image:url("../images/default/icons/green.png") !important;}
+.colo {height:auto;background-image:url("../images/default/icons/colo.png") !important;}
+.cash_receipt {height:auto;background-image:url("../images/default/icons/cash_receipt.png") !important;}
+.cash_voucher {height:auto;background-image:url("../images/default/icons/cash_voucher.png") !important;}
+.cheque_regi {height:auto;background-image:url("../images/default/icons/cheque_regi.png") !important;}
+.manage_structure {height:auto;background-image:url("../images/default/icons/manage_structure.png") !important;}
+.job_confirm {height:16px;background-image:url("../images/default/icons/job_confirm.png") !important;}
+
+.IsPickup_1 {background-color: #FFE0B2;
+             border-color:#EFEFEF;}
+
+.IsPickup_0 {background-color: #CEF6F5;
+             border-color:#EFEFEF;}
+
+.default_row {background-color: #FAFAFA;
+              border-color:#FAFAFA;}
+
+.live_vehicles{height:16px;background-image:url("../images/default/icons/live_vehicles.png") !important;}
+.force_logout{height:16px; margin-left: 3px;background-image:url("../images/default/icons/force_logout.png") !important;}
+.queued{height:32px; background-image:url("../images/default/icons/icon-1.png") !important;}
+.vehicle_history{height:16px;background-image:url("../images/default/icons/vehicle_history.png") !important;}
+.type_mapping{height:16px;background-image:url("../images/default/icons/type_mapping.png") !important;}
+.cross_receive{height:16px;background-image:url("../images/default/icons/cross_receive.png") !important;}
+.cross_dispatch{height:16px;background-image:url("../images/default/icons/cross_dispatch.png") !important;}
+.get_dest{height:16px;background-image:url("../images/default/icons/get_dest.png") !important;}
+.choose {height:16px;background-image:url("../images/default/icons/choose.png") !important;}
+.customLoadMask {
+    filter: alpha(opacity=70);
+    opacity: .7;
+    background: #303336 !important;
+    background:url(../images/icons/arrow-loading.gif) no-repeat left;
+}
+
+.delivered {height:16px;background-image:url("../images/default/icons/delivered.png") !important;}
+.pickup {height:16px;background-image:url("../images/default/icons/pickup.png") !important;}
+.receive{height:16px;background-image:url("../images/default/icons/receive.png") !important;}
+.queued_jobs{height:16px;background-image:url("../images/default/icons/jobqueue.png") !important;}
+.road{height:16px;background-image:url("../images/default/icons/road.png") !important;}
+
+.big-text .x-btn-tl {
+    background-position: -6px 0;
+}
+.big-text .x-btn-tr {
+    background-position: -9px 0;
+}
+.big-text .x-btn-tc {
+    background-position: 0 -9px;
+}
+.big-text .x-btn-ml {
+    background-position: -6px -24px;
+}
+.big-text .x-btn-mr {
+    background-position: -9px -24px;
+}
+.big-text .x-btn-mc {
+    background-position: 0 -2168px;
+}
+.big-text .x-btn-bl {
+    background-position: -6px -3px;
+}
+.big-text .x-btn-br {
+    background-position: -9px -3px;
+}
+.big-text .x-btn-bc {
+    background-position: 0 -18px;
+}
+
+.big-text .x-btn-text {
+
+}
+
+.x-btn-noicon .x-btn-large .x-btn-text {
+    height: 20px; width: 100px;
+}
+
+.now_active {height:16px;background-image:url("../images/default/bulb_green.png") !important;}
+.now_inactive {height:16px;background-image:url("../images/default/bulb_red.png") !important;}
+.edit {height:16px;margin-right:2px;background-image:url("../images/default/icons/edit.png") !important;}
+.add {height:16px;margin-right:2px;background-image:url("../images/default/icons/add.png") !important;}
+.Assigned {height:16px;background-image:url("../images/default/icons/assignclick.png") !important;}
+.Unattend {height:16px;background-image:url("../images/default/icons/assigning.png") !important;}
+.icon_authorization {
+    height:16px;background-image:url("../images/default/tbaricons/menu/authorization-key.gif") !important;
+}
+
+.icon_authorization_window {
+    height:24px;background-image:url("../images/default/tbaricons/menu/authorization-key.gif") !important;
+}
+
+.server_cache {
+    height:16px;background-image:url("../images/default/icons/server_cache.png") !important;
+}
+.company {height:16px;background-image:url("../images/default/icons/company.png") !important;}
+.branch {height:16px;background-image:url("../images/default/icons/branch.png") !important;}
+.upload_cloud {height:16px;background-image:url("../images/default/icons/upload_cloud.png") !important;}
+.receipt {
+    height:16px;background-image:url("../images/default/icons/receipt_1.png") !important;
+}
+.audit {
+    height:16px;background-image:url("../images/default/icons/audit.png") !important;
+}
+
+.icon_ledger {
+    height:16px;background-image:url("../images/default/tbaricons/menu/ledger.png") !important;
+}
+
+.color-blue { background-color: #0000FF;
+              width: 20%;
+              height:20px;
+              margin: 5px 2px 5px 5px;
+              border: 2px solid #DDDDDD;
+              float:left;}
+
+.color-red { background-color: #FF0000;
+             width: 20%;
+             height:20px;
+             margin: 5px 2px 5px 5px;
+             border: 2px solid #DDDDDD;
+             float:left;}
+
+.color-green { background-color: #006500;
+               width: 20%;
+               height:20px;
+               margin: 5px 2px 5px 5px;
+               border: 2px solid #DDDDDD;
+               float:left;}
+
+.color-l-blue { background-color: #009694;
+                width: 20%;
+                height:20px;
+                margin: 5px 2px 5px 5px;
+                border: 2px solid #DDDDDD;
+                float:left;}
+.color_wrap{
+    width:auto;
+    float:left;
+}
+.color_text{
+    width:69%;
+    float:left;
+    padding: 4px 5px;
+}
+.text_c{
+    width:auto;
+    float:left;
+    margin-top:9px;
+}
+.color_wr{
+    width:auto;
+    float:left;
+
+}
+
+.basic_nature a span{color: #7B7D21;font-weight:bold;}
+.nature_group a span{color: #0000FF;font-weight:bold;}
+.group a span{color: #FF0000;font-weight:bold;}
+.ledger_type a span{color: #006500;font-weight:bold;}
+.ledger_name a span{color: #009694;font-weight:bold;}
+.rose a span{color: #FF05FF;font-weight:bold;}
+
+.nature_group .x-treegrid-text{color: #0000FF;font-weight:bold;}
+.basic_nature .x-treegrid-text{color: #7B7D21;font-weight:bold;}
+.group .x-treegrid-text{color: #FF0000;font-weight:bold;}
+.ledger_type .x-treegrid-text{color: #006500;font-weight:bold;}
+.ledger_name .x-treegrid-text{color: #009694;font-weight:bold;}
+.rose .x-treegrid-text{color: #FF05FF;font-weight:bold;}
+
+
+
+#account_structure_tree  .x-tree-node-icon{
+    background-image:none;
+}
+
+.color-blue_small { background-color: #0000FF;
+                    width: 8%;
+                    height:20px;
+                    margin: 5px 2px 5px 5px;
+                    border: 2px solid #DDDDDD;
+                    float:left;}
+
+.color-red_small { background-color: #FF0000;
+                   width: 8%;
+                   height:20px;
+                   margin: 5px 2px 5px 5px;
+                   border: 2px solid #DDDDDD;
+                   float:left;}
+
+.color-green_small { background-color: #009694;
+                     width: 8%;
+                     height:20px;
+                     margin: 5px 2px 5px 5px;
+                     border: 2px solid #DDDDDD;
+                     float:left;}
+
+#inc_exp_grid  .x-tree-node-icon{
+    background-image:none;
+}
+
+#bs_grid  .x-tree-node-icon{
+    background-image:none;
+}
+
+
+.settings-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/settings-a.png') !important;
+}
+.x-btn-pressed.settings-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/settings.png') !important; 
+}
+
+.users-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/users-a.png') !important;
+}
+.x-btn-pressed.users-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/users.png') !important; 
+}
+
+.marketing-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/marketing.png') !important;
+}
+.x-btn-pressed.marketing-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/marketing_click.png') !important; }
+.website-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/website-a.png') !important;
+}
+.x-btn-pressed.website-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/website.png') !important; 
+}
+
+.company-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/company-a.png') !important;
+}
+.x-btn-pressed.company-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/company.png') !important; 
+}
+
+.branch-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/branch-a.png') !important;
+}
+.x-btn-pressed.branch-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/branch.png') !important; 
+}
+
+.accounts-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/accounts-a.png') !important;
+}
+.x-btn-pressed.accounts-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/accounts.png') !important; 
+}
+
+.purchase-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/purchase-a.png') !important;
+}
+.x-btn-pressed.purchase-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/purchase.png') !important; 
+}
+
+.sales-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/sales-a.png') !important;
+}
+.x-btn-pressed.sales-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/sales.png') !important; 
+}
+
+
+.auditing-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/audit-a.png') !important;
+}
+.x-btn-pressed.auditing-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/audit.png') !important; 
+}
+
+.util-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/utilities-a.png') !important;
+}
+.x-btn-pressed.util-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/utilities.png') !important; 
+}
+
+.wallet-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/wallet-a.png') !important;
+}
+.x-btn-pressed.wallet-btn .x-btn-text {
+    height:32px;width:32px;background-repeat: no-repeat;background-image: url('../images/default/tbaricons/wallet.png') !important; 
+}
+
+
+.profit_loss {
+    height:16px;background-image:url("../images/default/icons/profit_loss.png") !important;
+}
+.user_black {
+    height:16px;background-image:url("../images/default/icons/user_black.png") !important;
+}
+.search_btn {
+    height:16px;background-image:url("../images/default/icons/search.png") !important;
+}
+
+.scan {
+    height:16px;background-image:url("../images/default/icons/scan.png") !important;
+}
+
+.app_scan {
+    height:16px;background-image:url("../images/default/icons/app_scan.png") !important;
+}
+
+.upload_file {
+    height:16px;background-image:url("../images/default/icons/upload_file.png") !important;
+}
+
+.settings_icon {
+    height:16px;background-image:url("../images/default/icons/settings.png") !important;
+}
+
+.ref_icon {
+    height:16px;background-image:url("../images/default/icons/ref_icon.png") !important;
+}
+
+.hideicon{display:none;}
+.indicateCOL {
+    background-color: #FFE0B2 !important;
+}
+
+.close_btn {
+    height:16px;background-image:url("../images/default/icons/cross.png") !important;
+}
+
+
+.finascop_wordpress {height:auto;background-image:url("../images/default/icons/finascop_wordpress-16.png");}
+.edit_page_options{height:16px;background-image:url("../images/default/icons/edit_page_options.png");}
+.trash {height:16px;background-image:url("../images/default/icons/user.ico.drop.png");}
+.delete_visual{height:16px;margin-right:3px;background-image:url("../images/default/icons/drop.png") !important;}
+
+/*-------------------------------------------*/
+/*========== PERMISSION SETTINGS ============*/
+/*-------------------------------------------*/
+
+
+.myphasetting-prs .x-tree-node-icon {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/settings.png)  no-repeat 3px 6px;
+}
+
+
+/*-------------------------------------------*/
+/*========== MYPHARMACY ===============*
+/*-------------------------------------------*/
+
+
+.myphasetting-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/settings.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphasetting-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/settings.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+
+.myphamedicine-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/medicine.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphamedicine-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/medicine.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphaproducts-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/products.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphaproducts-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/products.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphapurchase-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/purchase.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphapurchase-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/purchase.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphastock-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/stock.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphastock-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/stock.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphatransfers-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/transfers.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphatransfers-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/transfers.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphasales-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/sales.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphasales-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/sales.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphaaccounts-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/accounts.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphaaccounts-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/accounts.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphaorders-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/orders.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphaorders-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/orders.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphawebsite-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/website.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphawebsite-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/website.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphacentralstore-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/central-store.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphacentralstore-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/central-store.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.myphadistributor-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/distributor.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.myphadistributor-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/distributor.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+
+.mypharetail-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/retail.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.mypharetail-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/retail.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.Search-icon {height:auto;background-image:url("../images/default/icons/Search-icon.png") !important;}
+.my-icon43 {height:16px;width:16px;background-image:url("../images/default/icons/camera_go.png") !important;}
+.edit_profile {height:auto;background-image:url("../images/default/icons/report_edit.png") !important;}
+.user-circle{ width: 32px; height: 32px; background: red; border-radius: 50%; color:#fff;  background: #dc624e; text-align:center;float: right;
+margin-left: 16px; margin-top: 12px;}
+.downarrow{height:16px;background-image:url("../images/default/icons/action.png");}
+.my-icon96 {
+    height: 16px;
+    background-image: url("../images/default/icons/view_details.png");
+}
+.sorting{height:16px;background-image:url("../images/default/icons/sorting.png");}
+.qugeo-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/qugeo.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.qugeo-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/qugeo.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.crm-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/crm.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.crm-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/crm.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.customer-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/customer.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.customer-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/customer.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.offer-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/offfer.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.offer-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/offfer.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.report-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/report.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.report-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/report.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.list_users{height:16px;background-image:url("../images/default/icons/list_users.gif") !important;}
+.print_invoice {
+    height: 16px;
+    width: 16px;
+    background-image: url("../images/default/icons/print_invoice.png");
+}
+.create_invoice {
+    height: 16px;
+    background-image: url("../images/default/icons/CreatedInvoice.png");
+}
+.recipe {
+    height: 16px;
+    background-image: url("../images/default/icons/Food_recipe-36-16.png");
+}
+.dispatch {
+    height: 16px;
+    background-image: url("../images/default/icons/dispatch.png");
+}
+.delivery {
+    height: 16px;
+    margin-right: 3px;
+    background-image: url("../images/default/icons/delivery.png") !important;
+}
+.return-back{
+    height: 16px;
+    /*margin-right: 3px;*/
+    background-image: url("../images/default/icons/return-back.png");
+}
+.userlog {
+    height: 16px;
+    background-image: url("../images/default/icons/log-view.jpg");
+}
+
+.x-form-num-field {
+    text-align: right;
+}
+
+.default_scheme {height:auto;background-image:url("../images/submenuicons/default_scheme.png") !important;}
+.actioncol {height:16px;background-image:url("../images/submenuicons/action.png") !important;}
+.color-trigger {height:11px !important;background-image:url("../images/submenuicons/Loader.gif") !important;}
+.packing-add{height:16px;background-image:url("../images/submenuicons/packing-add.png") !important;}
+.barcode_view {
+    height: 16px;
+    background-image: url("../images/submenuicons/qr-code.png");
+}
+.correct{
+    height:16px; width: 16px;background-image:url("../images/submenuicons/correct.png") !important;
+}
+.wrong {
+    height:16px; width: 16px;background-image:url("../images/submenuicons/close.png") !important;
+}
+.exit {height:16px;width:16px;;background-image:url("../images/submenuicons/exit.png") !important;}
+.delivered {height:16px;background-image:url("../images/submenuicons/delivered.png") !important;}
+.cancel_order {
+    height:16px;background-image:url("../images/submenuicons/order.png") !important;
+}
+.arrow_rotate_anticlockwise{height:16px;background-image:url("../images/default/icons/arrow_rotate_anticlockwise.png");}
+.arrow_rotate_clockwise{height:16px;background-image:url("../images/default/icons/arrow_rotate_clockwise.png");}
+.stockedit{height:16px;width:16px;background-image:url("../images/submenuicons/stockedit.png") !important;}
+.enlarge{height:16px;width:16px;background-image:url("../images/submenuicons/finascop_webpage_icon.png") !important;}
+.procurement-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/central-store.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.procurement-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/central-store.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.textboxasLabel {
+border: none !important;
+border-width: 0 !important;
+background-image: none !important;
+background-color: transparent !important;
+}
+
+.nature_group a span {
+    color: #39393a !important;
+    font-weight: bold;
+}
+.pro {height:auto;background-image:url("../images/default/icons/pro.png") !important;}
+.dractive {height:16px;width:16px;background-image:url("../images/default/icons/dractive.png") !important;}
+.drinactive {height:auto;background-image:url("../images/default/icons/drinactive.png") !important;}
+.knowlwdgebase-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/knowledge.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.knowlwdgebase-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/knowledge.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}
+.support-btn .x-btn-text {
+    height:32px;width:32px;    background: url(../mypharmacy/tbar/support.png)  no-repeat 3px 6px;
+}
+.x-btn-pressed.support-btn .x-btn-text {
+    height:32px;width:32px;background: url('../mypharmacy/tbar/support.png')  no-repeat 3px 6px ; border-bottom: 5px solid #dc624e;
+}

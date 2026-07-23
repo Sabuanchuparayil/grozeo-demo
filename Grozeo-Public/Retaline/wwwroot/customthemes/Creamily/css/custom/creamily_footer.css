@@ -1,0 +1,47 @@
+.footer {
+    background-color: var(--bs-primary);
+    padding: 40px 0;
+    color: var(--bs-white);
+}
+
+.footer-content p {
+    color: var(--bs-white);
+}
+
+.footer a {
+    text-decoration: none;
+    color: var(--bs-white);
+}
+
+.footer ul {
+    margin-bottom: 0px;
+}
+
+.footer li {
+    line-height: 26px;
+}
+
+.gpay img {
+    margin-top: 10px;
+}
+
+.gpay, .applepay img {
+    max-width: 154px;
+}
+
+.powered-img {
+    margin-top: 2rem;
+}
+
+.copyright {
+    display: flex;
+    font-size: 14px;
+    justify-content: space-between;
+    color: color-mix(in srgb, var(--bs-body-color) 65%, white);
+}
+.footer_social_link {
+    margin: 0px;
+}
+@media (max-width: 992px) {
+    .footer { padding-bottom: 90px; }
+}

@@ -1,0 +1,112 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@using Retaline.Core.ViewModel.Catalog;
+@using Retaline.Core.BusinessModel.Catalog;
+
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+
+@{
+    int retailerId = 0;
+    string businessTypeLinkTrigger = string.IsNullOrEmpty(ViewBag.IsHomePage) ? "hide" : ""; List<BusinessType> businessTypes = new List<BusinessType>();
+    if (!string.IsNullOrEmpty(ViewBag.UrlTypeId) && (ViewBag.UrlType == "/rc" || ViewBag.UrlType == "/bt"))
+    {
+        retailerId = Convert.ToInt32(ViewBag.UrlTypeId.Split("/")[1]);
+        // businessTypes = catalogService.GetBusinessTypes(retailerId).Result;
+    }
+    var retailers = catalogService.GetRetailerTypes().Result;
+    if (retailers != null && retailers.Count(r => r.StoreGroupId > 0) > 1)
+    {
+        retailers = retailers.Where(r => r.StoreGroupId > 0).ToList();
+    }
+    if (retailers != null && retailers.Count > 0)
+        retailers = retailers.DistinctBy(r => r.Name).ToList();
+}
+<div class="topmainnav">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="main-nav-wrap">
+                    <button class="scroll-btn left" id="scrollLeft" style="display: none;">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    @if (!string.IsNullOrEmpty(ViewBag.UrlTypeId) && (ViewBag.UrlType == "/st"))
+                    {
+                        <div class="navwrap">
+
+                            <ul class="nav">
+                                <li class="">
+                                    <a href="/">
+                                        <img class="img-fluid" src="~/images/grid.png">
+                                    </a>
+                                </li>
+
+                                <li class="active" data-id=@ViewBag.UrlTypeId.Remove(0, 1)>
+                                    <a href="@ViewBag.UrlTypeId/@ViewBag.StoreName">
+                                        @*  <img class="img-fluid" src="~/images/boutique.png">*@
+                                        @ViewBag.StoreName
+                                    </a>
+                                   @* <div id="retailer-type-@ViewBag.UrlTypeId.Remove(0, 1)">
+                                    </div>*@
+                                </li>
+                                <li class="" data-id=@ViewBag.UrlTypeId.Remove(0, 1)>
+                                    <a href="/">Other Stores</a>
+                                </li>
+
+
+                            </ul>
+
+
+
+                        </div>
+                    }
+                    else
+                    {
+                        @if (retailers?.Count > 0)
+                        {
+                            <div class="navwrap">
+
+                                <ul class="nav">
+                                    <li class=" @(retailerId == 0 ? "active" : "")">
+                                        <a href="/">
+                                            <img class="img-fluid" src="~/images/grid.png">
+                                            All
+                                        </a>
+                                    </li>
+                                    @foreach (var btype in retailers?.OrderBy(r=> r.DisplayOrder))
+                                    {
+                                        <li class="@(retailerId == btype.Id ? "active" : "")" data-id=@btype.Id>
+                                            <a href="/rc/@btype.Id">
+                                                  <img class="img-fluid" src="@btype.ImageUrl" onerror="this.src='~/images/no-image'">
+                                                @* @btype.Name *@
+                                                @(new Microsoft.AspNetCore.Html.HtmlString(System.Web.HttpUtility.HtmlDecode(btype.Name)))
+                                            </a>
+                                            @*<div id="retailer-type-@btype.Id">
+                                            </div>*@
+                                        </li>
+                                    }
+
+
+                                </ul>
+
+
+
+                            </div>
+
+                            <!--nav_wrap-->
+                        }
+                      
+                    }
+
+
+                    <button class="scroll-btn right" id="scrollRight" style="display: none;">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

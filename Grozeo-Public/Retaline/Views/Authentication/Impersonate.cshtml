@@ -1,0 +1,22 @@
+﻿@model Retaline.Web.Models.Authentication.Impersonate;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div id="content" style="padding: 0px; margin: 0px; padding-top: 0px; text-align: center;">
+    <h3>Impersonate User</h3>
+    <br>
+    @if (User.IsInRole("impersonated"))
+    {
+        <p class="Error"><b>You are already impersonated to another number: @User.Identity.Name . If you submit, your previous impersonation session will end and you will be 
+            impersonated to the new account with number: @Model.ImpersonateNumber .</b></p><br />
+    }
+    <form method="get" action="/Impersonate">
+        <label>Mobile:</label>&nbsp;
+        <input type="tel" id="id" name="id"  pattern="^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$" required value="@Model.ImpersonateNumber" />
+        <br /><input type="hidden" value="1" id="confirmImpersonate" name="confirmImpersonate" />
+        <br /><button type="submit" value="Impersonate">Impersonate</button>
+    </form>
+    <br />@Model.Message
+</div>

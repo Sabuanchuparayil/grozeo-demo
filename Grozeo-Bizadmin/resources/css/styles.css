@@ -1,0 +1,150 @@
+body {
+	font-size: 8pt;
+	margin: 0px;
+	color: #000000;
+	font-family: Raleway,verdana, arial, helvetica, sans-serif;
+	}
+html {
+	overflow: auto;
+}
+
+.topbg {
+	background-repeat: repeat-x;
+	height:150px;
+	}
+
+#carego_logo{
+	background-repeat: no-repeat;	
+	float:left;
+	height:61px;
+	width:103px;
+	}
+
+.ktc-log {
+    background: url("../images/default/ktclogintop_bg.gif") repeat-x scroll left top transparent;
+}
+
+.LR-padding26 {
+    padding: 8px 26px;
+}
+
+.gray-border {	
+	border: 1px solid #E4E4E4;
+}
+.login-head {
+        background-image:url(../images/default/qucik.png);
+	  /* background-image:url(../images/default/logo-demo-company.png);*/
+	background-repeat:no-repeat;
+        background-position:bottom;        	
+	width:103px;	
+}
+
+.logintopbg{
+	background-image:url(../images/default/ktclogintop_bg.gif);
+	background-repeat:repeat-x;
+	height:98px;
+	width:315px;
+	}
+
+.loginbott_bg{
+	background-image:url(../images/default/ktcloginbottom_bg.gif);
+	background-repeat:repeat-x;
+	background-position:bottom;
+	height:150px;
+	width:311px;
+	}
+
+.loginicon{
+	background-repeat:no-repeat;
+	height:68px;
+	width:71px;
+	}
+
+#footer {
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+	clear: both;
+	background-repeat:repeat-x;
+	background-position:bottom;
+	height: 67px;
+}
+
+.generalfield
+{
+    border-right: #77a9e6 1px solid;     
+    padding: 1px 2px 1px 2px; 
+    margin: 2px 0px 0px; 
+    font: 12px Arial, Helvetica, sans-serif;     
+    width: 160px; color: #9a310d;     
+    border:1px solid #CAC8C8; 
+    background-color: #F3F2F2;
+    vertical-align: top;
+    width: 180px;
+}
+
+.loginButton {
+    border: none/*1px Solid #000*/;
+    font: 12px Arial, Helvetica, sans-serif; 
+    background-color: #9CbfFA;
+    color: #fff;   
+    background:#512685; height:35px; line-height:35px;width:100px;
+
+   }
+
+.remember {
+    color: #587884;
+    font: 12px Arial,Helvetica,sans-serif;
+}
+.def-settings-row .x-change-cell {
+    background-color: #FFB0C4;
+    color: red;
+}
+
+.login-bg {   
+background: url("../images/default/login-bg.jpg");
+background-color: #512685;
+background-repeat: no-repeat;
+background-attachment: fixed;
+background-position: center left; background-size:cover;
+
+}
+div.boder-cloud {
+ display: table-cell;
+vertical-align:middle;
+}
+.cc{position: absolute;
+  top: 50%;
+  transform: translateY(-50%);width:100%}
+ .cc form{ background: rgba(255,255,255,.2);
+width: 100%;
+color: #fff;}
+.lgbg {
+    background: #fff none repeat scroll 0 0;
+    box-shadow: 11px 16px 91px #56666b;
+    padding: 0;
+    width: 350px; position:absolute; right:0; top:0; display:block; height:100vh; background:#512685;
+}
+.userlog-field-small {
+    border:0px solid #eee; 
+    color: #000;
+    font-size: 18px; float:left;
+    margin: 0px 0;
+    padding: 5px 3%;
+    width: 30%; background:rgba(255,255,255,.2);
+}
+.generalfield {
+    border:0px solid #eee;
+    color: #512685;
+    font-size: 18px; background:rgba(255,255,255,.2);
+    padding: 5px 3%;
+    width: 94%;margin-bottom:10px;
+}
+.fgr {
+    float: left;
+    padding: 7px 0 0;
+}
+.rednode {
+    color:red;
+}
+

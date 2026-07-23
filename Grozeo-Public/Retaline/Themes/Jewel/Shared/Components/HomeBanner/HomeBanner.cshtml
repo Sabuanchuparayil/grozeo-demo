@@ -1,0 +1,68 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@model List<HomeValue>
+@{
+}
+<figure class="MainBanner">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="swiper MainBanner_Slider @(ViewBag.UrlType == "/br"?"default_banner":"double_view_slider") ">
+        <div class="swiper-wrapper">
+
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                @if (Model[i].AdZoneName == "Home Top Banner")
+                {
+                    @for (int j = 0; j < Model[i].AdZoneDetails.Count; j++)
+                    {
+                        <div class="swiper-slide">
+                            <a href="">
+                                <img src="@(Model[i].AdZoneDetails[j].AdvImageUrl)">
+                            </a>
+                        </div>            <!--swiper-slide-->
+                    }
+                }
+            }
+        </div><!--swiper-wrapper-->
+        <div class="swiper-button-next"></div>
+      			<div class="swiper-button-prev"></div>
+
+    </div><!--MainBanner_Slider-->
+    <!-- pagination -->
+    <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+</figure>
+<script type="text/javascript">
+    var double_view_slider = new Swiper(".double_view_slider", {
+        loop: true,
+        speed: 4000,
+        spaceBetween: 0,
+        autoplay: {
+            delay: 3000,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+
+        breakpoints: {
+            1024: {
+                slidesPerView: 1,
+                loop: false,
+                slidesPerView: 'auto',
+                spaceBetween: 2,
+            },
+            1200: {
+                slidesPerView: 2,
+                slidesPerGroup: 2,
+                spaceBetween: 5,
+                loopFillGroupWithBlank: false,
+            },
+        },
+
+
+    });
+</script>

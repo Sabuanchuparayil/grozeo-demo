@@ -1,0 +1,41 @@
+﻿@using Retaline.Core.BusinessModel.UserDetails;
+@model List<Address>;
+@if (Model != null && Model.Count > 0)
+{
+    <div class="text-left boxcheck">
+
+        @foreach (Address item in Model)
+        {
+            <div class="row">
+                <div class="col-lg-6 branchadd brbook">
+                    <h5> <b>Delivey Address </b></h5>
+                    <p>@item.Name</p>
+                    <p>@item.HouseNumber, @item.HouseName</p>
+                    <p>@item.DeliveryAddress </p>
+                    <p>@item.City</p>
+                    <p>@item.District</p>
+                    <p>PO Box: @item.PINCode</p>
+                    <p>@item.State</p>
+                    <p>@item.ContactNumber</p>
+
+                </div>
+                <div class="col-lg-1">
+                    <i class="fa fa-bookmark bookmark bookm" aria-hidden="true"></i>
+                </div>
+                <div class="col-lg-5">
+                    <p class="  fright mb-52">
+                        <button type="button" class="btn btn-success btnnormal fright fribut btn-add-address" data-toggle="modal" data-target="#ADDRESS">Add New Delivey Address</button>
+                    </p>
+                </div>
+            </div>
+            <hr>
+        }
+
+    </div>
+}
+else
+{
+    <p class="  fright mb-52">
+        <button type="button" class="btn btn-success btnnormal fright fribut" data-toggle="modal" data-target="#ADDRESS">Add New Delivey Address</button>
+    </p>
+}

@@ -1,0 +1,19 @@
+:root {
+    
+    --bs-primary: #3F2B1D;
+    --bs-secondary: #AA7E44 !important;
+    --bs-border-primary: 1px solid #3F2B1D;
+    --bs-bg: #F6F2E9;
+    --bs-border-color: #E2E2E2;
+    --bs-font-sans-serif: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --bs-body-font-family: var(--bs-font-sans-serif);
+    --bs-body-font-size: 0.875rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.5;
+    --bs-text-primary: #3F2B1D;
+    --bs-text-secondary: #AA7E44 !important;
+    --bs-danger:#B92224;
+    --bs-body-color: #060000;
+    --bs-section-padding-top: 2.5rem;
+    --bs-section-padding-bottom: 2.5rem;
+}

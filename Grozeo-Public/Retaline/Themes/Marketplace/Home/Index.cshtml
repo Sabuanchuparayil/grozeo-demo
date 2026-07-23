@@ -1,0 +1,345 @@
+﻿@using Retaline.Core.ViewModel.Home;
+@using Retaline.Core.BusinessModel.Home;
+@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.Home.IHomePageService _homeService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _customAuthenticationService;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+
+
+@model List<HomePageViewModel>;
+@{
+    Layout = "_Layout";
+
+    bool showPWA = false;
+    int storegroupid = -1;
+    bool isNearestStoreView = Model.Any(m => m.Type == "Tenant Site");
+    if (tenant != null && tenant.Value != null)
+    {
+        showPWA = tenant.Value.ShowPWA;
+        if (!String.IsNullOrEmpty(tenant?.Value.StoreId))
+        {
+            try
+            {
+                storegroupid = Convert.ToInt32(tenant?.Value.StoreId);
+            }
+            catch { storegroupid = -1; }
+        }
+        if (String.IsNullOrEmpty(tenant?.Value.LogoImage) && String.IsNullOrEmpty(tenant?.Value.LogoSmall))
+            showPWA = false;
+    }
+
+    //var homeContent = _homeService.GetHomePageContent().Result;
+    string strInvokedPWA = _httpContextAccessor.HttpContext.Session.GetString("INVOKEDPWA");
+    //var categories = catalogService.GetCategoryMenuList().Result;//.Skip(15).Take(24);// GetCatalog().Result;
+    List<Retaline.Core.BusinessModel.Catalog.CategoryData> categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    try
+    {
+        categories = catalogService.HomeCategoriesMenu(120).Result;
+    }
+    catch
+    {
+        categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    }
+    var virtualCategories = categories.Where(c => c.Categorylevel == 4 && c.IsHome.Value == 1).ToList();
+
+    if (categories != null)
+    {
+        if (categories.Count > 40)
+            categories = categories.Skip(15).ToList();//.Take(65)
+        else
+            categories = categories.ToList(); // .Take(65)
+
+        categories = categories.OrderBy(c => c.Categorylevel).ToList();
+    }
+
+    var pcategories = new List<HomeValue>();
+    try { pcategories = Model[1].Content.Take(12).ToList(); } catch { }
+    var isCombinedCategoryAvailable = Model.Any(m => m.Type == "combinedcategory" && m.Content.Count > 0);
+    if (isCombinedCategoryAvailable)
+        try
+        {
+            List<HomeValue> new_cats = Model.Where(m => m.Type == "combinedcategory").FirstOrDefault().Content.Where(c => c.CategoryType != 4 || c.IsHome == 1)
+                .GroupBy(x => new { x.Id, x.CategoryType }).Select(x => x.FirstOrDefault()).Take(12).ToList();
+            pcategories = new_cats;
+        }
+        catch { }
+
+    if (pcategories.Count < 12)
+    {
+        try
+        {
+            List<string> catIds = pcategories.Select(c => String.Format("{0}_{1}", c.Id, c.CategoryType)).ToList();
+            List<Retaline.Core.BusinessModel.Catalog.CategoryData> cat = categories.Where(c => !catIds.Contains(String.Format("{0}_{1}", c.Id, c.Categorylevel)) && (c.Categorylevel != 4 || (c.Categorylevel == 4 && c.IsHome.Value == 1))).OrderByDescending(c => c.IsHome).ToList();
+            List<HomeValue> catHomeValues = cat.Select(c => new HomeValue
+                    {
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
+                        CategoryType = c.Categorylevel,
+                        Id = c.Id,
+                        ImageUrl = c.ImageUrl,
+                        IsHome = Convert.ToInt32(c.IsHome),
+                        IsInCategory = Convert.ToInt32(c.IsInCategory),
+                        ParentCategoryId = c.ParentCategoryId,
+                        Status = c.Status,
+                        ParentCategoryName = c.CategoryName
+                    }).ToList();
+            if (catHomeValues != null && catHomeValues.Count > 0)
+            {
+                pcategories.AddRange(catHomeValues.Take(12 - pcategories.Count));
+            }
+        }
+        catch { }
+    }
+
+    if (pcategories.Count < 12)
+    {
+        try
+        {
+            List<string> catIds = pcategories.Select(c => String.Format("{0}_{1}", c.Id, c.CategoryType)).ToList();
+            List<Retaline.Core.BusinessModel.Catalog.CategoryData> cat = categories.Where(c => !catIds.Contains(String.Format("{0}_{1}", c.Id, c.Categorylevel)) && (c.Categorylevel != 4 || (c.Categorylevel == 4 && c.IsHome.Value == 1))).OrderByDescending(c => c.IsHome).ToList();
+            List<HomeValue> catHomeValues = cat.Select(c => new HomeValue
+                    {
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
+                        CategoryType = c.Categorylevel,
+                        Id = c.Id,
+                        ImageUrl = c.ImageUrl,
+                        IsHome = Convert.ToInt32(c.IsHome),
+                        IsInCategory = Convert.ToInt32(c.IsInCategory),
+                        ParentCategoryId = c.ParentCategoryId,
+                        Status = c.Status,
+                        ParentCategoryName = c.CategoryName
+                    }).ToList();
+            if (catHomeValues != null && catHomeValues.Count > 0)
+            {
+                pcategories.AddRange(catHomeValues.Take(12 - pcategories.Count));
+            }
+        }
+        catch { }
+    }
+
+    //int curbranchId = _customAuthenticationService.GetBranchId();
+    //var groupCategories = catalogService.GetCategoryGroupDetails().Result;
+
+    List<HomeValue> dailyOffers = new List<HomeValue>();
+    if(Model != null && Model.Count > 0)
+        dailyOffers = Model[0].Content.Where(a => a.AdZoneName.StartsWith("Offer ")).ToList();
+
+}
+
+<!--<h1>Main Banner</h1>-->
+@if(Model != null && Model.Count > 0)
+    @await Component.InvokeAsync("HomeBanner", Model[0].Content)
+
+@await Component.InvokeAsync("HomeCategorySlider", pcategories)
+
+@if (storegroupid <= 0 && !isNearestStoreView)
+{
+    @await Component.InvokeAsync("HomePreferredStores", !User.Identity.IsAuthenticated)
+}
+
+
+@if (storegroupid <= 0 && !isNearestStoreView)
+{
+    @await Component.InvokeAsync("HomeNearestBranch", !User.Identity.IsAuthenticated)
+}
+@if (storegroupid <= 0 && !isNearestStoreView)
+{
+    <div class="row row_mb">
+        <div class="col-12">
+            <div class="shop_by_group_sec">
+                <div class="shop_by_group_slider_wrap">
+                    <div class="swiper shop_by_group_slider">
+                        <div class="swiper-wrapper">
+                            @await Component.InvokeAsync("CategoryGroup", virtualCategories)
+                        </div><!--swiper-wrapper-->
+                    </div><!--shop_by_group_slider-->
+                </div><!--shop_by_group_slider_wrap-->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+            </div><!--shop_by_group_sec-->
+
+        </div>
+    </div>
+}
+@await Component.InvokeAsync("SuggestedProducts", Model)
+
+@if (dailyOffers.Count > 0 && dailyOffers.Sum(a => a.AdZoneDetails.Count) > 0)
+{
+    @await Component.InvokeAsync("HomeBannerOffers", dailyOffers)
+}
+@await Component.InvokeAsync("HomePreferredItems", Model)
+
+
+@{
+    int bstypeid = -1, rttypeid = -1;
+    if (ViewBag.UrlType == "/rc")
+    {
+        string strrttypeid = ViewBag.UrlTypeId ?? "";
+        try { rttypeid = Convert.ToInt32(strrttypeid.Replace("/", "")); } catch { bstypeid = -1; }
+    }
+    else if (ViewBag.UrlType == "/bt")
+    {
+        string strbstypeid = ViewBag.BTypeId ?? "";
+        try { bstypeid = Convert.ToInt32(strbstypeid.Replace("/", "")); } catch { rttypeid = -1; }
+    }
+    string loadMoreUrl = $"/loadmoreoffers/{bstypeid}/{rttypeid}/1";
+}
+<div class="section-grz_">
+    <div class="container">
+    <div class="row row_mb">
+    <div class="col-12">
+        <div class="titlewrap">
+            <h2>Explore more products</h2>
+        </div>
+
+
+
+        <div class="product-itemview">
+            <div class="btnautoloadmore product-card" navlink="@loadMoreUrl" contenttype="2" pagenum="1" subcatId="-1" brandid="-1" catlevel="-1" searchkey="">Load more..</div>
+        </div>
+
+    </div><!--col-12-->
+</div><!--row-->
+    </div>
+</div>
+@await Component.InvokeAsync("BrowseByCategory", categories)
+
+<script>
+    master.properties.isHomePage = true;
+</script>
+@if (_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "fl"))
+{
+    string strFlResult = _httpContextAccessor.HttpContext.Session.GetString("FLRESULT");
+    string strAuthResul = _httpContextAccessor.HttpContext.Session.GetString("FLAUTHRESULT");
+    _httpContextAccessor.HttpContext.Session.Remove("FLRESULT");
+    _httpContextAccessor.HttpContext.Session.Remove("FLAUTHRESULT");
+
+    if (!String.IsNullOrEmpty(strFlResult))
+    {
+        Retaline.Core.BusinessModel.UserDetails.UserDetailsFromApi result = Newtonsoft.Json.JsonConvert.DeserializeObject<Retaline.Core.BusinessModel.UserDetails.UserDetailsFromApi>(strAuthResul);
+        if (result == null || result.Data == null)
+        {
+            <script>
+                $(document).ready(function () {
+                    master.showResult('There is a technical error. Please contact administrator for more details', 'Failure', false);
+                });
+            </script>
+        }
+        else if (!result.Data.IsRegisterd)
+        {
+
+            <script>
+                let data_email = '@result.Data.email'
+                $(document).ready(function () {
+                    $("#login-modal").modal('show');
+                    $("#txt-signup-email").val(data_email);
+                    $("#newacount_emailid_field").addClass('hide');
+
+                    // Show signup form:
+                    $('#h-loginHead').html("Create Account");
+                    $('.mobile-control').toggleClass("hide", true);
+                    $('.otp-control').toggleClass("hide", false);
+                    $('.create_account').removeClass("hide");
+                    $('.otp-control').addClass("hide");
+                    $('.sociallogin').addClass("hide");
+                    $('#email-acc-create').addClass("hide");
+                    $('#phone-acc-create').removeClass("hide");
+                    $('#pwd-acc-create').removeClass("hide");
+                });
+
+            </script>
+        }
+        else
+        {
+            <script>
+                let data_email = '@result.Data.email'
+                $(document).ready(function () {
+                    $("#login-modal").modal('show');
+                    // Show signup form:
+                    $('#h-loginHead').html("Login");
+                    $('.mobile-control').toggleClass("hide", true);
+                    $('.otp-control').addClass("hide");
+                    $('.enterpassword_control').removeClass("hide");
+                    var html = "Please enter your password";
+                    $('#psw-email').val(data_email);
+                    $('#lbl-password').html(html);
+
+                });
+            </script>
+        }
+
+        //if(strFlAuthResult == "2")
+        // Show failure popupu message for "Sorry there is a technical error happend on your login attempt."
+
+    }
+
+}
+
+@if (showPWA && !_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "ReturnUrl"))
+{
+
+    @if (string.IsNullOrEmpty(strInvokedPWA) || strInvokedPWA != "true")
+    {
+        _httpContextAccessor.HttpContext.Session.SetString("INVOKEDPWA", "true");
+
+        <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+        @await Component.InvokeAsync("PWAModel")
+
+
+        <script>
+
+            // Detects if device is on iOS
+            const isIos = () => {
+                const userAgent = window.navigator.userAgent.toLowerCase();
+                return /iphone|ipad|ipod/.test(userAgent);
+            }
+            // Detects if device is in standalone mode
+            const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+            // Checks if should display install popup notification:
+            //if (isIos() && !isInStandaloneMode()) {
+            //    this.setState({ showInstallMessage: true });
+            //    master.showInstallPromotion();
+            //}
+
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                master.showInstallPromotion();
+                console.log('beforeinstallprompt event was fired.');
+            });
+
+            window.addEventListener('appinstalled', () => {
+                master.hideInstallPromotion();
+                deferredPrompt = null;
+                console.log('CFED app was installed successfully');
+            });
+            //const buttonInstall = document.getElementById("btnaddhomescreen");
+            $('#btnaddhomescreen').unbind('click').on('click', async () => {
+                //buttonInstall.addEventListener('click', async () => {
+                master.hideInstallPromotion();
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                // Optionally, send analytics event with outcome of user choice
+                console.log('User response to the install prompt: ${outcome}');
+                // We've used the prompt, and can't use it again, throw it away
+                deferredPrompt = null;
+                master.hideInstallPromotion();
+            });
+
+        </script>
+
+    }
+    else
+    {
+        <span style="display: none">INVOKEDPWA: @strInvokedPWA</span>
+    }
+
+}

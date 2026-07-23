@@ -1,0 +1,100 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+	<ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.0.1-xyz</Version>
+    <UserSecretsId>2a884ff0-fc63-42b1-9727-ad8603e095ca</UserSecretsId>	
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Catalog\**" />
+    <Compile Remove="Themes\CustomTheme2\**" />
+    <Compile Remove="Themes\CustomTheme3\**" />
+    <Compile Remove="Views\Wishlist\**" />
+    <Compile Remove="wwwroot\html\**" />
+    <Content Remove="Models\Catalog\**" />
+    <Content Remove="Themes\CustomTheme2\**" />
+    <Content Remove="Themes\CustomTheme3\**" />
+    <Content Remove="Views\Wishlist\**" />
+    <Content Remove="wwwroot\html\**" />
+    <EmbeddedResource Remove="Models\Catalog\**" />
+    <EmbeddedResource Remove="Themes\CustomTheme2\**" />
+    <EmbeddedResource Remove="Themes\CustomTheme3\**" />
+    <EmbeddedResource Remove="Views\Wishlist\**" />
+    <EmbeddedResource Remove="wwwroot\html\**" />
+    <None Remove="Models\Catalog\**" />
+    <None Remove="Themes\CustomTheme2\**" />
+    <None Remove="Themes\CustomTheme3\**" />
+    <None Remove="Views\Wishlist\**" />
+    <None Remove="wwwroot\html\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Service\AuthenticationStartup.cs" />
+    <Compile Remove="Service\Tenant\IViewLocationExpander.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="Views\Catalog\Index - Copy.cshtml" />
+    <Content Remove="Views\Home\Index - Copy.cshtml" />
+    <Content Remove="Views\MyAccount\OrderDetails - Copy.cshtml" />
+    <Content Remove="wwwroot\service-worker.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="wwwroot\service-worker.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.2.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.12.0" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.9" />
+    <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\MyAccount\Wishlist.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Shared\Components\Header\Header.cshtml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\.well-known\apple-developer-merchantid-domain-association">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\InProgress\Shared\Components\" />
+    <Folder Include="wwwroot\fonts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Retaline.Core\Retaline.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings_co_uk.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="web_config_co_uk.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

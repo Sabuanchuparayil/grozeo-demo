@@ -1,0 +1,332 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@using Microsoft.AspNetCore.Http;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<HomeValue>;
+@{
+    int topProductsCount = 0;
+    double lowestPrice = 0;
+    double highestPrice = 0;
+    int storegroupid = 0; try { storegroupid = (tenant?.Value == null || String.IsNullOrEmpty(tenant?.Value.StoreId) ? 0 : Convert.ToInt32(tenant?.Value.StoreId)); } catch { storegroupid = 0; }
+    string addButtonBehaviour = "add-to-cart"; // !User.Identity.IsAuthenticated ? "open-login-modal" : "add-to-cart";
+    List<HomeValue> groupedItems = new List<HomeValue>();
+    List<KeyValuePair<int, int>> variantGroup = new List<KeyValuePair<int, int>>();
+
+    int totalItems = 0; //try { totalItems = Model.Sum(c => c.ItemMaster.Count); } catch { totalItems = 0; }
+    try
+    {
+        totalItems = Model.Where(g => g.IsGroupItem != 1).Sum(c => c.ItemMaster.Count()) + Model.Where(g => g.IsGroupItem == 1).GroupBy(n => n.GroupId).Sum(n => n.Count());
+    }
+    catch { }
+    var curUser = customAuthService.GetUserFromClaims();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    GuestData guestUser = HttpHelper.GuestUser;
+
+}
+
+
+@for (int i = 0; i < 2; i++)
+{
+    @foreach (HomeValue item in Model)
+    {
+        var mitems = item.ItemMaster.Where(m => (i == 0 && m.StockAvailable > 0) || (i == 1 && m.StockAvailable <= 0)).ToList();
+        if (item.IsGroupItem == 1)
+        {
+
+            if (groupedItems.Any(g => g.GroupId == item.GroupId))
+                continue;
+
+            var mgroupitems = Model.Where(gi => gi.GroupId == item.GroupId).Select(g => { g.IsGroupItem = 1; return g; }).ToList();
+            groupedItems.AddRange(mgroupitems.Select(g => { g.IsGroupItem = 1; return g; }).ToList());
+            mitems = new List<ItemMaster> { new ItemMaster { ItemName = item.GroupDisplayName, MainImage = new List<MainImage> { new MainImage { ImageUrl = item.GroupImage } } } };
+        }
+        @foreach (var mitem in mitems)
+        {
+            if (mitem.VariantGroupId > 0)
+            {
+                if (variantGroup.Any(k => k.Key == mitem.VariantGroupId && k.Value == mitem.StoreGroupId))
+                {
+                    continue;
+                }
+                else
+                {
+                    variantGroup.Add(new KeyValuePair<int, int>(mitem.VariantGroupId.Value, mitem.StoreGroupId));
+                }
+            }
+
+            topProductsCount++;
+            string strHref = (item.IsGroupItem > 0 ?
+                    String.Format("/groupitem/{0}/{1}", item.GroupId, item.GroupDisplayName.Replace("\"", "").Replace("\\", ""))
+                : String.Format("/pd/{0}/{1}/{2}/{3}", mitem.StitID, mitem.BranchId, mitem.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(mitem.ItemName) ? "-" + item.ItemName : mitem.ItemName))
+                );
+            bool isOutOfStock = (mitem.StockAvailable > 0 && (mitem.SellingPrice <= 0 || mitem.StockAvailable <= 0));
+            bool isSoldOut = (mitem.StockAvailable <= 0 && mitem.SellingPrice > 0);
+            bool isNotDeliverable = (mitem.BranchTypeId <= 0 && guestUser.GuestLatitude != null);
+
+            var requiresAgeVerification = mitem.HasAgeVerification == 1;
+            var isUserVerified = curUser?.AgeVerified == 1;
+            var verificationNeeded = (!isUserVerified && requiresAgeVerification ? 1 : 0);
+
+            <div class="swiper-slide">
+                <div class="@(isNotDeliverable ? "not_deliverale" : "") productItemWrap  @(item.IsGroupItem > 0 || mitem.VariantGroupId > 0 ?"product_group": (isSoldOut ? "pro_soldout" : (isOutOfStock ? "pro_outofstock" : "")))">
+
+                    @if (item.IsGroupItem != 1)
+                    {
+                        <div class="offer_wishlist">
+                            @if (mitem.Percentage > 0)
+                            {
+                                <div class="offerperctg"> @mitem.Percentage% OFF </div>
+                            }
+                            <div class="addtowishicon wishlist-block wishlist-@mitem.StitID-@mitem.StitFsiuid" data-isAuthenticated="@User.Identity.IsAuthenticated" data-productid="@mitem.StitID" data-groupid="@mitem.StitFsiuid" data-branchid=@mitem.BranchId data-branchtypeid=@mitem.BranchTypeId data-source="1">
+                                <i class="fa-regular fa-heart"></i>
+                            </div>
+                        </div>
+
+                        <!--offer_wishlist-->
+                    }
+
+
+
+                    <div class="productImgWrap">
+                        <div class="productImg">
+                            <a href="@strHref">
+                                <img src="@(mitem.MainImage != null && mitem.MainImage.Count >0 ? mitem.MainImage[0].ImageUrl : "")"
+                                     onerror="this.src='/images/p-no-image.png'" alt="img">
+                            </a>
+                        </div><!--productImg-->
+                    </div><!--productImgWrap-->
+
+                    <div class="productItemInfo">
+                        <div class="productTitle">
+                            <a href="@strHref">
+                                @(!String.IsNullOrEmpty(mitem.SKU) ? mitem.SKU
+                                    : String.Format("{0} {1}", (String.IsNullOrEmpty(mitem.ItemName) ? item.ItemName : mitem.ItemName), mitem.Quantity))
+                            </a>
+                        </div>
+
+                        <div class="productPrice">
+                            @if (item.IsGroupItem > 0)
+                            {
+                                lowestPrice = item.ItemMaster.Min(item => item.SellingPrice);
+                                highestPrice = item.ItemMaster.Max(item => item.SellingPrice);
+                                if (lowestPrice > 0 && highestPrice > 0)
+                                {
+                                    <span class="pricerang">@(_configuration["CurrencySymbol"])@lowestPrice <span>To</span> @(_configuration["CurrencySymbol"])@highestPrice</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="actulPrice">
+                                    @if (mitem.Mrp > 0 && mitem.Mrp > mitem.SellingPrice)
+                                    {
+                                        <span>@(_configuration["CurrencySymbol"])@mitem.Mrp </span>
+                                    }
+                                   @*  else if (mitem.SellingPrice <= 0)
+                                    {
+                                        <span class="text-decoration-none">Price not Available </span>
+                                    } *@
+                                    @if (storegroupid > 0 && storegroupid != mitem.StoreGroupId)
+                                    {
+                                        <span class="badge"><img src="/images/sponsored-01.svg"></span>
+                                    }
+                                </span>
+                                @if (mitem.SellingPrice > 0)
+                                {
+                                    <span class="DisPrice_unitprice">
+                                        <span class="productDisPrice">@(_configuration["CurrencySymbol"])@mitem.SellingPrice</span>
+                                        <i class="expres_delivery" title="@(mitem.BranchTypeId == 3 ? "Express Delivery" : "Courier Delivery")"><img src="/images/icons/@(mitem.BranchTypeId == 3 ? "expres_delivery.svg" : "normal_delivery.svg")"></i>
+                                    </span>
+                                }
+                                @if (mitem.SellingPrice <= 0)
+                                {
+                                    <span class="tx-14 text-secondary">Price not Available </span>
+                                }
+                            }
+
+                        </div>
+
+                        @if (item.IsGroupItem > 0)
+                        {
+                            <div class="viewgroup_btn_wrap">
+                                <a href="@strHref" class="btn viewgroup_btn">View</a>
+                            </div>
+
+                        }
+
+                    </div><!--productItemInfo-->
+                    @if (mitem.VariantGroupId > 0 && item.IsGroupItem != 1)
+                    {
+                        <div class="addunit_infowrap">
+                            <div class="form-qty-block">
+                                <a href="@strHref" class="btn-plus btn-add skip-addcart" style="padding-left: 70px;"><span style="">View</span><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="veg_novgsymple">
+                                @if (mitem.FoodType == 1)
+                                {
+                                    <img src="/images/icons/organic_icon.svg">
+                                }
+                                else if (mitem.FoodType == 2)
+                                {
+                                    <img src="/images/icons/Nonveg_icon.svg">
+                                }
+                                else if (mitem.FoodType == 3)
+                                {
+                                    <img src="/images/icons/Vege_icon.svg">
+                                }
+                            </div>
+                        </div>
+
+                    }
+                    else if (item.IsGroupItem != 1)
+                    {
+                        @if (true) //(User.Identity.IsAuthenticated)
+                        {
+                            if (mitem.BranchTypeId > 0 && mitem.StockAvailable > 0 && mitem.SellingPrice > 0)
+                            {
+                                <div class="addunit_infowrap">
+                                    <div class="form-qty-block addunitWrap addunitWrap-@mitem.StitID-@mitem.StitFsiuid" data-productid="@mitem.StitID" data-groupid="@mitem.StitFsiuid">
+                                        <button type="button" id="product-minus-@mitem.StitID-@mitem.StitFsiuid" class="btn btn-sm btn-minus hide product-tile-minus-@mitem.StitID-@mitem.StitFsiuid" data-productid="@mitem.StitID" data-groupid="@mitem.StitFsiuid">-</button>
+                                        <input type="number" class="form-control form-control-sm form-qty hide product-tile-qty-@mitem.StitID-@mitem.StitFsiuid" step="1" min="0" max="@mitem.StockAvailable" value="0" id="product-qty-@mitem.StitID-@mitem.StitFsiuid" placeholder="Add">
+                                        @if (!User.Identity.IsAuthenticated && guestUser != null && guestUser.GuestLatitude == null && mitem.BranchTypeId == 3)
+                                        {
+
+                                            <button type="button" class="btn btn-sm btn-plus-no-action btn-add product-tile-plus-@mitem.StitID-@mitem.StitFsiuid" data-bs-toggle="modal" data-bs-target="#search-address-modal"><span>Add</span>+</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" id="product-plus-@mitem.StitID-@mitem.StitFsiuid" class="btn btn-sm btn-plus btn-add product-tile-plus-@mitem.StitID-@mitem.StitFsiuid" data-productid="@mitem.StitID" data-groupid="@mitem.StitFsiuid" data-brid="@mitem.BranchId" data-brtypeid="@mitem.BranchTypeId" data-needageverification="@verificationNeeded"><span>Add</span>+</button>
+
+                                        }
+                                    </div>
+                                    <div class="veg_novgsymple">
+                                        @if (mitem.FoodType == 1)
+                                        {
+                                            <img src="/images/icons/organic_icon.svg">
+                                        }
+                                        else if (mitem.FoodType == 2)
+                                        {
+                                            <img src="/images/icons/Nonveg_icon.svg">
+                                        }
+                                        else if (mitem.FoodType == 3)
+                                        {
+                                            <img src="/images/icons/Vege_icon.svg">
+                                        }
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="not_deliverale_msg_wrap d-flex justify-content-start mb-1 align-items-center">
+
+                                    @if (isSoldOut)
+                                    {
+                                        <div class="form-qty-block">
+                                            <a href="javascript:void(0)" class="btn-plus btn-add skip-addcart wishlist-block wishlist-notify-@mitem.StitID-@mitem.StitFsiuid" data-productid="@mitem.StitID" data-groupid="@mitem.StitFsiuid" data-branchid=@mitem.BranchId data-branchtypeid=@mitem.BranchTypeId data-source="2">
+                                                <span>Notify</span>
+                                                <i class="fa-regular fa-bell ms-0 notify-bell-@mitem.StitID-@mitem.StitFsiuid" aria-hidden="true"></i>
+                                                <i class="notify-check-@mitem.StitID-@mitem.StitFsiuid fa-solid fa-check ms-0 hide"></i><i class="fa-regular fa-bell ms-0" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    else if (isOutOfStock)
+                                    {
+                                        <span class="not_deliverale_msg_icon d-flex justify-content-center align-items-center me-2">
+                                            <img src="/images/icons/normal_delivery.svg">
+                                        </span>
+                                        <span class="not_deliverale_msg">Out of Stock<br>Check Back Later</span>
+                                    }
+                                    else @* if(isNotDeliverable) *@
+                                    {
+                                        if (!User.Identity.IsAuthenticated && guestUser != null && guestUser.GuestLatitude == null)
+                                        {
+                                            <div class="form-qty-block addunitWrap">
+                                                <button type="button" class="btn btn-sm btn-plus btn-add" data-bs-toggle="modal" data-bs-target="#search-address-modal"><span>Add</span>+</button>
+                                            </div>
+                                            <div class="veg_novgsymple">
+                                                @if (mitem.FoodType == 1)
+                                                {
+                                                    <img src="/images/icons/organic_icon.svg">
+                                                }
+                                                else if (mitem.FoodType == 2)
+                                                {
+                                                    <img src="/images/icons/Nonveg_icon.svg">
+                                                }
+                                                else if (mitem.FoodType == 3)
+                                                {
+                                                    <img src="/images/icons/Vege_icon.svg">
+                                                }
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <div class="not_deliverale_msg_wrap d-flex justify-content-start align-items-center">
+                                                <span class="not_deliverale_msg_icon d-flex justify-content-center align-items-center me-2">
+                                                    <img src="/images/icons/normal_delivery.svg">
+                                                </span>
+                                                <span class="not_deliverale_msg">Undeliverable to location</span>
+                                            </div>
+                                        }
+
+                                    }
+
+                                </div>
+                            }
+                        }
+                        else if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="addunit_infowrap">
+                                <div class="form-qty-block addunitWrap">
+                                    <button type="button" class="btn btn-sm btn-minus minus" style="display:none;">-</button>
+                                    <input type="number" class="form-control form-control-sm form-qty" step="1" min="0" max="100" name="qty" value="" size="4" inputmode="numeric" placeholder="Add" style="display:none;">
+                                    <button type="button" class="btn btn-sm btn-plus plus btn-add open-login-modal"><span>Add</span>+</button>
+                                </div>
+                                <div class="veg_novgsymple">
+                                    @if (mitem.FoodType == 1)
+                                    {
+                                        <img src="/images/icons/organic_icon.svg">
+                                    }
+                                    else if (mitem.FoodType == 2)
+                                    {
+                                        <img src="/images/icons/Nonveg_icon.svg">
+                                    }
+                                    else if (mitem.FoodType == 3)
+                                    {
+                                        <img src="/images/icons/Vege_icon.svg">
+                                    }
+                                </div>
+                            </div>
+
+                        }
+
+                    }
+
+                </div><!--productItemWrap-->
+            </div>
+
+            <!--swiper-slide-->
+        }
+    }
+
+}
+
+

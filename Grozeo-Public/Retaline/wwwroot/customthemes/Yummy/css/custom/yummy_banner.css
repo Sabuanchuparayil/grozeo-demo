@@ -1,0 +1,33 @@
+
+.section-grz_banner_figure {
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1.5rem ;
+}
+.mainbanner .paginationwrap .swiper-pagination, .addsbanner .paginationwrap .swiper-pagination {
+    background: transparent;
+}
+
+.swiper-pagination-bullet {
+    background-color: #AA7E44;
+    opacity: 1;
+}
+
+.mainbanner .swiper-pagination-bullet-active, .addsbanner .swiper-pagination-bullet-active {
+    background: var(--bs-primary);
+    width: 10px;
+    height: 10px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    background-color: var(--bs-primary);
+}
+
+.catogery-slider-wrap .swiper-button-next, .catogery-slider-wrap .swiper-button-prev {
+    color: #fff;
+    background-color: var(--bs-primary);
+}
+
+.mainbanner .swiper-slide img, .mainbanner img, .addsbanner .swiper-slide img, .addsbanner img {
+    width: 100%;
+}

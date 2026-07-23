@@ -1,0 +1,139 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Microsoft.AspNetCore.Http;
+@model Retaline.Core.ViewModel.Catalog.CategoryItemViewModel
+
+@{
+    List<CategoryData> allcategories = new List<CategoryData>();
+    //List<CategoryData> departments = new List<CategoryData>();
+    try
+    {
+        allcategories = Model.Categories;
+        //departments = allcategories.Where(c => c.Categorylevel == 1).ToList();
+        //categoryItem.Categories.Count(c => c.Subcategories.Count() > 0 && c.Subcategories.Count(s => s.Subcategory.Count() > 0) > 0)
+        allcategories = allcategories.Where(c => c.Subcategories.Count() > 0 && c.Subcategories.Count(s => s.Subcategory.Count() > 0) > 0).ToList();
+    }
+    catch
+    {
+        allcategories = new List<CategoryData>();
+        //departments = new List<CategoryData>();
+    }
+    //departments = new List<CategoryData>();
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="all-category_card">
+                <div class="titlewrap">
+                    <h2>All categories</h2>
+                </div>
+                @foreach (var dept in allcategories)
+                {
+
+                    <div class="category_department">
+                        <div class="title_department">
+                            <h5 class="cat-type-1">@dept.CategoryName</h5>
+                        </div>
+                        <div class="department_category-wrap">
+                            @foreach (var cat in dept.Subcategories.Where(c => c.Subcategory.Count() > 0).ToList())
+                            {
+
+                                <div class="department_category">
+                                    <h6 class="cat-type-2">@cat.CategoryName</h6>
+                                    <div class="department_sub-category">
+                                        <div class="department_sub-category-higlight">
+
+                                            <a href="@String.Format("/pc/{0}/{1}/{2}/{3}", cat.ParentCategory, cat.CategoryId, cat.Subcategory[0].SubCategoryId, cat.Subcategory[0].SubCategoryName)">
+                                                <div class="category_img">
+                                                    <img class="img-fluid" src="@(cat.Subcategory[0].SubCategoryImage??"/images/noimagefound.png")" onerror="this.src='/images/noimagefound.png'">
+                                                </div>
+                                                <span>@cat.Subcategory[0].SubCategoryName</span>
+                                            </a>
+
+                                            @if (cat.Subcategory.Count > 1)
+                                            {
+                                                @* <span class="more_category-btn" data-bs-target="#morecategories-modal" data-bs-toggle="modal" data-bs-dismiss="modal">More</span> *@
+                                                <span class="more_category-btn" data-subcat='@Html.Raw(Json.Serialize(cat))'>More</span>
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--department_category-->
+                            }
+                        </div><!--department_category-wrap-->
+                    </div>
+
+                    <!--category_department-->
+                }
+            </div><!--all-category_card-->
+        </div><!--col-12-->
+    </div>
+
+
+    <!-- More categories Modal -->
+    <div class="modal fade morecategories" id="morecategories-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="morecategories-modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h5 class="modal-title" id="morecategories-modalLabel">Loading...</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h6 id="cat-2">Loading...</h6>
+                            <ul class="sub-category_list">
+                            </ul>
+                        </div>
+                    </div>
+                </div><!--modal-body-->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('.more_category-btn').off("click").on("click", function () {
+        const $categoryBlock = $(this).closest('.department_category');
+        const cat2 = $categoryBlock.find('h6.cat-type-2').text().trim();
+        const cat1 = $(this).closest('.category_department').find('h5.cat-type-1').text().trim();
+        const catData = $(this).data('subcat');
+
+        const parentCatId = catData.parent_category;
+        const mainCatId = catData.category_id;
+        const subCats = catData.categories || [];
+
+        const $list = $('#morecategories-modal .sub-category_list');
+        $list.empty();
+
+        subCats.forEach(sub => {
+            const subCatId = sub.sub_category_id;
+            const subCatName = sub.sub_category;
+            const subCatImage = sub.sub_category_image || '/images/noimagefound.png';
+            const urlSafeName = encodeURIComponent(subCatName);
+            const href = `/pc/${parentCatId}/${mainCatId}/${subCatId}/${urlSafeName}`;
+
+            $list.append(`
+                            <li>
+                                <a href="${href}">
+                                    <div class="category_img">
+                                        <img class="img-fluid" src="${subCatImage}" onerror="this.src='/images/noimagefound.png'">
+                                    </div>
+                                    <span>${subCatName}</span>
+                                </a>
+                            </li>
+                        `);
+        });
+
+        $('#morecategories-modal').find('#morecategories-modalLabel').text(cat1);
+        $('#morecategories-modal').find('#cat-2').text(cat2);
+        $('#morecategories-modal').modal('show');
+    });
+
+
+</script>

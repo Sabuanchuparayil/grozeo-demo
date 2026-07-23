@@ -1,0 +1,133 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model bool;
+@{
+    bool isFooterView = Model;
+    string strThemeTitle = "Grozeo", strTenantAddress="", strTenantEmail="", strTenantPhone="";
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.Name))
+    {
+        strThemeTitle = tenant.Value.Name;
+        try{
+            strTenantAddress = tenant.Value.Address;
+            strTenantEmail = tenant.Value.ContactEmail;
+            strTenantPhone = tenant.Value.ContactPhone;
+        }catch{}
+    }
+
+}
+
+@if(isFooterView){
+    <h6 class="footer-heading">@strThemeTitle</h6>
+
+    @if (!String.IsNullOrEmpty(strTenantAddress))
+    {
+        <p>
+            @strTenantAddress
+            Tel: @strTenantPhone@(String.IsNullOrEmpty(strTenantEmail) ? "" : ", Email: "+ strTenantEmail)
+        </p>
+    }
+    else
+    {
+        <p>
+            Reta Globe India Private Limited, The Atomic Near Technopark Phase 1, Kazhakootam,
+            695581,
+            Trivandrum, Kerala Tel: +91 471 22334455 / 9988776655 Email: contact@grozeo.com
+        </p>
+    }
+}
+else{ 
+    @if (!String.IsNullOrEmpty(strTenantAddress)){
+
+        <div class="info-addres">
+            <h6>@tenant.Value.Name</h6>
+            <ul class="contacts-info-list">
+                <li>
+                    <i class="fa-light fa-location-dot" aria-hidden="true"></i>
+                    <div class="info-item">
+                        <p>@strTenantAddress</p>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-light fa-envelope"></i>
+                    <span class="info-item">
+                        <a href="@strTenantEmail">@strTenantEmail</a>
+                    </span>
+                </li>
+                <li>
+                    <i class="fa-light fa-phone"></i>
+                    <div class="info-item">
+                        @strTenantPhone
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+
+
+      @*   <div class="contctinfowrap">
+            <h5>@tenant.Value.Name</h5>
+            <p>@strTenantAddress</p>
+            <div class="contctinfo">
+                <span class="telicont">Tel: @strTenantPhone</span>
+                <span class="telicont">Email: <a href="@(String.Format("mailto:{0}", strTenantEmail))">@strTenantEmail</a></span>
+            </div>
+        </div> *@
+
+    }
+    else{
+
+        <div class="info-addres">
+            <h6>Grozeo Gloabl</h6>
+            <ul class="contacts-info-list">
+                <li>
+                    <i class="fa-light fa-location-dot" aria-hidden="true"></i>
+                    <div class="info-item">
+                        <p>House of Spells, 69-71 Charing Cross Road, London, WC2H 0NE,<br>London, United Kingdom</p>
+                    </div>
+                </li>
+
+                <li>
+                    <i class="fa-light fa-envelope"></i>
+                    <span class="info-item">
+                        <a href="mailto:contact@grozeo.co.uk">contact@grozeo.co.uk</a>
+                    </span>
+                </li>
+                <li>
+                    <i class="fa-light fa-phone"></i>
+                    <div class="info-item">
+                        (+44) 020 7287 9077/+914713551729
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+
+
+
+
+
+		@* 	<div class="contctinfowrap">
+				<h4>Global office</h4>
+				<h5>Grozeo Gloabl</h5>
+				<p>House of Spells, 69-71 Charing Cross Road, London, WC2H 0NE,<br>London, United Kingdom</p>
+				<div class="contctinfo">
+					<span class="telicont">Tel: (+44) 020 7287 9077</span>
+					<span class="telicont">Email: <a href="mailto:contact@grozeo.co.uk">contact@grozeo.co.uk</a></span> 
+				</div>
+			</div>
+
+			<div class="contctinfowrap">
+				<h4>Regional Address</h4>
+				<h5>Grozeo International Private Limited</h5>
+				<p>The Atomic Near Technopark Phase 1, Kazhakootam,<br>Trivandrum, Kerala, India -695581</p>
+				<div class="contctinfo">
+					<span class="mobilecont">Mob: +91 7012455015</span>
+					<span class="telicont">Tel: +914713551729</span>
+					<span class="telicont">Email: <a href="mailto:contact@grozeo.in">contact@grozeo.in</a></span> 
+				</div>
+			</div> *@
+    }
+}
+

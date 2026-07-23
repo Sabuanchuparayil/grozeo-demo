@@ -1,0 +1,22 @@
+# Credentials
+appsettings.json
+appsettings.*.json
+*.pfx
+secrets.json
+
+# Build
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+
+# NuGet
+packages/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

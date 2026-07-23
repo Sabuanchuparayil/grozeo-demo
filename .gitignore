@@ -1,0 +1,41 @@
+# === CREDENTIALS & SECRETS ===
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+
+# === Laravel ===
+**/vendor/
+**/node_modules/
+**/storage/logs/*
+**/storage/framework/cache/*
+**/storage/framework/sessions/*
+**/storage/framework/views/*
+
+# === .NET ===
+**/bin/
+**/obj/
+
+# === PHP Legacy Apps - Large Assets ===
+**/jscache/
+**/vlsupload/
+**/myphaprescription/
+
+# === IDE & OS ===
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Database dumps ===
+*.sql
+
+# === Temp dirs ===
+/local-dev/
+/terminals/
+
+# === Railway link files ===
+.railway/

@@ -1,0 +1,24 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@model List<CategoryData>;
+@{
+    Layout = null;
+    int indx = 0;
+}
+
+@foreach (var category in Model)
+{
+    foreach (var subcategory in category.Subcategories.Where(c=> c.ImageUrl != null))
+    {
+        if (indx >= 24)
+            break;
+        indx = indx + 1;
+    <li>
+        <a href="@String.Format("/pc/{0}/{1}/{2}", subcategory.ParentCategory, subcategory.CategoryId, subcategory.CategoryName)">
+            <div class="image">
+                <img src="@(subcategory.ImageUrl)" onerror="this.src='/images/p-no-image.png'" alt="img">
+            </div>
+            <p>@subcategory.CategoryName</p>
+        </a>
+    </li>
+    }
+}

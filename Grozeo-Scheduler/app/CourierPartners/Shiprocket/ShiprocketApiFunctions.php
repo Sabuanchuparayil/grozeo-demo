@@ -1,0 +1,236 @@
+<?php
+namespace App\CourierPartners\Shiprocket;
+
+use App\Helpers\HttpCurlCalls;
+
+use App\CourierPartners\Shiprocket\{
+	ShiprocketAuthentication,
+	ShiprocketOrders,
+	ShiprocketTracking,
+};
+use Illuminate\Support\Facades\DB;
+use App\Models\{
+    Order,
+    Branch,
+    TransferOrder
+};
+
+class ShiprocketApiFunctions
+{
+    protected $authId;
+    protected $authPass;
+    protected $channelId;
+    protected $authApi;
+    protected $packDetails;
+    protected $pickup;
+    
+    function __construct()
+    {
+        $this->authId = config('courierpartners.shiprocket.auths.id');
+        $this->authPass = config('courierpartners.shiprocket.auths.password');
+        $this->channelId = config('courierpartners.shiprocket.channel_id');
+        $this->authApi = config('courierpartners.shiprocket.authentication');
+        $this->pickup = config('courierpartners.shiprocket.createPickup');
+
+        $this->packDetails = DB::table('retaline_transfer_order_pack_details');
+        $this->shippingConsignment = DB::table('shipping_consignment');
+    }
+       
+    public function getHeader($tokenCheck = 1)
+    {
+        $outs = ['Content-Type: application/json'];
+        if($tokenCheck == 1)
+        {
+            $token = DB::table('sys_configuration')->where('cfg_Name', 'SHIPROCKET_TOKEN')->value('cfg_Value');
+            if($token)
+            {
+                array_push($outs, 'Authorization: Bearer '.$token);
+            }
+            else
+            {
+                array_push($outs, 'Authorization: Bearer '.$this->createAuthToken());
+            }
+        }
+        return $outs; 
+    }
+    public function createAuthToken()
+    {
+        $outs = '';
+        $body = [
+            'email'     => $this->authId,
+            'password'  => $this->authPass
+        ];
+        $response = (new HttpCurlCalls)->curlCall($this->authApi, json_encode($body), 'POST', ['Content-Type: application/json']);
+        if($response)
+        {
+            $updateConfig = DB::table('sys_configuration')
+            ->where('cfg_Name', 'SHIPROCKET_TOKEN')
+            ->update([
+                'cfg_Value'	=> $response->token
+            ]);
+            $outs = $response->token;
+        }
+        return $outs;
+    }
+    public function getOrderBody($fsto_id)
+    {
+        $outs = [
+            'status'    => 'error',
+            'data'      => [],
+            'message'   => 'Order not found'
+        ];
+        $data = [];
+        $package = TransferOrder::where('fsto_id', $fsto_id)->first();
+        if($package)
+        {
+            $outs['message'] = 'Order not packed';
+            if($package->fsto_status == 10)
+            {
+                $productData = $package->packedtransferorderDetails;
+                $outs['message'] = 'No packed products found.';
+                if($productData)
+                {
+                    $orderData = Order::where('order_id', $package->fstr_id)->first();
+                    $outs['message'] = 'Branch not available.';
+                    if(@$orderData->order_branch_id > 0)
+                    {
+                        $branchData = Branch::where('br_ID', $orderData->order_branch_id)->first();
+
+                        $shipmentExists = $this->shippingConsignment->where([
+                            ['order_id', $orderData->order_order_id],
+                            ['shipping_type', 'worldoptions'],
+                        ])->whereNotIn('consignment_status', [4,5])->first();
+                        $outs['message'] = 'Order already registered for shipping.';
+                        if(empty($shipmentExists))
+                        {
+                            $store_addr = [@$branchData->br_City, @$branchData->district->dst_Name, @$branchData->state->st_name];
+
+                            $cust_addr1 = [@$orderData->deliveryAddress->order_house_no, @$orderData->deliveryAddress->order_house_name, @$orderData->deliveryAddress->order_address];
+                            $cust_addr2 = [@$orderData->deliveryAddress->order_land_mark, @$orderData->deliveryAddress->order_city, @$orderData->deliveryAddress->order_state];
+
+                            $data['order_id'] = @$orderData->order_order_id;
+                            $data['from_details'] = [
+                                'branch_id'         => $branchData->br_ID,
+                                'company_name'      => $branchData->br_Name,
+                                'address1'          => implode(', ', array_filter($store_addr)),
+                                'address2'          => implode(', ', array_filter($store_addr)),
+                                'city'              => $branchData->br_City,
+                                'pincode'           => $branchData->br_pincode,
+                                'phone'             => $branchData->br_Phone,
+                                'email'             => $branchData->br_Email,
+                                'latitude'          => $branchData->br_Lat,
+                                'longitude'         => $branchData->br_Lng,
+                                'gst'               => $branchData->br_GST,
+                                'storegroup'        => $branchData->storegroup
+                            ];
+                            $data['to_details'] = [
+                                'customer_name'     => @$orderData->deliveryAddress->order_customer_name,
+                                'customer_email'    => @$orderData->deliveryAddress->order_customer_email,
+                                'customer_phone'    => @$orderData->deliveryAddress->order_contact_no,
+                                'customer_city'     => @$orderData->deliveryAddress->order_city,
+                                'address1'          => implode(', ', array_filter($cust_addr1)),
+                                'address2'          => implode(', ', array_filter($cust_addr2)),
+                                'pincode'           => @$orderData->deliveryAddress->order_pin
+                            ];
+                            $pickup_date = date('d/m/Y', strtotime($package->fsto_updateon));
+                            $dateCheck = date('Y-m-d', strtotime($package->fsto_updateon));
+                            $pickup_time = date('H:i', strtotime($package->fsto_updateon));
+                            if(strtotime($package->fsto_updateon) < strtotime('now'))
+                            {
+                                $pickup_date = date("d/m/Y", time()+86400);
+                                $dateCheck = date("Y-m-d", time()+86400);
+                                $pickup_time = '11:00';
+                            }
+                            if (in_array(date('w', strtotime($dateCheck)), [0, 6]))
+                            {
+                                $pickup_date = (date('w', strtotime($dateCheck)) == 6) ? date("d/m/Y", strtotime('+3 days')) : date("d/m/Y", strtotime('+1 days'));
+                                $pickup_time = '11:00';
+                            }
+                            $data['package_details'] = [
+                                'package'       => [],
+                                'products'      => [],
+                                'pickup_date'   => $pickup_date,
+                                'pickup_time'   => $pickup_time
+                            ];
+
+                            $packagedItems = $this->packDetails->where('rtopd_fstoId', $fsto_id)->get();
+                            $x = 0;
+                            foreach ($packagedItems as $pItem)
+                            {
+                                $x++;
+                                $packageMaster = DB::table('retaline_package_master')->where('rpckm_id', $pItem->rtopd_packaging)->first();
+                                $data['package_details']['package'][] = [
+                                    'weight'        => intval($pItem->rtopd_packetweigh),
+                                    'length'        => @intval($packageMaster->rpckm_length),
+                                    'width'         => @intval($packageMaster->rpckm_breadth),
+                                    'height'        => @intval($packageMaster->rpckm_height),
+                                ];
+                            }
+                            $p = 0;
+                            foreach ($orderData->orderItems as $oitem)
+                            {
+                                $data['package_details']['products'][] = [
+                                    'package_number'    => 'package_'.$p,
+                                    'id'                => $oitem->item_id,
+                                    "name"              => $oitem->item->stit_itemName,
+                                    "price"             => $oitem->item_price,
+                                    "discount"          => 0,
+                                    "total"             => $oitem->item_sales_price,
+                                    "qty"               => $oitem->item_order_qty_scanned,
+                                    "sku"               => $oitem->item->stit_SKU,
+                                    "hsn"               => $oitem->item->stit_HSN_code,
+                                    "tax"               => ($oitem->item_is_taxable > 0) ? ($oitem->item_cgst+$oitem->item_sgst+$oitem->item_igst+$oitem->item_kfc) : 0,
+                                    "weight"            => $oitem->item->item_weight,
+                                    "line_item"         => 0
+
+                                ];
+                                $p++;
+                            }
+                            $data['payment_mode'] = 'online';
+                            $data['pending_amount'] = 0;
+                            if(($orderData->payment_mode == 1) || ($orderData->payment_mode == 4) || ($orderData->payment_mode == 7))
+                            {
+                                $data['payment_mode'] = 'cod';
+                                $data['pending_amount'] = $orderData->order_amount_payable;
+                            }
+                            if(($x > 0) && ($p > 0))
+                            {
+                                $outs['message'] = 'success';
+                                $outs['status'] = 'success';
+                                $outs['data'] = $data;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $outs;
+    }
+
+    public function createPickupAddress($branch_id)
+    {
+        $branchDetails = Branch::where('br_ID', $branch_id)->first();
+        if($branchDetails)
+        {
+            $store_addr = [@$branchDetails->br_City, @$branchDetails->district->dst_Name, @$branchDetails->state->st_name];
+            return [
+                "pickup_location"   => str_replace(' ', '_', $branchDetails->br_Name)."_{$branchDetails->br_ID}",
+                "name"              => $branchDetails->br_Name,
+                "email"             => $branchDetails->br_Email,
+                "phone"             => $branchDetails->br_Phone,
+                "address"           => implode(', ', array_filter($store_addr)),
+                "address_2"         => implode(', ', array_filter($store_addr)),
+                "city"              => $branchDetails->br_City,
+                "state"             => @$branchDetails->state->st_name,
+                "country"           => config('app.operatingcountry'),
+                "lat"               => $branchDetails->br_Lat,
+                "long"              => $branchDetails->br_Lng,
+                "vendor_name"       => @$branchDetails->storegroup->store_group_name,
+                "gstin"             => $branchDetails->br_GST,
+                "address_type"      => "vendor",
+                "pin_code"          => $branchDetails->br_pincode
+            ];
+        }
+        return [];
+    }
+}

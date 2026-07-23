@@ -1,0 +1,44 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/AgentMaster.Master" AutoEventWireup="true" CodeBehind="FinanceMaster.master.cs" Inherits="RetalineProAgent.Finance.FinanceMaster" %>
+
+<%--<%@ Register Src="~/Finance/Controls/HeaderNavigationFinance.ascx" TagPrefix="uc1" TagName="HeaderNavigationFinance" %>--%>
+<%@ Register Src="~/Controls/ctrlMenuNavigation.ascx" TagPrefix="uc1" TagName="ctrlMenuNavigation" %>
+
+
+<asp:Content ContentPlaceHolderID="matomoSite" runat="server">
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "<%= ConfigurationSettings.AppSettings.Get("MatomoUrl")%>";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '71']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+    
+</asp:Content>
+
+<asp:Content ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" href="/Content/css/custom/Finance/custom.css">
+    
+    <asp:ContentPlaceHolder ID="cpNhead" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpHeaderNavigationAdmin" runat="server">
+    <%--<uc1:HeaderNavigationFinance runat="server" id="HeaderNavigationFinance" />--%>
+    <uc1:ctrlMenuNavigation runat="server" ID="ctrlMenuNavigation" StartingNode="~/finance" />
+
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpBreadcrumb" runat="server">
+    <asp:ContentPlaceHolder ID="cpNBreadcrumb" runat="server"><li class="breadcrumb-item"><a href="/">Home</a></li></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpTitle" runat="server">
+    <asp:ContentPlaceHolder ID="cpNTitle" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpMainContent" runat="server">
+    <asp:ContentPlaceHolder ID="cpNMainContent" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>

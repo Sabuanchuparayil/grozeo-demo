@@ -1,0 +1,90 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><!--#include file="clearssl.inc"-->
+
+
+<link rel="stylesheet" type="text/css" href="./resources/css/styles.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title></title>
+<script>
+	function createCookie(name,value,days) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	}
+	function ContinueToNext(){
+		createCookie('ignorebrowser','true',7);		
+		window.location = '/';
+	}
+	</script>
+
+<style type="text/css">
+
+html,body{
+      margin:0;
+      padding:0;
+      height:100%;
+      border:none;
+	  background-color: #F3F4F6;
+   }
+   #SysReq{
+       font-size:11px;
+       font-family:Arial;
+       padding-top:10px;
+   }
+   #ReqTitle{
+       font-weight:bold;
+   }
+body{font-family:Arial, Helvetica, sans-serif;}
+
+
+p{font-size:12px; padding:5px 0;}
+.title{font-weight:bold; font-size:13px;}
+
+</style>
+</meta>
+</head><body>
+  <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="center" valign="middle"><table width="420" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td></td>
+  </tr>
+  <tr>
+    <td align="center"><table width="380" cellpadding="3" border="0" style="border: 1px #cc0033 solid">
+  <tr>
+    
+  </tr>
+  <tr style="background-color: #cc0033; color: white;">
+      <td>
+          <strong id="ReqTitle">Minimum System Requirements</strong>
+      </td>
+  </tr>
+  <tr>
+      <td>
+          <p>
+<b> Operating System </b> - Windows XP or higher, Ubuntu Linux 10.04 or higher, Mac OS 10.4.x or higher <br/> <b>Browser</b> - Firefox 3.5+ ( Windows, Linux
+and Mac), Safari 4.0+ (Mac), Chrome 20+ (Windows and Linux)	  <br> 
+--------------------------------------------------------------------------------------------<br>
+To continue at your own risk, click Continue
+</p>
+	
+
+      </td>
+  </tr>  
+  <tr>	
+    <td align="right"> 	
+	
+	<button align="right" onclick="ContinueToNext()">Continue</button>
+	</td>
+  </tr>
+</table>
+</td>
+  </tr>
+  <tr>
+    <td></td>
+  </tr>
+</table>
+</body></html>

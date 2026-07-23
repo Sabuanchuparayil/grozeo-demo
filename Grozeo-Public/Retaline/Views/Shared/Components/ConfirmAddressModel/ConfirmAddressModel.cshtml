@@ -1,0 +1,108 @@
+﻿@using Retaline.Core.BusinessModel.UserDetails
+@model List<Address>;
+
+<div class="modal fade show"
+     id="address-modal-confirm"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1"
+     aria-labelledby="addressModalLabel"
+     style="display: block"
+     aria-modal="true"
+     role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4">
+            <div class="modal-header flex-wrap justify-content-center p-0 border-0 mb-4">
+                <h5 class="modal-title w-100 text-center mb-2"
+                    id="addressModalLabel">
+                    Select your address to deliver the order
+                </h5>
+                <button class="btn btn-outline-primary add_new_delvadress delvadress_btn px-3 py-0"
+                        data-bs-toggle="modal"
+                        data-bs-target="#address-modal"
+                        data-bs-dismiss="modal"
+                        id="addNewAddressButton">
+                    Add New Address
+                </button>
+               
+
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="position-relative">
+                    <button class="adressScroll_button Scrollup @(Model.Count < 3 ? "hide" : "")" id="scrollButtonUp"><i class="fas fa-chevron-up"></i></button>
+                    <div class="address-list" id="addressList">
+
+                          @for (int i = 0; i < Model.Count; i++)
+                        {
+                            var iconClass = Model[i].Type == "home" ? "myhome_address" : Model[i].Type == "office" ? "myoffice_address" : "myother_address";
+                            <div class="address-tile-@Model[i].Id address-tile @(Model[i].IsPrimary==1?"active":"") @iconClass nw_delvadress_list mb-3" >
+                                <div class="delivery_adresslist @(Model[i].IsPrimary==0?"select_address":"") border-0 bg-transparent d-flex flex-wrap position-relative" data-addrid="@Model[i].Id" @(Model[i].IsPrimary == 1 ? "data-bs-dismiss=modal" : "")>
+                                    @if (Model[i].IsPrimary == 1)
+                                    {
+                                        <div class="ribbon"><span>Last Used</span></div>
+
+                                    }
+                                    <span class="adress_cat d-flex align-items-center text-capitalize mb-2">
+                                        <div class="address-tile-icons d-flex justify-content-center align-items-center p-1 rounded-circle me-2 position-relative">
+                                            <!-- <img src="index_files/home-icon.png"> -->
+                                        </div>
+                                        <div class="address_tile_name">@Model[i].Type</div>
+                                    </span>
+
+                                    <div class="d-flex">
+                                        <div class="delivery_adress p-0 pe-2 @(Model[i].IsPrimary == 1 ? "active" : "") " data-addrid="@Model[i].Id">
+                                            <span class="delivery_location mb-1">
+                                                @Model[i].HouseNumber  @Model[i].HouseName @Model[i].DeliveryAddress
+                                                @Model[i].City @Model[i].State
+                                                @if (Model[i].Post.Length > 1)
+                                                {
+                                                    @Model[i].Post
+                                                }
+                                            </span>
+                                            <span class="adress_phonenumber">@Model[i].ContactNumber</span>
+                                        </div>
+                                        <div class="mapicons">
+                                            <img class="img-fluid" src="/images/map.png" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--address-tile-->
+                        }
+                    </div>
+                    <button class="adressScroll_button Scrolldown @(Model.Count < 3 ? "hide" : "")" id="scrollButtonDown"><i class="fas fa-chevron-down"></i></button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var addressCount = @Model.Count;
+    document.addEventListener('DOMContentLoaded', function () {
+        var addressModal = new bootstrap.Modal(document.getElementById('address-modal-confirm'));
+        addressModal.show();
+
+        document.getElementById('scrollButtonDown').addEventListener('click', function () {
+            var addressList = document.getElementById('addressList');
+            addressList.scrollBy({
+                top: addressList.clientHeight / 2,
+                behavior: 'smooth'
+            });
+        });
+        document.getElementById('scrollButtonUp').addEventListener('click', function () {
+            var addressList = document.getElementById('addressList');
+            addressList.scrollBy({
+                top: -addressList.clientHeight / 2,
+                behavior: 'smooth'
+            });
+        });
+        $('#addNewAddressButton').click(function () {
+            if (addressCount < 1 ){
+                $('.closepopup').remove();
+            }
+        });
+    });
+</script>

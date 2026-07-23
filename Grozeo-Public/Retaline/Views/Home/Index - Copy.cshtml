@@ -1,0 +1,274 @@
+﻿@using ODOCart.Core.ViewModel.Home;
+@using ODOCart.Core.BussinessModel.Home;
+@using ODOCart.Core.Utilities;
+
+@model List<HomePageViewModel>;
+@{
+    //HomeRoot homeRoot = Model.HomeRoot??new HomeRoot();
+}
+@*<script type="text/javascript">
+        var homeStatus = "@(Model.HomeRoot == null || String.IsNullOrEmpty(Model.HomeRoot.Status) ? "error": Model.HomeRoot.Status)";
+        if (homeStatus == "error") {
+            $("#myModa2").modal('show');
+        }
+    </script>
+*@
+<header>
+    <div class="owl-carousel owl-theme ">
+        @foreach (HomeValue item in Model[0].Content)
+        {
+        <div class="item">
+            <div class="our-team">
+                <a href="/offers">    <img src="@(item.ImageUrl??item.Image)" onerror="this.src='/img/p-no-image.png'" alt=""></a>
+                @*<a href="/offers">
+                    <div class="cover">
+                        <div class="container">
+                            <div class="header-content">
+                                <h2>Summer Surpises</h2>
+                                <h1>
+                                    In publishing and graphic design, Lorem ipsum is a placeholder text
+                                    commonly used to demonstrate the visual fom of a document or a
+                                    typeface without relying on meaningful content.
+                                </h1>
+                                <a href="#" class="btn button2">Shop Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </a>*@
+            </div>
+        </div>
+        }
+    </div>
+</header>
+<div id="content">
+    <div class=" section1 pt-0 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 ">
+                    <div class="banner">
+                        <a href="">    <img src="~/img/aaasd.png" alt=""></a>
+                        <div class="content-wrapper">
+                            <div class="content vertical-center vertical-center1 w-100 text-left">
+                                <div class="row addtext">
+                                    <div class="col-md-12">
+                                        <p class="display-4">Huge discounts to avail</p>
+                                        <a href="#" class="btn button1">30% OFF</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="banner">
+                        <a href="">    <img src="~/img/ds.png" alt=""></a>
+                        <div class="content-wrapper">
+                            <div class="content vertical-center vertical-center1 w-100 text-left">
+                                <div class="row addtext">
+                                    <div class="col-md-12">
+                                        <p class="display-4">
+                                            High quality
+                                            meat products
+                                        </p>
+                                        <a href="#" class="btn button2">FROM 100 SAR</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="section category">
+        <div class="container">
+            <header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>Shop By Category</h2>
+                    </div>
+                    <div class="col-md-4 showlef">
+                        <a href="#" class="link d-none d-md-inline-block">Show All</a>
+                    </div>
+                </div>
+            </header>
+            <ul class="category-list">
+                @foreach (HomeValue item in Model[1].Content)
+                {
+                <li>
+                    <a href="@String.Format("/pc/{0}/{1}", item.ParentCategoryId, item.ParentCategoryName)">
+                        <div class="image">
+                            <img src="@(item.ImageUrl??item.Image)" onerror="this.src='/img/p-no-image.png'" alt="img">
+                        </div>
+                        <p>@item.ParentCategoryName</p>
+                        <p class="subpro">@item.TotalCount Products</p>
+                    </a>
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class=" promotional-items">
+        <div class="container">
+            <header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>MOST POPULAR</h2>
+                    </div>
+                    <div class="col-md-4 showlef">
+                        <a href="#" class="link d-none d-md-inline-block viewmore">View more</a>
+                    </div>
+                </div>
+            </header>
+            <ul class="product-list">
+                @foreach (HomeValue item in Model[2].Content)
+                {
+                    <li>
+                        <div class="product">
+                            <header class="d-flex flex-wrap justify-content-between align-items-center">
+                                <span class="total-discount">
+                                </span>
+                                <a class="favourite" href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                            </header>
+                            <div class="product-image">
+                                <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", item.ItemMaster[0].StitID, item.ItemName, item.ItemMaster[0].StitFsiuid, item.ItemMaster[0].StitID)">
+                                    <img src="@Common.GetProductImage(item.ItemMaster)" onerror="this.src='/img/p-no-image.png'" alt="img">
+                                </a>
+                            </div>
+                            <span class="price-block ">
+                                <span class="old-price">@item.ItemMaster[0].Mrp </span>
+                                <span class="offer-price">@item.ItemMaster[0].SellingPrice </span>
+                            </span>
+
+                            <div class="product-desc">
+                                <p>
+                                    <span>
+                                        @item.ItemName
+                                        (@item.Variant)
+                                    </span>
+                                </p>
+                            </div>
+
+                        </div>
+                    </li>
+                }
+                
+            </ul>
+        </div>
+    </div>
+
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>BRANDS</h2>
+                </div>
+                <div class="col-md-4 showlef">
+                </div>
+            </div>
+            <div class=" owl-theme owlis">
+            @foreach (HomeValue item in Model[3].Content)
+            {
+            <div class="item"><img src="@(item.ImageUrl??item.Image)" onerror="this.src='/img/p-no-image.png'"></div>
+            }
+            </div>
+        </div>
+    </section>
+    <div class=" promotional-items">
+        <div class="container">
+            <header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>TOP PRODUCT</h2>
+                    </div>
+                    <div class="col-md-4 showlef">
+                        <a href="#" class="link d-none d-md-inline-block viewmore">View more</a>
+                    </div>
+                </div>
+            </header>
+            <ul class="product-list">
+                @foreach (HomeValue item in Model[4].Content)
+                {
+                    <li>
+                        <div class="product">
+                            <header class="d-flex flex-wrap justify-content-between align-items-center">
+                                <span class="total-discount">
+                                </span>
+                                <a class="favourite" href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                            </header>
+                            <div class="product-image">
+                                <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", item.ItemMaster[0].StitID, item.ItemName, item.ItemMaster[0].StitFsiuid, item.ItemMaster[0].StitID)">
+                                    <img src="@Common.GetProductImage(item.ItemMaster)" onerror="this.src='/img/p-no-image.png'" alt="img">
+                                </a>
+                            </div>
+                            <span class="price-block ">
+                                <span class="old-price">@item.ItemMaster[0].Mrp </span>
+                                <span class="offer-price">@item.ItemMaster[0].SellingPrice </span>
+                            </span>
+
+                            <div class="product-desc">
+                                <p>
+                                    <span>
+                                        @item.ItemName
+                                        (@item.Variant)
+                                    </span>
+                                </p>
+                            </div>
+
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class=" promotional-items">
+        <div class="container">
+            <header>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>CAREGORY PRODUCT</h2>
+                    </div>
+                    <div class="col-md-4 showlef">
+                        <a href="#" class="link d-none d-md-inline-block viewmore">View more</a>
+                    </div>
+                </div>
+            </header>
+            <ul class="product-list">
+                @foreach (HomeValue item in Model[4].Content)
+                {
+                <li>
+                    <div class="product">
+                        <header class="d-flex flex-wrap justify-content-between align-items-center">
+                            <span class="total-discount">
+                            </span>
+                            <a class="favourite" href="#"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+                        </header>
+                        <div class="product-image">
+                            <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", item.ItemMaster[0].StitID, item.ItemName, item.ItemMaster[0].StitFsiuid, item.ItemMaster[0].StitID)">
+                                <img src="@Common.GetProductImage(item.ItemMaster)" onerror="this.src='/img/p-no-image.png'" alt="img">
+                            </a>
+                        </div>
+                        <span class="price-block ">
+                            <span class="old-price">@item.ItemMaster[0].Mrp </span>
+                            <span class="offer-price">@item.ItemMaster[0].SellingPrice </span>
+                        </span>
+
+                        <div class="product-desc">
+                            <p>
+                                <span>
+                                    @item.ItemName
+                                    (@item.Variant)
+                                </span>
+                            </p>
+                        </div>
+
+                    </div>
+                </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+
+</div>

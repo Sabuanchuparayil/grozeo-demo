@@ -1,0 +1,14 @@
+body{
+    font-family: 'Poppins', sans-serif;
+}
+.container {padding: 25px;}
+.logo{width: 150px;}
+.logo img {width: 100%; height: auto;}
+h1 {font-size: 30px;}
+ul {padding: 0px;}
+.address li {width: 50%; float: left; list-style: none; padding: 0px;}
+.txt_r {text-align: right; padding-right: 20px!important;}
+.txt_c {text-align: center;}
+.txt_l {text-align: left;}
+.pad {padding: 8px!important;}
+.valign {vertical-align: top!important;}

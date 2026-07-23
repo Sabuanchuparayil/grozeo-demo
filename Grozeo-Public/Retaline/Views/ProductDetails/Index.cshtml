@@ -1,0 +1,396 @@
+﻿@model Retaline.Core.BusinessModel.ProductDetails.ProductDetailsModel;
+@using Microsoft.AspNetCore.Http;
+@using Retaline.Core.BusinessModel.UserDetails;
+
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@{
+    string productUrl = "";
+    string sliderId = "";
+    int storegroupid = 0; try { storegroupid = (tenant?.Value == null || String.IsNullOrEmpty(tenant?.Value.StoreId) ? 0 : Convert.ToInt32(tenant?.Value.StoreId)); } catch { storegroupid = 0; }
+    var curUrl = new Uri($"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.Path}{_httpContextAccessor.HttpContext.Request.QueryString}");
+
+    //Retaline.Core.BusinessModel.Catalog.ItemMaster _product = Model.Product;
+    if (Model.Product == null && Model.MasterData != null)
+    {
+        Model.Product = Model.MasterData;
+    }
+    
+
+
+    bool isOutOfStock = (User.Identity.IsAuthenticated && Model?.Product?.StockAvailable > 0 && (Model?.Product?.SellingPrice <= 0 || Model?.Product?.StockAvailable <= 0));
+    bool isSoldOut = (User.Identity.IsAuthenticated && Model?.Product?.StockAvailable <= 0 && Model?.Product?.SellingPrice > 0);
+    bool isNotDeliverable = (User.Identity.IsAuthenticated && Model.BranchTypeId <= 0);
+
+}
+<link rel="stylesheet" href="~/css/swiper-bundle.min.css">
+<link rel="stylesheet" href="~/css/slick.css">
+<link rel="stylesheet" href="~/css/slick-theme.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/css/lightgallery.min.css">
+
+
+<div class="container">
+
+<div class="row">
+    <div class="col-12 col-lg-9">
+        <div class="product-detailes">
+
+            <div class="product-gallery">
+
+                <div class="product-gallery__thumbs-wrapper">
+
+                    <div class="gallery-thumbs">
+                        @if (Model?.Product?.MainImage.Length > 0)
+                        {
+                            <div class="slider-items thumbs-view">
+                                <div class="slide_img_view">
+                                    <img src="@(Model?.Product?.MainImage[0].ThumbUrl)" onerror="this.src='/images/p-no-image.png'" class="img-fluid" title="" alt="">
+                                </div>
+                            </div>
+                        }
+                        @if (Model?.Product?.AdditionalImages != null && Model?.Product?.AdditionalImages?.Length > 0)
+                        {
+                            foreach (var adImg in Model?.Product?.AdditionalImages)
+                            {
+                                sliderId = "zoom_0" + (adImg.Id);
+                                <div class="slider-items thumbs-view">
+                                    <div class="slide_img_view">
+                                        <img data-type="@sliderId" src="@adImg.ThumbUrl" onerror="this.src='/images/p-no-image.png'" />
+                                    </div>
+                                </div>
+
+                                <!--thumbs-view-->
+                            }
+                        }
+                        @if (Model?.Product?.AdditionalImages?.Length == 0 && Model?.Product?.MainImage.Length == 0)
+                        {
+                            <div class="slider-items thumbs-view">
+                                <div class="slide_img_view">
+                                    <img src="/images/p-no-image.png" class="img-fluid" title="" alt="">
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div><!--product-gallery__thumbs-wrapper-->
+
+                <div class="product-gallery__carousel-wrapper">
+
+                    <div class="gallery-slider">
+
+                        @if (Model?.Product?.MainImage?.Length > 0)
+                        {
+
+                            sliderId = "zoom_0" + Model?.Product?.MainImage[0].Id;
+
+                            <div class="slider-items full-view">
+                                <a href="@Model?.Product?.MainImage[0].ImageUrl" class="slide_img_view slider-items">
+                                    <img id="@sliderId" src="@(Model?.Product?.MainImage.Length > 0 ? Model?.Product?.MainImage[0].ImageUrl : "/images/p-no-image.png")" class="img-fluid" title="" alt="">
+                                </a>
+                            </div>
+                        }
+
+                        @foreach (var adImg in Model?.Product?.AdditionalImages)
+                        {
+                            sliderId = "zoom_0" + (adImg.Id);
+                            <div class="slider-items full-view">
+                                <a href="@adImg.ImageUrl" class="slide_img_view slider-items">
+                                    <img id="@sliderId" src="@adImg.ImageUrl" class="img-fluid" title="" alt="">
+                                </a>
+                            </div>
+
+                        }
+                        @if (Model?.Product?.AdditionalImages?.Length == 0 && Model?.Product?.MainImage.Length == 0)
+                        {
+                            <div class="slider-items full-view">
+                                <div class="slide_img_view">
+                                    <img id="zoom_01" src="/images/p-no-image.png" />
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div><!--product-gallery__carousel-wrapper-->
+            </div><!--product-gallery-->
+
+            <div class="product-meta">
+
+                <div class="product-card_info">
+                    <h4>@(Model?.Product != null && !String.IsNullOrEmpty(Model?.Product?.SKU) ? Model?.Product?.SKU : Model?.MasterData?.SKU)</h4>
+                    <div class="product-meta__category">
+                        <p>@(Model?.Product != null ? Model?.Product.CategoryName : Model?.MasterData?.CategoryName)</p>
+                        @* <div class="action-icon wishlist-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-isAuthenticated="@User.Identity.IsAuthenticated" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product.StitFsiUId" data-branchid=@Model.BranchId data-branchtypeid=@Model.BranchTypeId data-source="1">
+                        <a href="javascript:void(0)" title="Add to Wishlist" class="label_wishlist addtowishlistBtn">
+                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                        </a>
+                        </div> *@
+                        <div class="action-icon">
+                            @if (storegroupid > 0 && Model?.Product?.StoreGroupId > 0 && storegroupid != Model?.Product?.StoreGroupId)
+                            {
+                                <div class="sponsored-badge">
+                                    <img src="~/images/sponsored.svg" alt="sponsored">
+                                </div>
+                            }
+                            <a href="javascript:void(0)" title="Add to Wishlist" class="label_wishlist wishlist-block wishlist-@Model?.Product?.StitId-@Model?.Product?.StitFsiUId" data-isAuthenticated="@User.Identity.IsAuthenticated" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId" data-productid="@Model?.Product?.StitId" data-groupid="@Model?.Product?.StitFsiUId" data-branchid=@Model?.Product?.BranchId data-branchtypeid=@Model?.Product?.BranchTypeId data-source="1">
+                                <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                    @await Component.InvokeAsync("ProductShortDesc", Model)
+
+
+         
+                </div>
+
+            </div>
+
+            @* <div class="swatch-variants_wrap">
+            <h6>Variants</h6>
+            <ul class="swatch-variants_list">
+            <li>
+            <a class="active" href="">
+            <img class="img-fluid" src="~/images/variants_img_01.png">
+            </a>
+            </li>
+            <li>
+            <a href="">
+            <img class="img-fluid" src="~/images/variants_img_02.png">
+            </a>
+            </li>
+            <li>
+            <a href="">
+            <img class="img-fluid" src="~/images/variants_img_03.png">
+            </a>
+            </li>
+            <li>
+            <a href="">
+            <img class="img-fluid" src="~/images/variants_img_04.png">
+            </a>
+            </li>
+            </ul>
+            </div> *@
+
+            <div class="pro-basic_info">
+                <ul class="pro-basic_info_list">
+                    <li>
+                        <span>Category:</span>
+                        <span>@(string.IsNullOrEmpty(Model.Product.CategoryName) ? "Not Available" : Model.Product.CategoryName)</span>
+                    </li><!--li-->
+                    <li>
+                        <span>Variant:</span>
+                        <span>@(string.IsNullOrEmpty(Model.MasterData.ProductVariant) ? "None" : Model.MasterData.ProductVariant)</span>
+                    </li><!--li-->
+                    <li>
+                        <span>Country of origin:</span>
+                        <span>@(string.IsNullOrEmpty(Model.Product.Country) ? "Not Available" : Model.Product.Country)</span>
+                    </li><!--li-->
+                    <li>
+                        <span>Net Content:</span>
+                        <span>@(Model?.Product != null ? Model?.Product?.Quantity : Model.MasterData.Quantity)</span>
+                    </li><!--li-->
+                  @*   @if (Model?.Product?.ReturnTime != null && Model?.Product?.ReturnTime.Value > 0)
+                    { *@
+                        <li>
+                            <span>Return time :</span>
+                        <span>@(Model?.Product?.ReturnTime > 0 ? Model?.Product?.ReturnTime+" days":"Not Returnable") </span>
+                        </li>
+                    @* } *@
+                    <li>
+                        <span>Product code:</span>
+                        <span>@Model?.Product?.StitId-@Model?.Product?.StitFsiUId</span>
+                    </li><!--li-->
+                </ul>
+            </div>
+
+
+            <div class="pro-infotab_wrap">
+                <nav>
+                    <div class="nav nav-tabs pro-infotab_nav hdt-scroll" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-description-tab" data-bs-toggle="tab" data-bs-target="#nav-description" type="button" role="tab" aria-controls="nav-description" aria-selected="true">Product Information</button>
+                        @if (!(String.IsNullOrEmpty(Model?.Product?.Ingredients) && String.IsNullOrEmpty(Model?.Product?.Allergens)))   
+                        {
+
+                            <button class="nav-link" id="nav-Nutrition-tab" data-bs-toggle="tab" data-bs-target="#nav-Nutrition" type="button" role="tab" aria-controls="nav-material" aria-selected="false">Nutrition Value</button>
+                        }
+
+                        @if (!String.IsNullOrEmpty(Model?.Product?.PreparationAndUse))
+                        {
+
+                            <button class="nav-link" id="nav-Prepration-tab" data-bs-toggle="tab" data-bs-target="#nav-Prepration" type="button" role="tab" aria-controls="nav-Prepration" aria-selected="false">Preparation & Use</button>
+                        }
+                    </div>
+                </nav>
+                <div class="tab-content pro-infotab_content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
+
+                        @if ((!String.IsNullOrEmpty(Model?.Product?.Ingredients) && Model?.Product?.Ingredients.Trim() != "NA") || (!String.IsNullOrEmpty(Model?.Product?.Allergens) && Model?.Product?.Allergens.Trim() != "NA"))
+                        {
+
+                            @if (!String.IsNullOrEmpty(Model?.Product?.Ingredients) && Model?.Product?.Ingredients.Trim() != "NA")
+                            {
+
+                                <h6>Ingredients</h6>
+                                <p>@Html.Raw(Model?.Product?.Ingredients)</p>
+
+                            }
+                            @if (!String.IsNullOrEmpty(Model?.Product?.Allergens) && Model?.Product?.Allergens.Trim() != "NA")
+                            {
+
+                                <h6>For allergens</h6>
+                                <p>@Html.Raw(Model?.Product?.Allergens)</p>
+
+                            }
+
+                        }
+
+
+               
+                        <p>@Html.Raw(Model?.Product?.LongDesc)</p>
+
+
+
+                    </div>
+                    <div class="tab-pane fade" id="nav-Nutrition" role="tabpanel" aria-labelledby="nav-material-tab">
+                        <p>@Html.Raw(Model?.Product?.NutritionLabel)</p>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Prepration" role="tabpanel" aria-labelledby="nav-Prepration-tab">
+                        <p>@Html.Raw(Model?.Product?.PreparationAndUse)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-3">
+        <div class="" id="dvsimilar_and_others">
+            @* Shows an intiatial loader later replaced by dynamic data <starts>*@
+            @* Similar products *@
+            <div class="SimilarProducts_wrap">
+                <ul class="SimilarProducts_List">
+                    @*@for (int i = 0; i < Model.SimilarItems.Count; i++)*@
+                    <div class="product-recommended_wrap similar-products">
+                        <div class="product-recommended_title">
+                            <h6>Similar products</h6>
+                        </div>
+                        <ul class="product-recommended_list">
+                            <li>
+                                <div class="product-card">
+                                    <div class="preloder">
+                                        <span class="preloder_content">Loading...</span>
+                                        <span class="loader_anim"></span>
+                                    </div>
+                                </div>
+                            </li><!--li-->
+                        </ul><!--ul-->
+                    </div>
+                </ul>
+            </div>
+            @* You might like *@
+            <div class="SimilarProducts_wrap">
+                <ul class="SimilarProducts_List">
+                    @*@for (int i = 0; i < Model.SimilarItems.Count; i++)*@
+                    <div class="product-recommended_wrap similar-products">
+                        <div class="product-recommended_title">
+                            <h6>You mmight like</h6>
+                        </div>
+                        <ul class="product-recommended_list">
+                            <li>
+                                <div class="product-card">
+                                    <div class="preloder">
+                                        <span class="preloder_content">Loading...</span>
+                                        <span class="loader_anim"></span>
+                                    </div>
+                                </div>
+                            </li><!--li-->
+                        </ul><!--ul-->
+                    </div>
+                </ul>
+            </div>
+            @* Shows an intiatial loader later replaced by dynamic data <ends>*@
+        </div>
+
+    </div> <!--row-->
+
+</div>
+</div>
+<script src="~/js/jquery.elevatezoom.js"></script>
+<script src="~/js/swiper-bundle.min.js"></script>
+<script src="~/js/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.4/js/lightgallery-all.min.js"></script>
+<script src="~/js/custom/productDetails.js" asp-append-version="true"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+
+<script>
+    $('#product-gallery').lightGallery({
+        thumbnail: false,
+        download: false,
+        share: false,
+        autoplayControls: false,
+        loop: false
+    });
+    $(document).ready(function () {
+        $('.gallery-slider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.gallery-thumbs'
+        });
+
+        $('.gallery-thumbs').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            vertical: true,
+            asNavFor: '.gallery-slider',
+            dots: false,
+            arrows: false,
+            centerMode: true, // This is the default for desktop/vertical
+            focusOnSelect: true,
+            verticalSwiping: true,
+
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        vertical: false,
+                        centerMode: false,     
+                        verticalSwiping: false, 
+                    }
+                },
+                {
+                    breakpoint: 580,
+                    settings: {
+                        vertical: false,
+                        centerMode: false,   
+                        verticalSwiping: false,
+                    }
+                },
+                {
+                    breakpoint: 380,
+                    settings: {
+                        vertical: false,
+                        centerMode: false,   
+                        verticalSwiping: false,
+                    }
+                }
+            ]
+        });
+    });
+
+
+    wishlist.properties.isProductDetailsPage = true;
+    productDetails.properties.productid = @Model?.Product?.StitId;
+    productDetails.properties.groupid = @Model?.Product?.StitFsiUId;
+    productDetails.properties.brid = @Model.BranchId;
+    productDetails.properties.brtypeid = @Model.BranchTypeId;
+    productDetails.properties.categoryid = @(Model.Product.SubcategoryId > 0 ? Model.Product.SubcategoryId : Model.MasterData.CategoryId);
+    productDetails.properties.variantGroupID = @Model.Product?.VariantGroupId;
+</script>
+<style>
+    .Sharetogle {
+        display: block !important;
+    }
+</style>

@@ -1,0 +1,41 @@
+﻿@model Retaline.Core.BusinessModel.InfoPages.Page;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+
+@{
+
+}
+
+<div class="container">
+
+    <div class="row">
+        @await Component.InvokeAsync("InfoPageSideMenu", "hiw")
+
+        <div class="col-12 col-lg-9">
+
+            <div class="titlewrap title_group">
+                <h2>How It Works</h2>
+                <a href="/contact" class="Support-btn"><i class="fa-light fa-headset"></i><span>Get Support</span></a>
+            </div>
+
+
+            <div class="article-wrap">
+                <div class="tab-content myordertab_content" id="myorder-tabContent">
+                    @if (Model != null && !String.IsNullOrEmpty(Model.Content))
+                    {
+                        @(new Microsoft.AspNetCore.Html.HtmlString(System.Web.HttpUtility.HtmlDecode(System.Web.HttpUtility.HtmlDecode(Retaline.Web.Service.Common.FormatContentWithPlaceholder(Model?.Content, tenant?.Value)))))
+                    }
+                    else
+                    {
+                        <h6>No Contents Available</h6>
+
+                    }
+                </div>
+
+            </div><!--myorder-tabwrap-->
+
+
+        </div><!--col-lg-9-->
+    </div>
+</div>
+
+

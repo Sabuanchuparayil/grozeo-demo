@@ -1,0 +1,18 @@
+﻿@model Retaline.Core.BusinessModel.ProductDetails.ProductDetailsModel;
+@{
+}
+@if (!String.IsNullOrEmpty(Model?.Product?.StoreName) && Model?.Product?.BranchId > 0)
+{
+    <div class="shortDiscrp">
+        <small>Listed by</small>
+        <h4><a href="@($"/br/{Model.Product.BranchId}/{Retaline.Web.Service.Common.EncodeUrl(Model.Product.StoreName)}")" class="">@Model.Product.StoreName</a></h4><p></p>
+    </div>
+}
+<div class="shortDiscrp">
+    @if (!String.IsNullOrEmpty(Model?.ReturnDetails))
+    {
+        <p>@Model.ReturnDetails</p>
+    }
+    <h4>Short Description</h4>
+    <p>@Html.Raw(Model?.Product?.ShortDesc)</p>
+</div>

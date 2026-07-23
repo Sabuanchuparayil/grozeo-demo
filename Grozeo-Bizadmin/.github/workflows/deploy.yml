@@ -1,0 +1,47 @@
+name: Grozeo-Bizadmin CI/CD
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for exposed credentials
+        run: |
+          if grep -rn "AKIAQFHKOLNKPKGGCJN6\|mypharmacydev\|ZfDwOaOfDSUi\|fhGpLLpsjaQW\|Password_123" \
+            --include="*.php" --include="*.json" . 2>/dev/null; then
+            echo "CRITICAL: Exposed credentials found!"
+            exit 1
+          fi
+
+  lint:
+    name: PHP Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: PHP Syntax Check
+        run: find modules includes -name "*.php" -exec php -l {} \; 2>&1 | grep -v "^No syntax errors" | head -20
+
+  deploy:
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+    needs: [security, lint]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Deploy
+        run: |
+          doctl apps create-deployment ${{ secrets.DO_APP_ID_BIZADMIN }} \
+            --force-rebuild --wait

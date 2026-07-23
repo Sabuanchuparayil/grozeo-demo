@@ -1,0 +1,128 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@model List<HomeValue>
+@{
+}
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var prefVCategory in Model)
+    {
+        if (!String.IsNullOrEmpty(prefVCategory.ImageUrl))
+        {
+            <div class="row pb-0">
+                <div class="col-12">
+                    <div class="swiper MainBanner_Slider default_banner">
+                        <div class="swiper-wrapper">
+
+                            <div>
+                                <a href="@($"/vc/{prefVCategory.Id}/{prefVCategory.ParentCategoryName}")">
+                                    <img src="@prefVCategory.ImageUrl">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="vcitemsslider" clsid="@prefVCategory.Id">
+                    <div class="titlewrap">
+                        <h2>@prefVCategory.ParentCategoryName </h2>
+                        <div class="seeall_slidercontro">
+                            <a href="@($"/vc/{prefVCategory.Id}/{prefVCategory.ParentCategoryName}")" class="seeall">See all</a>
+                            <div class="slidercontro PopularProductSlideNav_@prefVCategory.Id">
+                                <div class="swiper-button-prev"></div>
+                                <div class="test swiper-button-next"></div>
+                            </div>
+                        </div>
+                    </div><!--titlewrap-->
+
+                    <div class="PopularSliderWrap prodectslider">
+
+                        <div class="swiper PopularProductSlide_@prefVCategory.Id">
+                            <ul class="swiper-wrapper p-0 list-none">
+                                <li class="btnautoloadmore px-2 py-1 d-flex align-items-center justify-content-center" navlink="" contenttype="6" pagenum="1" subcatId="@prefVCategory.Id" brandid="-1" catlevel="-1" searchkey="@prefVCategory.Id">Load more..</li>
+
+                            </ul><!--swiper-wrapper-->
+
+
+                        </div><!--PopularProductSlide-->
+
+                    </div><!--PopularSliderWrap-->
+
+                </div>
+
+            </div><!--col-12-->
+        </div>
+
+        <!--row-->
+    }
+
+    <script>
+        function initSwiper(objclass, navclass) {
+
+            var swiper = new Swiper(objclass, {
+
+                navigation: {
+                    nextEl: navclass + " .swiper-button-next",
+                    prevEl: navclass + " .swiper-button-prev",
+                },
+                breakpoints: {
+                    0: {
+                        slidesPerView: 'auto',
+                        spaceBetween: 0,
+                    },
+                    480: {
+                        slidesPerView: 3,
+                        spaceBetween: 0,
+                    },
+                    767: {
+                        slidesPerView: 4,
+                        spaceBetween: 0,
+                    },
+                    1024: {
+                        slidesPerView: 5,
+                        spaceBetween: 0,
+                    },
+                    1260: {
+                        slidesPerView: 6,
+                        spaceBetween: 0,
+                    },
+                },
+            });
+
+            if ($(objclass + " .swiper-slide").length < 5) {
+                $(objclass + ' .swiper-wrapper').addClass("slider_item_center");
+            }
+        }
+
+        $(document).ready(function () {
+            $('.vcitemsslider').each(function (i, obj) {
+                var cls = $(obj).attr('clsid');
+                initSwiper('.PopularProductSlide_' + cls, '.PopularProductSlideNav_' + cls);
+            });
+
+        });
+
+    </script>
+
+
+}
+
+<div class="row pb-0">
+    <div class="col-12">
+        <div class="swiper MainBanner_Slider default_banner">
+            <div class="swiper-wrapper">
+
+                <div>
+                    <a href="/offers">
+                        <img src="https://grozeoin.s3.ap-southeast-1.amazonaws.com/ads/Jewellery-Banner-Featured-Collections.jpg">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

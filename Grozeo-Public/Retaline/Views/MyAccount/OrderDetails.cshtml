@@ -1,0 +1,401 @@
+﻿@using Retaline.Core.BusinessModel.Order;
+@using Retaline.Web.Service;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model Order;
+@{
+    bool showProgress = true;
+    var failedIds = new int[] { 0, 1, 2, 21, 19,56 };
+    int deliveryStatus = 0; try { if (Model != null && Model.Status != null && Model.Status.StatusId != null) deliveryStatus = Common.OrderPostion((int)Model.Status.StatusId); } catch { }
+    //TimeSpan theTimeDifference = DateTime.Now - Convert.ToDateTime(Model.CancelTime);
+    bool showCancel = false;
+    TimeSpan theTimeDifference = new TimeSpan();
+
+
+    DateTime? apiDateTime = (DateTime.TryParse(Model.CurAPITime, out DateTime capiTime) == true ? capiTime : null); // Convert.ToDateTime(Model.CurAPITime);
+    DateTime? cancelTime = (DateTime.TryParse(Model.CancelTime, out DateTime cnlTime) == true ? cnlTime : null); //Convert.ToDateTime(Model.CancelTime);
+    if (apiDateTime != null && cancelTime != null)
+    {
+        theTimeDifference = (cancelTime == null || apiDateTime == null ? new TimeSpan() : cancelTime.Value - apiDateTime.Value);
+        showCancel = (cancelTime > apiDateTime && theTimeDifference.TotalSeconds > 0);
+    }
+    var shippingaddr = Model.ShippingAddresses.FirstOrDefault();
+
+    string paymentGateway = _configuration["PaymentGateway"];
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.PaymentGateway))
+    {
+        paymentGateway = tenant.Value.PaymentGateway;
+    }
+}
+<div class="container">
+
+<div class="row">
+    @await Component.InvokeAsync("MyAccountSideMenu", "account")
+    <div class="col-12 col-lg-9">
+
+
+        <div class="order-details-card">
+            <div class="order-details_status">
+                <span class="dlvry-status">@(Model.Status != null ? Model.Status.Status : "")</span>
+               @*  <span class="expt-dlvry-time">
+                    Estimated delivery on : <strong>25 Nov, 2024</strong>
+                </span> *@
+                @if (Model.Status != null && failedIds.Contains(Model.Status.StatusId ?? 0))
+                {
+                    @if (Model.Status.StatusId == 19)
+                    {
+                        <div class="ordr_status_img">
+                            <img src="/images/Cancelled.png" style="width: 200px;" />
+
+                        </div>
+                    }
+                    else if (Model.Status.StatusId == 21 || Model.Status.StatusId == 56)
+                    {
+                        <div class="ordr_status_img">
+                            <img src="~/images/Attention.png" style="max-width: 200px;" />
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ordr_status_img">
+                            <img src="/images/Failed.png" style="width: 200px;" />
+
+                        </div>
+                    }
+                }
+            </div>
+
+            @if (Model.Status == null || !failedIds.Contains(Model.Status.StatusId ?? 0))
+            {
+            <ul class="order-processing_wrap">
+                <li class="d-flex justify-content-center flex-wrap odr_processing">
+                    <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                    <div class="processing-title w-100 text-center px-2">Confirmed</div>
+                </li>
+
+                <li class="d-flex justify-content-center flex-wrap ">
+                    <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                    <div class="processing-title w-100 text-center px-2">Processing</div>
+                </li>
+
+                <li class="d-flex justify-content-center flex-wrap">
+                    <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                    <div class="processing-title w-100 text-center px-2">In Transit</div>
+                </li>
+                <li class="d-flex justify-content-center flex-wrap">
+                    <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                    <div class="processing-title w-100 text-center px-2">Delivered</div>
+                </li>
+            </ul>
+            }
+            <div class="order-details_infowrap">
+
+
+                <div class="order-details_info">
+
+                    <div class="order-details_info-list">
+                        <ul>
+                            <li>
+                                <span>Order ID :</span>
+                                <span>@Model.OrderId</span>
+                              
+                            </li>
+                            <li>
+                                <span>Order Amount :</span>
+                                <span>@(_configuration["CurrencySymbol"])@Model.OrderTotal</span>
+                            </li>
+                            <li>
+                                <span>Order Date :</span>
+                                <span>@Model.OrderDateTime</span>
+                            </li>
+                            <li>
+                                <span>Order Status :</span>
+                                <span>
+                                    <span>@(Model.Status != null ? Model.Status.Status : "")</span>
+                                    @if (!String.IsNullOrEmpty(Model.TrackUrl) && Model.Status?.Status != "Cancelled" && (new int[] { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20 }).Contains(Model.Status?.StatusId ?? 0))
+                                    {
+                                        <span class="mt-md-0 mt-1"><a href="@Model.TrackUrl" target="_blank">Track Order</a></span>
+                                    }
+                                </span>
+                            </li>
+                        </ul>
+
+                        <ul>
+                            <li>
+                                <span>Delivery Type :</span>
+                                <span>@Model.DeliveryType</span>
+                            </li>
+                            <li>
+                                <span>Payment Mode :</span>
+                                <span>@Model.PaymentMode</span>
+                            </li>
+                            <li>
+                                <span>Sold by :</span>
+                                <span>@Model.BranchName</span>
+                                @* , @Model.BranchLocation *@
+                            </li>
+                            <li>
+                                <span>Contact Number :</span>
+                                <span>@Model.BranchPhone</span>
+                            </li>
+                            @if (!String.IsNullOrEmpty(Model.SlotTime))
+                            {
+                                <li>
+                                    <span>Schedule</span>
+                                    <span>
+                                        @if (!String.IsNullOrEmpty(Model.SlotDate))
+                                        {
+                                            <p>@Model.SlotDate</p>
+                                        }
+                                        <p>@Model.SlotTime</p>
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="order-details_dlry_addres">
+                    <h5>Delivery address</h5>
+                    <div class="deliveryadress_wrap">
+                        <span class="deliveryadress_name">
+                            <strong> @shippingaddr.CustomerName</strong>
+                        </span>
+                        <span class="deliveryadress_line">
+                            <span class="deliveryadress_line-one">@shippingaddr.HouseNo @shippingaddr.HouseName @shippingaddr.Address</span>
+                            <span class="deliveryadress_line-two"> @shippingaddr.City @shippingaddr.State</span>
+                        </span>
+                        <span class="deliveryadress_contact-no">
+                            @if (!String.IsNullOrEmpty(shippingaddr.Post) && shippingaddr.Post.Length > 1)
+                            {
+                                <span>Post: @(string.IsNullOrEmpty(shippingaddr.Post) ? "" : shippingaddr.Post)</span>
+                            }
+                            <span>Mobile: @shippingaddr.ContactNo</span>
+                        </span>
+                        <div class="btn-field">
+                            @if (Model.Status?.StatusId > 7 && !(new int[] { 19, 23, 24, 25, 27, 34, 40, 41, 42, 50 }).Contains(Model.Status?.StatusId ?? 0))
+                            {
+                                <a href="/order/invoice/@Model.OrderNum" target="_blank" class="btn btn-sm btn-outline-primary checkoutBTN">Invoice</a>
+
+                            }
+                            @if (string.IsNullOrEmpty(Model.TrackUrl))
+                            {
+                                <a class="btn btn-sm btn-outline-secondary checkoutBTN" target="_blank" href="@(Model.TrackUrl??"#")">Track order</a>
+
+                            }
+
+                        </div>
+                        
+
+                    </div>
+                </div><!--order-details_dlry_addres-->
+
+                <div class="order-details_summeery">
+                    <div class="order-summery_wrap">
+                        <h5>Order Summary</h5>
+                        <ul class="order-summery_list">
+                            <li class="cost-prod">
+                                <div class="order-summery_label">Basket value</div>
+                                <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.SubTotal</div>
+                            </li>
+                            <li>
+                                <div class="order-summery_label">Before tax</div>
+                                <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.Amount</div>
+                            </li>
+                            <li>
+                                <div class="order-summery_label">Taxes</div>
+                                <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.TotalGST</div>
+                            </li>
+                            <li>
+                                <div class="order-summery_label">Delivery charge</div>
+                                <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.ShippingCharge</div>
+                            </li>
+                            @if ((Model.Discount ?? 0) != 0)
+                            {
+                                <li>
+                                    <span class="order-summery_label">Discount</span>
+                                    <span class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.Discount</span>
+                                </li>
+                            }
+                            @if ((Model.RoundOff ?? 0) != 0)
+                            {
+                                <li>
+                                    <span class="order-summery_label">Round off</span>
+                                    <span class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.RoundOff</span>
+                                </li>
+                            }
+                        </ul>
+                        <div class="grand-total">
+                            <div class="order-summery_label">Grand Total</div>
+                            <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.OrderTotal</div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div><!--order-details_infowrap-->
+
+            <div class="order-details_item-list">
+                <div class="item-summary-table item-summary_checkout">
+                    <div class="summary-table-head">
+                        <div class="summary-table-list">
+                            <div class="summary-table-disc">Item Description</div>
+                            <div class="summary-table-qty mobile_hide">Qty</div>
+                            <div class="summary-table-price mobile_hide">Price</div>
+                            <div class="summary-table-tprice mobile_hide">Total price</div>
+                        </div>
+                    </div>
+                    <div class="summary-table-body w-100">
+                        @foreach (var pitem in Model.Items)
+                        {
+                            <div class="summary-table-list @(pitem.ReturnQtyRequested > 0 && pitem.ReturnQtyRequested >= pitem.OrderQty ?"text-decoration: line-through;" : "")">
+                                <div class="summary-table-disc">
+                                    <div class="product-card_thumb mobile_hide">
+                                        <a href="/pd/@pitem.ProductId/@Common.EncodeUrl(pitem.Item.Sku)">
+                                            <img src=" @(pitem.ItemImage?.ThumbUrl??"/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class="img-fluid">
+                                        </a>
+                                    </div>
+                                    <h4><a href="/pd/@pitem.ProductId/@Common.EncodeUrl(pitem.Item.Sku)">@pitem.Item.Sku</a></h4>
+                                  @*   @if (pitem.ReturnQtyRequested > 0)
+                                    {
+                                        <br>
+
+                                        <small>Return requested for quantity: @pitem.ReturnQtyRequested </small>
+                                    }
+                                    else if (pitem.Item != null && !String.IsNullOrEmpty(pitem.Item.ReturnDetails))
+                                    {
+                                        <br>
+
+                                        <small>@pitem.Item.ReturnDetails</small>
+                                    } *@
+                                    <div class="summary-m-lbel">
+                                        <div class="summary-table-qty">
+                                            <span>Qty</span>
+                                            <span>@pitem.OrderQty</span>
+                                        </div>
+                                        <div class="summary-table-price">
+                                            <span>Amount</span>
+                                            <span>@(_configuration["CurrencySymbol"])@pitem.SalesPrice</span>
+                                        </div>
+                                        <div class="summary-table-tprice">
+                                            <span>Total price</span>
+                                            <span>@(_configuration["CurrencySymbol"])@pitem.Price</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="summary-table-qty mobile_hide">
+                                    <span>@pitem.OrderQty</span>
+                                </div>
+                                <div class="summary-table-price mobile_hide">
+                                    <span>@(_configuration["CurrencySymbol"])@pitem.SalesPrice</span>
+                                </div>
+                                <div class="summary-table-tprice mobile_hide">
+                                    <span>@(_configuration["CurrencySymbol"])@pitem.Price</span>
+                                </div>
+                            </div>
+
+                            <!--summary-table-list-->
+                        }
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div><!--col-lg-9-->
+    <!-- <div class="col-12 col-lg-4">
+
+        <div class="order-summery_wrap order-summery_cart">
+            <h5>Order Summary</h5>
+            <ul class="order-summery_list">
+                <li class="cost-prod">
+                    <div class="order-summery_label">Cost of products</div>
+                    <div class="order-summery_value">₹1699.40</div>
+                </li>
+                <li class="discount-amt">
+                    <div class="order-summery_label">Discount Applied</div>
+                    <div class="order-summery_value">-₹4</div>
+                </li>
+                <li>
+                    <div class="order-summery_label">Taxes &amp; Charges</div>
+                    <div class="order-summery_value">₹81.30</div>
+                </li>
+            </ul>
+            <div class="grand-total">
+                <div class="order-summery_label">Total Payable</div>
+                <div class="order-summery_value">₹1675.00</div>
+            </div>
+
+            <div class="btn-field">
+                <button class="btn btn-primary checkout_btn opacity-50" data-bs-toggle="modal" data-bs-target="#alertmodelpopup">Review to check out</button>
+            </div>
+            <div class="extr-info">
+                <p class="m-0">*Delivery charges may apply</p>
+            </div>
+        </div>
+
+    </div> -->
+    </div>
+</div>
+
+
+
+<script src="~/js/custom/order.js" asp-append-version="true"></script>
+
+<script>
+    orderMaster.properties.orderId = @Model.OrderId;
+    orderMaster.properties.canReturn = @(Model.IsReturnAvailable > 0 && Model.ReturnCanStart > 0 ? "true" : "false");
+</script>
+
+
+@if (tenant != null && tenant.Value != null && tenant.Value.CanCheckout && tenant.Value.OnlinePaymentEnabled)
+{
+    <form style="display: none" action="/confirm-order" method="POST" id="confirm-checkout-form"></form>
+
+    @if (paymentGateway == "Stripe")
+    {
+        <script src="https://js.stripe.com/v3/"></script>
+        @* <script type="text/javascript">cart.properties.paymentGatewayType=2;</script> *@
+    }
+    else if (paymentGateway.ToLower() == "razorpay")
+    {
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    }
+    else
+    {
+        <div class="modal fade" id="modalpaymentframe" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-transparent">
+                    <div class="modal-body">
+                        @*<div class="closepopup" data-bs-dismiss="modal" aria-label="Close"><img src="/images/icons/close.svg"></div>*@
+                        <div class="d-flex flex-wrap flex-lg-nowrap">
+                            <div class="bg-white">
+                                <iframe width="482" height="750" scrolling="no" frameborder="0" style="max-width: 100%" id="paymentFrame" src=""></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#paymentFrame").attr("src", 'data:text/html;charset=utf-8,' + encodeURI('<body><img src="https://dev.grozeo.in/images/processing.svg" style="position: absolute; margin: auto; left: 38%; top: 37%;"></body>'));
+
+                //$('#paymentFrame').load(function () {
+                //    window.addEventListener('message', function (e) {
+                //        $("#paymentFrame").css("height", e.data['newHeight'] + 'px');
+                //    }, false);
+                //});
+            });
+        </script>
+    }
+}

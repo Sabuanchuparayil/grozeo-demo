@@ -1,0 +1,37 @@
+
+body{
+  font-family: "Archivo",sans-serif;
+}
+header{
+  height: 190px;
+}
+section{
+  min-height: calc(100vh - 190px);
+}
+img {
+  max-width: 100%;
+}
+.error_tx {
+  color: #9DA1B8;
+  font-size: 106px;
+  line-height: 100%;
+}
+section p, section .btn{
+  font-size: 14px;
+}
+@media (max-width: 767px) {
+  header img{
+    max-width: 135px
+  }
+  header{
+    height: 130px;
+  }
+  section{
+    min-height: calc(100vh - 130px);
+  }
+  .error_tx {
+    font-size: 70px;
+  }
+}
+
+

@@ -1,0 +1,58 @@
+﻿@model string
+
+<div class="col-12 col-lg-3">
+    <div class="submenu-wrap">
+        <ul class="submenu-wrap_list">
+            <li id="side-menu-aboutus">
+                <a class="" href="/about-us">
+                    <i class="fa-light fa-bullhorn me-2" aria-hidden="true"></i>
+                    About Us
+                </a>
+            </li>
+            <li id="side-menu-hiw">
+                <a class="" href="/how-it-works">
+                    <i class="fa-light fa-scroll me-2" aria-hidden="true"></i>
+                    How it works
+                </a>
+            </li>
+            <li id="side-menu-faq">
+                <a class="" href="/faq">
+                    <i class="fa-light fa-comments-question-check me-2" aria-hidden="true"></i>
+                    FAQ & Support
+                </a>
+            </li>
+            <li id="side-menu-terms">
+                <a href="/terms-conditions">
+                    <i class="fa-light fa-memo me-1" aria-hidden="true"></i>
+                    Terms & Conditions
+                </a>
+            </li>
+            <li id="side-menu-privacy">
+                <a class="" href="/privacy">
+                    <i class="fa-file-lines fa-headphones me-2" aria-hidden="true"></i>
+                    Privacy Policy
+                </a>
+            </li>
+            <li id="side-menu-install">
+                <a class="" href="/install">
+                    <i class="fa-light fa-mobile me-2" aria-hidden="true"></i>
+                    Install App
+                </a>
+            </li>
+            @* 
+            <li id="side-menu-logout">
+                <a class="" href="/logout">
+                    <i class="fa-light fa-arrow-right-from-bracket me-2" aria-hidden="true"></i>
+                    Log out
+                </a>
+            </li> *@
+        </ul>
+    </div>
+</div><!--col-lg-3-->
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#side-menu-@Model > a").addClass("active");
+    });
+</script>

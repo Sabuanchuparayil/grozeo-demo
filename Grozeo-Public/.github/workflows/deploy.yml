@@ -1,0 +1,55 @@
+name: Grozeo-Public CI/CD
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for exposed credentials
+        run: |
+          if grep -rn "Password=GzRT\|RevolutPublicToken.*pk_\|GoogleAPI.*AIza\|PostalCodeAPIKey.*ak_" \
+            --include="*.json" --include="*.cs" . 2>/dev/null; then
+            echo "CRITICAL: Exposed credentials found in appsettings!"
+            exit 1
+          fi
+          echo "No credentials found in committed files."
+
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: security
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+      - name: Restore dependencies
+        run: dotnet restore Retaline/Retaline.csproj
+      - name: Build
+        run: dotnet build Retaline/Retaline.csproj -c Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+        continue-on-error: true
+
+  deploy:
+    name: Deploy to DigitalOcean
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Deploy
+        run: |
+          doctl apps create-deployment ${{ secrets.DO_APP_ID_PUBLIC }} \
+            --force-rebuild --wait

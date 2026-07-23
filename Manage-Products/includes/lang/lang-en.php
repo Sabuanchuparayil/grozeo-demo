@@ -1,0 +1,23 @@
+<?php
+define('USER_NOT_FOUND',"No matching username found, please check");
+define('USERNAME_PASS_BLANK',"Please enter a username and password");
+define('PASSWORD_INCORRECT1',"Username and password do not match, please try again");
+define('PASSWORD_INCORRECT2',"Password failed, please try again");
+define('DEACTIVE_USER','This login attempt has been locked. Please contact the administrator.');
+define('CHANGE_PWD_INCORRECT', "Password incorrect, please try again.");
+define('USER_CHECK','The supplied username already exists...!');
+define('ROLE_CHECK','The supplied designation already exists...!');
+define('USER_EMAIL','User Email already exists...!');
+define('DUP_EMAIL',"This email ID already exists");
+define('DUP_USERNAME',"This user name already exists");
+define('LOGIN_FAIL',"Login failed. No matching profile found, please check");
+define('TEMP_EXIST','Template already exists');
+define('SEL_MAIL_TYPE','Please select mail type');
+define('REP_DUP_USER',"Username already exists. Please try another");
+define('CURR_PASS',"Incorrect current password!");
+define('UPDATE_FAIL_ADM','Update failed. Please contact the System Administator.');
+define('DUP_USERNAME_Branch',"This user name already registered in application login, Branch");
+define('COMPANY_EXISTS',"Company name already exists");
+define('COMPANY_SHRT_NAME_EXISTS',"Company short name already exists");
+define('BRANCH_EXISTS',"Branch name already exists");
+define('BRANCH_SHRT_NAME_EXISTS',"Branch short name already exists");

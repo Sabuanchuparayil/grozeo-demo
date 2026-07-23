@@ -1,0 +1,51 @@
+# ============================================================
+# GROZEO .gitignore - For Laravel Repos (Grozeo-Scheduler, Grozeo-Bizapi)
+# ============================================================
+
+# === CREDENTIALS & SECRETS (CRITICAL) ===
+.env
+.env.*
+env
+*.env
+*.key
+*.pem
+*.pfx
+
+# === Laravel Framework ===
+/vendor
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/storage/logs/*
+!storage/logs/.gitkeep
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+
+# === Compiled & Build ===
+/public/css/app.css
+/public/js/app.js
+/public/mix-manifest.json
+*.min.js
+*.min.css
+*.map
+npm-debug.log
+yarn-error.log
+
+# === IDE & Editor ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.suo
+*.user
+
+# === Testing ===
+.phpunit.result.cache
+coverage/
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini

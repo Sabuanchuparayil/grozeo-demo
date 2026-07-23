@@ -1,0 +1,23 @@
+<div class="col-12 mb-4">
+    <div class="title_sec d-flex align-items-center justify-content-between">
+      <div class="support_title_wrap d-flex align-items-center">
+        <span class="titleicon wd-50 ht-50 rounded-circle bg-light d-flex justify-content-center align-items-center mr-3">
+            <i class="fa-thin fa-user-headset tx-26"></i>
+        </span>
+        <div class="support_title">
+          <h6 class="mb-1 w-100 tx-14 tx-medium ">Support Center</h6>
+          <p class="mb-0">Lorem ipsum dolor sit</p>
+        </div>
+      </div>
+      <a href="javascript:void(0)" class="backbtn"><i class="fa fa-reply mr-2" aria-hidden="true"></i>Back</a>
+    </div>
+  </div>
+
+  <script>
+     var loader = '<div class="d-flex align-items-center justify-content-center w-100"><div class="loader"></div></div>';
+        $('.backbtn').click(function(e) {
+            e.preventDefault();
+            $("#suportcontent").html(loader);
+            $("#suportcontent").load("/content/support_page/support_landing.html");
+        });
+  </script>

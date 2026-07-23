@@ -1,0 +1,75 @@
+﻿@using Retaline.Core.BusinessModel.Store;
+@using Retaline.Core.BusinessModel.Catalog;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<StoreGroup>
+@{
+    List<BusinessType> businessTypes = new();
+    bool showBusinessTypesInSelect = true;
+    int storesCount = 0;
+    int actualStoreCount = 0;
+
+    Retaline.Core.BusinessModel.UserDetails.User curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+
+    actualStoreCount = Model.Count;
+    storesCount = actualStoreCount > 8 ? 8 : actualStoreCount;
+
+}
+@if (storesCount > 0)
+{
+
+<div class="section-grz_nearest-branch">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="titlewrap">
+                    <h2>Stores near by - <span>@curUser.PrimaryAddress?.City</span></h2>
+                </div>
+                <div class="multistore-list">
+                    @if (showBusinessTypesInSelect)
+                    {
+                        @for (int i = 0; i < storesCount; i++)
+                        {
+                            <a href="/st/@Model[i].Id/@Model[i].Name" class="multistore-card">
+                                <div class="multistore__img" style="background-image: url(@Model[i].Logo ?? ~/images/storeimage.png);"></div>
+                                <div class="multistore-card__info">
+                                    <div class="multistore__logo">
+                                        <h6>@Model[i].Name</h6>
+                                    </div>
+                                    <p class="multistore__awayfrom">@Math.Round(Model[i].MinDistance, 2)km away</p>
+                                    @{
+                                        var types = @Model[i].BusinessType.Split(','); // split the categories
+                                        var shown = types.Take(3); // first 3
+                                        var remainingCount = types.Length - 3; // rest count
+                                    }
+                                    <p title="@Model[i].BusinessType">
+                                        @string.Join(", ", shown)
+                                        @if (remainingCount > 0)
+                                        {
+                                            <span> + @remainingCount more...</span>
+                                        }
+                                    </p>
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

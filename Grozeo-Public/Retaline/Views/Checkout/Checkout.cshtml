@@ -1,0 +1,621 @@
+﻿@model Retaline.Web.Models.Checkout.CartCheckout;//Retaline.Core.BusinessModel.Cart.Checkout.Checkout;
+@using Retaline.Core.BusinessModel.Cart.Checkout;
+@using Retaline.Core.BusinessModel.UserDetails;
+@using System.Linq;
+@using Retaline.Web.Service;
+@inject Retaline.Core.Services.ProfileManagement.IProfileService profileService;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    Address deliveryAddress = new Address();
+    AvailableSlots slot = new AvailableSlots();
+    bool EnabledPod = Model.PODEnabled;
+
+    //if(Model.CheckoutInfo.customer != null && Model.CheckoutInfo.customer.Slots != null)
+    //    slot = Model.CheckoutInfo.customer.Slots.Where(s=> !String.IsNullOrEmpty(s.Date)).FirstOrDefault(); //new AvailableSlots();
+    if (slot == null)
+        slot = new AvailableSlots();
+
+    if (Model.CheckoutInfo.shippingAddress != null)
+    {
+        try
+        {
+            deliveryAddress = new Address()
+                    {
+                        Name = Model.CheckoutInfo.shippingAddress.CustomerName,
+                        HouseNumber = Model.CheckoutInfo.shippingAddress.HouseNo,
+                        HouseName = Model.CheckoutInfo.shippingAddress.HouseName,
+                        DeliveryAddress = Model.CheckoutInfo.shippingAddress.Address,
+                        City = Model.CheckoutInfo.shippingAddress.City,
+                        State = Model.CheckoutInfo.shippingAddress.State,
+                        Post = Model.CheckoutInfo.shippingAddress.Post,
+                        ContactNumber = Model.CheckoutInfo.shippingAddress.ContactNo,
+                        Latitude = Model.CheckoutInfo.shippingAddress.Latitude,
+                        Longitude = Model.CheckoutInfo.shippingAddress.Longitude
+                    };
+        }
+        catch
+        {
+            deliveryAddress = null;
+        }
+    }
+    else
+    {
+        deliveryAddress = null;
+    }
+
+    if (deliveryAddress == null)
+    {
+        try
+        {
+            var addrresses = profileService.GetAddress().Result;
+            if (addrresses != null && addrresses.Data != null && addrresses.Data.Count > 0)
+                deliveryAddress = addrresses.Data.Where(a => a.IsPrimary == 1).FirstOrDefault();
+
+        }
+        catch
+        {
+
+        }
+    }
+    if (deliveryAddress == null)
+        deliveryAddress = new Address();
+
+    string paymentGateway = _configuration["PaymentGateway"]; //"RazorPay";
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.PaymentGateway))
+    {
+        paymentGateway = tenant.Value.PaymentGateway;
+    }
+
+    bool isValidOrder = (Model != null && Model.Orders != null && Model.Orders.Count > 0 && Model.Orders.All(order => order.DeliveryStatus != 0));
+    int releaseStage = 0; try { if (!String.IsNullOrEmpty(_configuration["ReleaseStage"])) releaseStage = Convert.ToInt32(_configuration["ReleaseStage"]); } catch { releaseStage = 0; }
+    int? totalItemCount = 0;
+
+    foreach (var item in Model.Orders)
+    {
+        if (item.ItemDetails != null)
+        {
+            totalItemCount += item.ItemDetails[0].OrderQty;
+        }
+    }
+
+    string itemLabel = totalItemCount == 1 ? "item" : "items";
+
+}
+
+@using (Html.BeginForm("SubmitOrder", "Checkout", FormMethod.Post, new { @id = "frmSubmitCheckout", @cancheckout = isValidOrder && Model.CanCheckout }))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <ul class="order-processing_wrap">
+                    <li class="d-flex justify-content-center flex-wrap odr_processing">
+                        <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                        <div class="processing-title w-100 text-center px-2">Review item</div>
+                    </li>
+                    <li class="d-flex justify-content-center flex-wrap odr_processing">
+                        <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                        <div class="processing-title w-100 text-center px-2">Checkout</div>
+                    </li>
+                    <li id="payment-progress" class="d-flex justify-content-center flex-wrap">
+                        <div class="d-flex align-items-center justify-content-center processing-icon"></div>
+                        <div class="processing-title w-100 text-center px-2">Payment</div>
+                    </li>
+                </ul>
+
+                <div class="titlewrap title_group">
+                    <h2>Checkout</h2>
+                    <span>@totalItemCount @itemLabel</span>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8" id="dvcheckoutinfo">
+
+                <div class="deliveryadress_wrap">
+                    <span class="deliveryadress_name">
+                        <span>Deliver to:</span>
+                        <span><strong>@deliveryAddress.Name</strong><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#adressDropdown" title="Chenge adress">Change</a></span>
+                    </span>
+                    <span class="deliveryadress_line">
+                        <span class="deliveryadress_line-one">@deliveryAddress.HouseNumber @deliveryAddress.HouseName, @deliveryAddress.DeliveryAddress </span>
+                        <span class="deliveryadress_line-two">@deliveryAddress.City, @deliveryAddress.State.</span>
+                    </span>
+                    <span class="deliveryadress_contact-no">
+                        @if (!String.IsNullOrEmpty(deliveryAddress.Post) && deliveryAddress.Post.Length > 1)
+                        {
+                            <span class="opacity-100">Post: @deliveryAddress.Post</span>
+                        }
+                        @if (!String.IsNullOrEmpty(deliveryAddress.ContactNumber))
+                        {
+                            <span class="opacity-100">Mobile: @deliveryAddress.ContactNumber</span>
+                        }
+                    </span>
+                    <input type="hidden" id="OrderNum" name="OrderNum" value="@Model.Orders[0].OrderNum" />
+                    <input type="hidden" id="OrderId" name="OrderId" value="@Model.Orders[0].OrderId" />
+                    <input type="hidden" id="IsPaymentResult" name="IsPaymentResult" value="@(Model.IsPaymentView ? 1 : 0)" />
+                </div>
+
+
+
+
+
+                <div class="checkout-listing_wrap">
+                    <div class="sub_title">
+                        <h6>Your Orders</h6>
+                    </div>
+
+                    <div class="checkout-listing">
+                        @foreach (var item in Model.Orders)
+                        {
+                            <div class="product-card @(item.DeliveryStatus == 0? "not-deliverable-order":"") order-@item.OrderNum">
+                                <div class="product-card_thumb">
+
+                                    <div class="card_thumb-img">
+                                        <img src="@(item.HighestPricedImage??"/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                                    </div>
+                                    <div class="pro-items-count">
+                                        <span class="pro-items-number">
+                                            <strong>@item.ItemDetails.Sum(x => Convert.ToInt32(x.OrderQty))</strong>
+                                            Items
+                                        </span>
+                                        <span class="view-summary"><i data-bs-toggle="modal" title="View Items Summary" data-bs-target="#checkout-items-summary-popup" role="button" class="fa-solid fa-eye"></i></span>
+                                    </div>
+                                </div>
+                                <div class="product-card_info">
+                                    <div class="checkout-listing_info">
+                                        <div class="checkout-listing_info-pro">
+                                            <h4>
+
+                                                @if (item.ItemDetails.Count > 1)
+                                                {
+                                                    <a href="#">
+                                                        @item.HighestPricedItemName
+                                                        + @(item.ItemDetails.Count - 1)
+                                                        More @(item.ItemDetails.Count >= 3 ? "Items" : "Item")
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#">
+                                                        @item.HighestPricedItemName
+                                                    </a>
+                                                }
+
+
+                                            </h4>
+                                            <ul>
+                                                <li>
+                                                    <span>Sold By :</span>
+                                                    <span>@(item.OrderBranch != null ? item.OrderBranch.Name : "")</span>
+                                                </li>
+                                                <li>
+                                                    <span>Phone :</span>
+                                                    <span>@(item.OrderBranch != null ? item.OrderBranch.Phone : "")</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="checkout-listing_info-order">
+                                            @if (item.DeliveryStatus == 1)
+                                            {
+                                                <ul>
+                                                    <li>
+                                                        <span>Order id :</span>
+                                                        <span>@item.OrderNum</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>Order Date :</span>
+                                                        <span>@DateTime.Now.ToShortDateString()</span>
+                                                    </li>
+                                                    <li>
+                                                        <span>No. of items :</span>
+                                                        <span>@item.ItemDetails.Sum(x => Convert.ToInt32(x.OrderQty))</span>
+                                                    </li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                // <a href="javascript:void(0)" data-orderid="@item.OrderNum" class="removelistitems remove_order px-3"><i class="fa-light fa-xmark"></i></a>
+                                                <a href="javascript:void(0)" rel="nofollow" title="Remove this item" class="btn-cart-remove" data-orderid="@item.OrderNum">
+                                                    <i class="fa-light fa-xmark"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (item.DeliveryStatus == 1)
+                                    {
+                                        <div class="dlv-option">
+                                            <span class="label_delivery_mode expressdelivery" title="@(item.BranchTypeId == 3 ? "Express" : "Courier") Delivery">
+                                                <i class="@(
+                                                        item.BranchTypeId == 0
+                                                        ? "fa fa-exclamation-triangle"
+                                                        : (item.BranchTypeId == 3
+                                                        ? "fa-regular fa-moped"
+                                                        : "fa-regular fa-truck")
+                                                        )" aria-hidden="true"></i>
+                                                @(
+                                                    item.BranchTypeId == 0
+                                                    ? "Undeliverable"
+                                                    : (item.BranchTypeId == 3
+                                                    ? "Express"
+                                                    : "Courier")
+                                                    )
+                                                Delivery
+                                            </span>
+                                            @if (item.DeliveryStatus != 0)
+                                            {
+                                                <a class="order-notes" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#order-notes-modal">Add instructions for store</a>
+                                            }
+                                        </div>
+                                        @if (item.BranchTypeId == 3 && item.Slots != null && item.Slots.Length > 0)
+                                        {
+                                            <div class="BookaSlotWrap ms-0">
+                                                <div class="BookaSlotTriger">Book a Slot <i></i></div>
+                                                <div class="BookaSlotToggle" style="position: absolute; display:none;">
+
+
+                                                    <div class="daywrap">
+                                                        <div class="daylist">Available Slots</div>
+                                                        <div class="TileList">
+                                                            <ul class="time-slot">
+                                                                @foreach (var tslot in item.Slots)
+                                                                {
+                                                                    <li class="time-slot-item" tslot="@tslot.Slot" slotid="@tslot.Id" ordid="@item.OrderId" slotdate="@tslot.Date"><span>@(String.IsNullOrEmpty(tslot.Date) ? DateTime.Now.ToString("dd MMM yy") : tslot.Date) </span><span> @tslot.Slot </span></li>
+                                                                }
+                                                            </ul><!--ul-->
+                                                        </div><!--TileList-->
+                                                    </div><!--daywrap-->
+
+                                                </div><!--BookaSlotToggle-->
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="dlv-option">
+                                            <span class="label_delivery_mode courierdelivery">
+                                                All our delivery agents are currently busy with deliveries hence we can't take the order now
+                                            </span>
+                                        </div>
+                                    }
+                                </div><!--product-card_info-->
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="col-12 col-lg-8" id="dvpaymentmodes" style="display: none;">
+                <div class="payment-mode-card-wrap">
+                    <div class="payment-mode-card">
+                        <div class="sub_title">
+                            <h6>Choose payment mode</h6>
+                        </div>
+
+                        <div class="payment-mode_list">
+                            <div class="payby_card selected">
+                                <input class="form-check-input paymentmodecheck" type="radio" name="paymentmode" id="payby_card">
+                                <div class="payment-mode_icons">
+                                    <img src="~/images/Card_pay.svg">
+                                </div>
+                                <div class="payment-mode_name">Online Payment</div>
+                            </div>
+
+                            @* <div class="payby_cashondelivery">
+                        <input class="form-check-input paymentmodecheck" type="radio" name="paymentmode" id="payby_cashondelivery">
+                        <div class="payment-mode_icons">
+                        <img src="~/images/Cash_on_Delivery.svg">
+                        </div>
+                        <div class="payment-mode_name">Cash on Delivery</div>
+                        </div>*@
+                        </div>
+
+
+                    </div>
+
+                    <div class="payment-mode_wrap" id="onlinePaymentSection">
+                        <div class="sub_title">
+                            <h6>Credit card &amp; Debit card</h6>
+                        </div>
+                        <div class="payment-mode_icon">
+                            <div class="modeico">
+                                <img class="img-fluid" src="/images/Card_pay.svg">
+                            </div>
+
+                            <div class="modeico">
+                                <img class="img-fluid" src="/images/Net_Banking.svg">
+                            </div>
+                            <div class="modeico">
+                                <img class="img-fluid" src="/images/upi_logo.svg">
+                            </div>
+                        </div><!--payment-mode_icon-->
+
+                        <div class="payment-externalpath">
+                            @if (paymentGateway.ToLower() == "stripe")
+                            {
+                                <div id="card-element" class="processing">
+                                    <!--Stripe.js injects the Card Element-->
+                                </div>
+                                <div class="row">
+                                    <p id="card-error" role="alert"></p>
+                                </div>
+                                <div id="payment-request">
+                                    <!--Stripe.js injects the Card Element-->
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="payondeliverymsg">
+                                    <p>Multiple payment options are available. UPI payments are free of charges. Bank may be charging transaction fee on other payments other than UPI.</p>
+                                </div>
+                            }
+                            <div class="contunuPay_btn_wrap payNowBtnsec mt-1 @(paymentGateway.ToLower() == "stripe" ? "hide":"")">
+                                <div class="submitonlinepaymentWrap m-fixed-button">
+                                    <button id="submitonlinepayment" class="contunuPay_btn btn btn-primary w-100">PAY NOW</button>
+                                </div>
+                                <span class="paymentsecurinfo">
+                                    <i><img src="images/icons/Lock.svg"></i>Payments are secure and encrypted.
+                                </span>
+                            </div>
+                        </div><!--payment-externalpath-->
+
+
+                    </div>
+
+                    <div class="payment-mode_wrap" id="cashOnDeliverySection" style="display: none;">
+
+                        <div class="sub_title">
+                            <h6>Pay On Delivery</h6>
+                        </div>
+                        <div class="payment-externalpath cod">
+
+                            <div class="gifanim_payondvry">
+                                <img class="img-fluid" src="images/icons/cash-on-delivery.gif">
+                            </div>
+                            <div class="payondeliverymsg">
+                                <p>Due to handling costs, a nominal fee will be charged for orders placed using this option. Avoid this fee by paying online now.</p>
+                            </div>
+                            <div class="contunuPay_btn_wrap payNowBtnsec mt-4">
+                                @Html.RadioButton("PaymentMethod", "1", false, new { @id = "rdPaymentMethod_0", @class = "form-check-input hide" })
+
+                                <button id="btnsubmitpod" type="submit" class="btn btn-primary w-100" onclick="">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4">
+
+                <div class="order-summery_wrap">
+                    <h5>Order Summary</h5>
+                    <ul class="order-summery_list">
+                        @foreach (var style in Model.CheckoutInfo.style.OrderBy(c => c.Order))
+                        {
+                            @if (!string.IsNullOrEmpty(style.Value))
+                            {
+                                <li class="cost-prod">
+                                    <div class="order-summery_label">@style.Label</div>
+                                    <div class="order-summery_value">@Common.FormatCurrency(style.Value, _configuration["CurrencySymbol"])</div>
+                                </li>
+                            }
+
+                        }
+                        <li class="wallet-holder hide">
+                            <span>Wallet Amount Used</span>
+                            <span id="wallet-amount-used"></span>
+                        </li>
+
+                    </ul>
+                    <div class="grand-total">
+                        <div class="order-summery_label">Grand Total</div>
+                        <div class="order-summery_value">@(_configuration["CurrencySymbol"])@Model.CheckoutInfo.customer.Total.ToString("0.00")</div>
+                    </div>
+                    <div class="have-acoupon-wrap w-100">
+                        <div class="form-group">
+                            <label class="mb-2">Have coupon?</label>
+                            <div class="input-group">
+                                <input type="text" id="txtCoupon" class="form-control coupon" name="" placeholder="Coupon code">
+                                <span class="input-group-append">
+                                    <button class="btn btn-primary rounded-0 rounded-end btn-apply coupon btnapplycoupon">Apply</button>
+                                </span>
+                            </div>
+                            <input type="hidden" id="CouponCode" name="CouponCode">
+                        </div>
+                    </div>
+                    @if (Model.CheckoutInfo.WalletBalance > 0)
+                    {
+                        <div class="haveAcouponWrap walletrow">
+                            <div class="form-group">
+                                @Html.CheckBox("UseWallet", false, new { @id = "chkcheckoutusewallet" }) &nbsp; <label>
+                                    Use Wallet Amount (balance: @(_configuration["CurrencySymbol"])@Model.CheckoutInfo.WalletBalance)
+                                </label>
+                            </div>
+                        </div>
+                    }
+                    <div class="btn-field m-fixed-button">
+                        <div class="radioBtn paymentoptionsrow" style="display: none;">
+                            <div class="form-check">
+                                @if (Model.EnabledOnlinePayment)
+                                {
+                                    @Html.RadioButton("PaymentMethod", "2", (Model.IsPaymentView ? true : false), new { @id = "rdPaymentMethod_1", @class = "form-check-input" })
+                                }
+                                else
+                                {
+                                    @Html.RadioButton("PaymentMethod", "2", (Model.IsPaymentView ? true : false), new { @id = "rdPaymentMethod_1", @class = "form-check-input", @disabled = "disabled", @onclick = "alert('Sorry, this option is temporary not available.'); return false;" })
+                                }
+                                <label class="form-check-label" for="rdPaymentMethod_1">Pay Now</label>
+                            </div>
+                            <div class="form-check">
+                                @Html.RadioButton("PaymentMethod", "1", false, new { @id = "rdPaymentMethod_0", @class = "form-check-input" })
+                                <label class="form-check-label" for="rdPaymentMethod_0">Pay On Delivery</label>
+                            </div>
+                        </div><!--radioBtn-->
+                        @if (isValidOrder)
+                        {   @if (paymentGateway.ToLower() == "razorpay" || paymentGateway.ToLower() == "ccavenue")
+                            {
+                                <button id="submitonlinepayment-rzp-mob" class="contunuPay_btn btn btn-primary w-100"> Pay Now  @(_configuration["CurrencySymbol"])@Model.CheckoutInfo.customer.Total</button>
+                                <a href="javascript:void(0)" id="btncontinuePay" class="btn btn-primary placeorder_btn hide">Pay With Wallet</a>
+                            }
+                            else
+                            {
+                                <a href="javascript:void(0)" id="btncontinuePay" class="btn btn-primary placeorder_btn">Place Order</a>
+                                <a href="javascript:void(0)" id="submitonlinepayment" class="btn btn-primary placeorder_btn hide">Place Order</a>
+
+                            }
+
+                            <input type="hidden" id="OrderGroupId" name="OrderGroupId" value="@Model.Orders[0].OrderGroupId" />
+                        }
+                        else
+                        {
+                            <a href="/cart" class="btn btn-primary placeorder_btn remove_items_prompt">Back to cart</a>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (isValidOrder && Model.CanCheckout && Model.EnabledOnlinePayment)
+{
+    <form style="display: none" action="/confirm-order" method="POST" id="confirm-checkout-form"></form>
+
+    @if (paymentGateway.ToLower() == "stripe")
+    {
+        <script src="https://js.stripe.com/v3/"></script>
+        <script type="text/javascript">cart.properties.paymentGatewayType = 2;</script>
+    }
+    else if (paymentGateway.ToLower() == "razorpay")
+    {
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    }
+    else if (paymentGateway.ToLower() == "easebuzz")
+    {
+        <script src="https://ebz-static.s3.ap-south-1.amazonaws.com/easecheckout/easebuzz-checkout.js"></script>
+    }
+    else if (paymentGateway.ToLower() == "revolut")
+    {
+        @if (releaseStage == 5) //For production
+        {
+            <script src="https://merchant.revolut.com/embed.js"></script>
+            <script>
+                master.properties.pgkey = '@(_configuration["RevolutPublicToken"])'; master.properties.pgtotal = @(Model.CheckoutInfo.customer.Total * 100);
+                !function (e, o, t) { var n = { sandbox: "https://sandbox-merchant.revolut.com/embed.js", prod: "https://merchant.revolut.com/embed.js" }, r = { sandbox: "https://sandbox-merchant.revolut.com/upsell/embed.js", prod: "https://merchant.revolut.com/upsell/embed.js" }, l = function (e) { var n = function (e) { var t = o.createElement("script"); return t.id = "revolut-checkout", t.src = e, t.async = !0, o.head.appendChild(t), t }(e); return new Promise((function (e, r) { n.onload = function () { return e() }, n.onerror = function () { o.head.removeChild(n), r(new Error(t + " failed to load")) } })) }, u = function () { if (window.RevolutCheckout === i || !window.RevolutCheckout) throw new Error(t + " failed to load") }, c = {}, d = {}, i = function o(r, d) { return c[d = d || "prod"] ? Promise.resolve(c[d](r)) : l(n[d]).then((function () { return u(), c[d] = window.RevolutCheckout, e[t] = o, c[d](r) })) }; i.payments = function (o) { var r = o.mode || "prod", d = { locale: o.locale || "auto", publicToken: o.publicToken || null }; return c[r] ? Promise.resolve(c[r].payments(d)) : l(n[r]).then((function () { return u(), c[r] = window.RevolutCheckout, e[t] = i, c[r].payments(d) })) }, i.upsell = function (e) { var o = e.mode || "prod", n = { locale: e.locale || "auto", publicToken: e.publicToken || null }; return d[o] ? Promise.resolve(d[o](n)) : l(r[o]).then((function () { if (!window.RevolutUpsell) throw new Error(t + " failed to load"); return d[o] = window.RevolutUpsell, delete window.RevolutUpsell, d[o](n) })) }, e[t] = i }(window, document, "RevolutCheckout");</script>
+        }
+        else
+        { //For other release stages, attaching revolut sandbox embed js.
+            <script src="https://sandbox-merchant.revolut.com/embed.js"></script>
+
+        }
+
+        <script>
+            $('.displayHandler').addClass('hide');
+        </script>
+    }
+    else
+    {
+        <div class="modal fade" id="modalpaymentframe" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-transparent">
+                    <div class="modal-body">
+                        <div class="closepopup" style="top:11px; right:18px;" data-bs-dismiss="modal" aria-label="Close" id="btnccavenueclose"><img style="width:13px;" src="/images/icons/close.svg"></div>
+                        <div class="d-flex flex-wrap flex-lg-nowrap">
+                            <div class="bg-white">
+                                <iframe width="482" height="750" scrolling="yes" frameborder="0" style="max-width: 100%" id="paymentFrame" src="" target="_parent"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var iframe = document.getElementById('paymentFrame');
+
+            $(document).ready(function () {
+                $("#paymentFrame").attr("src", 'data:text/html;charset=utf-8,' + encodeURI('<body><img src="https://dev.grozeo.in/images/processing.svg" style="position: absolute; margin: auto; left: 42%; top: 36%; width: 130px; height: 130px;"></body>'));
+
+                //$('#paymentFrame').load(function () {
+                //    window.addEventListener('message', function (e) {
+                //        $("#paymentFrame").css("height", e.data['newHeight'] + 'px');
+                //    }, false);
+                //});
+            });
+
+            // Function to handle messages from the iframe
+            function handleMessage(event) {
+                // Check if the message is from the iframe
+                if (event.source === iframe.contentWindow) {
+                    // Check the content of the message (assuming it contains the new URL)
+                    var newUrl = event.data;
+
+                    // Compare the new URL with the old URL or perform any other checks
+                    // For simplicity, let's assume the URL has changed
+                    //if (newUrl !== oldUrl) {
+                    if (newUrl == 'closeiframe') {
+                        // Close the iframe or perform any other action
+                        closeIframe();
+                    }
+                }
+            }
+
+            // Add event listener for messages
+            window.addEventListener('message', handleMessage);
+
+            // Function to close the iframe
+            function closeIframe() {
+                // Assuming "iframe" is the reference to your iframe element
+                //iframe.style.display = 'none';
+                $('#modalpaymentframe').modal('hide');
+            }
+
+        </script>
+    }
+}
+@if (Model.CheckoutInfo != null && (!Model.CheckoutInfo.StockAvailable || !Model.CheckoutInfo.SufficientAvailable))
+{
+    <script type="text/javascript">$(document).ready(function () { master.showResult('There are out of stock items in the list you have added in cart. Please remove the item/s or update quantity and try again.', 'Checkout failed', false, '/cart'); });</script>
+
+}
+
+<div class="modal fade" id="payment-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="payment-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h5 class="modal-title" id="delivery_adress-popupLabel">Enter card details</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div id="payment-details" class="col-12">
+                    </div>
+                </div>
+            </div>
+
+            <!--modal-body-->
+            <div class="modal-footer">
+                <div class="btn-field">
+                    <a href="javascript:void(0)" id="loadPayment" class="btn btn-primary placeorder_btn hide">Place Order</a>
+                    <input type="hidden" id="OrderGroupId" name="OrderGroupId" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('pageshow', function (event) {
+        // Check if the page was loaded from the browser's cache (bfcache)
+        if (event.persisted) { //runs only if browser navigation buttons are used
+            $('.processing').removeClass('processing'); // Removes processing from all buttons with proecssing as there may be multiple checkout buttons based on payment gateway.
+        }
+    });
+</script>

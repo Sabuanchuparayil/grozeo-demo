@@ -1,0 +1,53 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+
+<div class="mainsearchwrap search-bar">
+    @await Component.InvokeAsync("NavigateBackButton")
+
+    <form class="searchform position-relative w-100" action="/search">
+        <div class="search-icon">
+            <i class="fa-light fa-magnifying-glass"></i>
+        </div>
+        <input class="search__input form-control mainsearchinput" type="text" placeholder="Search a product" name="searchkey" autocomplete="off" id="searchkey" required="">
+        <div class="search-close-icon search-cntrl hide">
+            <i class="fa-light fa-xmark"></i>
+        </div>
+    </form>
+    <div id="mainsitsearch" class="mainsitsearch-dropdown_wrap  hide"></div><!--mainsitsearch-->
+</div><!--mainsearchwrap-->
+<script type="text/x-handlebars" id="search-results-template">
+        <ul class="mainsitsearch_ul">
+        {{#each this}}
+        {{#if mrp}}
+
+        <li class="search_info_items" data-branch={{branch_id}}
+        data-branchtypeid={{branch_type_id}} data-stitid={{stit_ID}}
+        data-stitfsiuid={{stit_fsiuid}} data-name={{stit_SKU}}>
+            <div class="product-card">
+                <div class="product-card_info">
+                    <h4>{{stit_SKU}}</h4>
+                    <div class="product_btn_group">
+                          {{#if percentage}}
+                        <div class="product-label">
+                            <span>{{percentage}}% OFF</span>
+                         </div>
+                         {{/if}}
+                         <div class="product-price_wrap">
+                            <!-- <span class="product-price_info">Price Not Available</span> -->
+                            <span class="product-price_discount">@(_configuration["CurrencySymbol"]){{selling_price}}</span>
+                          {{#if percentage}}
+                            <del class="product-price_regular">@(_configuration["CurrencySymbol"]){{mrp}}</del>
+                          {{/if}}
+
+                        </div>
+                    </div>
+                </div> <!--search_info_left-->
+            </div> <!--search_info_wrap-->
+        </li>
+        {{/if}}
+        {{/each}}
+    </ul><!--mainsitsearch_ul-->
+</script>
+
+
+

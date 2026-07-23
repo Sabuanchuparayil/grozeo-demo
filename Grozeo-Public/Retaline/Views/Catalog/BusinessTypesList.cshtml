@@ -1,0 +1,149 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+@using Retaline.Core.BusinessModel.Cart;
+@using Microsoft.AspNetCore.Http;
+@using System.Collections.Generic;
+
+@* @model Retaline.Core.ViewModel.Catalog.CategoryItemViewModel *@
+@inject IHttpContextAccessor _httpContextAccessor
+@inject Retaline.Core.Services.Cart.ICartService _cartService;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _customAuthenticationService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _authenticationService;
+@inject Retaline.Core.Services.ProfileManagement.IProfileService _profileService;
+@functions {
+    public dynamic NearestStoresResult { get; set; }
+}
+
+@{
+
+    var retailers = catalogService.GetRetailerTypes().Result;
+    if (retailers != null && retailers.Count(r => r.StoreGroupId > 0) > 1)
+    {
+        retailers = retailers.Where(r => r.StoreGroupId > 0).ToList();
+    }
+    if (retailers != null && retailers.Count > 0)
+        retailers = retailers.DistinctBy(r => r.Name).ToList();
+
+
+
+}
+
+<section class="InnerPAgeSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @if (retailers != null && retailers.Count > 1)
+                {
+                    @foreach (var btype in retailers)
+                    {
+
+                        <div class="all_categorylist_sec">
+                            <h2 class="business_department-title d-flex justify-content-between">
+                                @btype.Name
+                                @*<div class="seeall_slidercontro">
+                        <a href="/" class="seeall">See all</a>
+                        <div class="slidercontro PopularProductSlideNav_@btype.Id">
+                        <div class="swiper-button-prev"></div>
+                        <div class="test swiper-button-next"></div>
+                        </div>
+                        </div>*@
+                            </h2>
+
+                            <div class="swiper rcstoreslider store_list_wrap_sec d-flex flex-wrap mt-3">
+                                @*@await Component.InvokeAsync("BusinessTypeItems", btype)*@
+
+                                <div id="cnt_neareststores" class="swiper-wrapper p-0 m-0 list-inline">
+                                    <div class="btnautoloadmore px-2 py-1 d-flex align-items-center justify-content-center" isbusinesstypes="true" retailtypeid="@btype.Id" navlink="" contenttype="6" pagenum="1" subcatId="0" brandid="-1" catlevel="-1" searchkey="0">Load more..</div>
+                                </div><!--swiper-wrapper-->
+
+
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div> <!-- swiper-wrapper -->
+                        </div> <!-- all_categorylist_sec -->
+                    }
+                }
+
+                <!--col-12-->
+            </div>
+            <!--row-->
+        </div>
+</section>
+<script src="~/js/custom/catalog.js"></script>
+<script>
+    function initSwiper(objclass, navclass) {
+        console.log(objclass)
+
+        var swiper = new Swiper(objclass, {
+
+            navigation: {
+                nextEl: navclass + " .swiper-button-next",
+                prevEl: navclass + " .swiper-button-prev",
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 'auto',
+                    spaceBetween: 0,
+                },
+                480: {
+                    slidesPerView: 3,
+                    spaceBetween: 0,
+                },
+                767: {
+                    slidesPerView: 4,
+                    spaceBetween: 0,
+                },
+                1024: {
+                    slidesPerView: 5,
+                    spaceBetween: 0,
+                },
+                1260: {
+                    slidesPerView: 6,
+                    spaceBetween: 0,
+                },
+            },
+        });
+
+        // if ($(objclass + " .swiper-slide").length < 5) {
+        //     $(objclass + ' .swiper-wrapper').addClass("slider_item_center");
+        // }
+    }
+
+    $(document).ready(function () {
+        $('.vcitemsslider').each(function (i, obj) {
+            var cls = $(obj).attr('clsid');
+            initSwiper('.PopularProductSlide_' + cls, '.PopularProductSlideNav_' + cls);
+        });
+        var rcstoreslider = new Swiper(".rcstoreslider", {
+
+            navigation: {
+                nextEl: ".rcstoreslider .swiper-button-next",
+                prevEl: ".rcstoreslider .swiper-button-prev",
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 'auto',
+                    spaceBetween: 0,
+                },
+                480: {
+                    slidesPerView: 2,
+                    spaceBetween: 0,
+                },
+                767: {
+                    slidesPerView: 3,
+                    spaceBetween: 0,
+                },
+                1080: {
+                    slidesPerView: 4,
+                    spaceBetween: 0,
+                },
+                1260: {
+                    slidesPerView: 5,
+                    spaceBetween: 10,
+                },
+            },
+        });
+    });
+
+</script>

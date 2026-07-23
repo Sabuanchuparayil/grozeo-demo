@@ -1,0 +1,32 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@using Retaline.Web.Service;
+@model List<HomeValue>
+@{
+
+}
+@if (Model != null && Model.Count > 1 && Model[0].AdZoneDetails.Count > 0 && Model[1].AdZoneDetails.Count > 0)
+{
+    <div class="section-grz_">
+        <div class="container">
+            <div class="row row_mb" bis_skin_checked="1">
+                <div class="col-12 col-md-6 mb-3 mb-md-0" bis_skin_checked="1">
+                    <div class="addsbanner" bis_skin_checked="1">
+                        <a href="@Common.OfferUrl(Model[0].AdZoneDetails[0])">
+                            <img title="@(Model[0].AdZoneDetails[0].AdvTitle)" src="@(Model[0].AdZoneDetails[0].AdvImageUrl)" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 mb-3 mb-md-0" bis_skin_checked="1">
+                    <div class="addsbanner" bis_skin_checked="1">
+                        <a href="@Common.OfferUrl(Model[1].AdZoneDetails[0])">
+                            <img title="@(Model[1].AdZoneDetails[0].AdvTitle)" src="@(Model[1].AdZoneDetails[0].AdvImageUrl)" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!--row-->
+        </div>
+    </div>
+}

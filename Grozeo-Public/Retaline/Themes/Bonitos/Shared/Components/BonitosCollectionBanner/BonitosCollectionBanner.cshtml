@@ -1,0 +1,49 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@* @for (int i = 0; i < Model.Count; i++)
+{
+} *@
+<div class="section-grz_addsbanner">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="titlewrap titlewrap-text-center">
+					<h2>Shop By Collection</h2>
+					<p>Best collections for your kids</p>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="addbanner_grid_view">
+					<div class="addsbanner_vertical">
+						<div class="addsbanner addbanner_one">
+							<a href="">
+								<img src="~/customthemes/Bonitos/images/adds_banner_1.png">
+							</a>
+						</div>
+					</div>
+					<div class="addsbanner_vertical_multy">
+						<div class="addsbanner addbanner_two">
+							<a href="">
+								<img src="~/customthemes/Bonitos/images/adds_banner_2.png">
+							</a>
+						</div>
+						<div class="addsbanner_multy">
+							<div class="addsbanner addbanner_three">
+								<a href="">
+									<img src="~/customthemes/Bonitos/images/adds_banner_3.png">
+								</a>
+							</div>
+							<div class="addsbanner addbanner_four">
+								<a href="">
+									<img src="~/customthemes/Bonitos/images/adds_banner_4.png">
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!--container-->
+</div>

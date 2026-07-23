@@ -1,0 +1,22 @@
+﻿@{
+  
+}
+<button class="site_navigate_back navigate-back-control">
+    <i class="fa-regular fa-arrow-left"></i>
+</button>
+<script>
+    //Function basically check if the tab has a history with document.referrer, if yes navigate back, else execute default behaviour.
+    $(function () {
+
+        $('.navigate-back-control').off().on("click", () => {
+            const referrer = document.referrer;
+
+            if (referrer && referrer.includes(window.location.hostname)) {
+                window.history.back();
+            } else {
+                window.location.href = '/'; // Fallback to homepage
+            }
+        });
+
+    })
+</script>

@@ -1,0 +1,104 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@* <input type="button" value="open child" onclick="openSearchPopUp();" />
+<input type="button" value="reload parent and close child" onclick="closeAndRefresh();" />
+
+<script>
+    var popupWindow = null;
+    function openSearchPopUp() {
+        popupWindow = window.open("#", 'window', 'width=800,height = 600, location = yes,menubar =‌​yes, scrollbars = yes, resizable = yes');
+        popupWindow.focus();
+        document.onmousedown = focusPopup;
+        document.onkeyup = focusPopup;
+        document.onmousemove = focusPopup;
+    }
+
+    function focusPopup() {
+        if (popupWindow && !popupWindow.closed) { popupWindow.focus(); }
+    }
+    function closeAndRefresh() {
+        //opener.location.reload(); // or
+        window.opener.location.href = '/';//opener.location.href;
+        //window.close(); // or self.close();
+        self.close();
+    }
+
+</script> *@
+
+<!-- Payment Button -->
+<button id="initialize-payment">Pay with Apple Pay / Google Pay</button>
+
+<!-- Placeholder for the payment interface -->
+<div id="express-checkout-element"></div>
+<div id="payment-error" style="display: none; color: red; margin-top: 10px;"></div>
+
+<!-- Include Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize Stripe
+        console.log('Initializing Stripe...');
+        const stripe = Stripe('pk_live_51OSaMbKCAf9CZOUkxdzCmqXSu1mscedaCn70jUyRAZi6YIPB4WEALVWMUo54MscKVYnmzAxRQsZzxQd9CbX0lxJ300nN1KpOvW'); // Replace with your actual test/public token
+
+        // Define options for express checkout
+        const expressCheckoutOptions = {
+            buttonType: {
+                applePay: 'buy',
+                googlePay: 'buy',
+                paypal: 'buynow',
+                klarna: 'pay',
+            },
+            paymentMethods: {
+                googlePay: 'always',
+                applePay: 'always',
+            },
+        };
+
+        // Button click event listener
+        document.getElementById("initialize-payment").addEventListener("click", async function () {
+            try {
+                // Create Elements instance
+                const elements = stripe.elements({
+                    locale: 'de', // German locale
+                    mode: 'payment',
+                    amount: 1099, // Amount in smallest currency unit (e.g., pence for GBP)
+                    currency: 'gbp',
+                });
+
+                // Create and mount Express Checkout element
+                const expressCheckoutElement = elements.create('expressCheckout', expressCheckoutOptions);
+                expressCheckoutElement.mount('#express-checkout-element');
+
+                console.log('Express checkout element mounted successfully.');
+
+                // Handle errors while rendering
+                expressCheckoutElement.on('change', function (event) {
+                    if (event.error) {
+                        showError(event.error.message);
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing Stripe or rendering checkout:', error);
+                showError('An unexpected error occurred. Please try again later.');
+            }
+        });
+
+        // Error display function
+        function showError(message) {
+            const errorContainer = document.getElementById('payment-error');
+            if (errorContainer) {
+                errorContainer.textContent = message;
+                errorContainer.style.display = 'block';
+            } else {
+                alert(message); // Fallback if no error container exists
+            }
+        }
+    });
+</script>
+
+
+

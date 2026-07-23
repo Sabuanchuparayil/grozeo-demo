@@ -1,0 +1,175 @@
+﻿@using Retaline.Core.ViewModel.Catalog;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.Info.IPageService _pageService;
+@inject Retaline.Core.Caching.IStaticCacheManager _staticCacheManager;
+
+
+@{
+    List<Retaline.Core.BusinessModel.Catalog.CategoryData> _categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>();
+    try
+    {
+        _categories = catalogService.FilteredCategories().Result;
+    }
+    catch { _categories = new List<Retaline.Core.BusinessModel.Catalog.CategoryData>(); }
+    //var categoriesMenu = catalogService.GetCategoryHeaderMenuDetails().Result;
+    CataogoryHeaderMenuViewModel categoriesMenu = new CataogoryHeaderMenuViewModel();
+    if (_categories != null && _categories.Count > 0)
+    {
+        categoriesMenu.Categories = _categories.OrderByDescending(c => c.IsInCategory).OrderBy(c => c.Categorylevel).ToList();//.Take(9).OrderBy(c => c.CategoryName).ToList();
+        int cats = categoriesMenu.Categories.Count;
+        if (cats > 18)
+            categoriesMenu.Categories = categoriesMenu.Categories.Skip(9).Take(10).ToList();
+        else if (cats > 9)
+            categoriesMenu.Categories = categoriesMenu.Categories.Skip(cats - 10).Take(10).ToList();
+
+        categoriesMenu.MenuIterations = 1;//categoriesMenu.Categories.Count / 9;
+
+    }
+
+
+    var _user = customAuthService.GetUserFromClaims();
+    string strThemeTitle = "Grozeo", strFooterAboutContent = ""; int storegroupid = 0;
+    string footerLogo = "", androidUrl = "/install", iosUrl = "/install"; // (tenant == null && tenant.Value == null || String.IsNullOrEmpty(tenant.Value.StoreId) || tenant.Value.StoreId == "0" ? "/images/Footer_Logo.svg" : "");
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.Name))
+    {
+        strThemeTitle = tenant.Value.Name;
+        try { storegroupid = Convert.ToInt32(tenant.Value.StoreId); } catch { storegroupid = 0; }
+        if (!String.IsNullOrEmpty(tenant.Value.LogoImage))
+            footerLogo = tenant.Value.LogoImage;
+
+        if (!String.IsNullOrEmpty(tenant.Value.AppUrlAndroid))
+            androidUrl = tenant.Value.AppUrlAndroid;
+        if (!String.IsNullOrEmpty(tenant.Value.AppUrlIOS))
+            iosUrl = tenant.Value.AppUrlIOS;
+
+    }
+
+    strFooterAboutContent = _pageService.GetAboutUsMiniContent(500).Result;
+    if(String.IsNullOrEmpty(strFooterAboutContent))
+        strFooterAboutContent = "Welcome to "+strThemeTitle+"! We are a locally owned and operated business committed to providing our customers with top-quality products and exceptional customer service. We are continually upgrading our inventory in order to provide you with the best range of products at the most reasonable pricing. We also try to offer special promotions throughout the year to help you save even more through our online store. If you have any suggestions or feedback, please feel free to contact us.";
+
+    if (storegroupid == 0 && String.IsNullOrEmpty(footerLogo))
+        footerLogo = "/images/Footer_Logo.svg";
+    int catLoaded = 0;
+}
+
+<footer class="footer">
+    <div class="section_footer-content">
+
+        <div class="container">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <div class="footer_hide-wrap">
+                    <span><strong>@(string.IsNullOrEmpty(strThemeTitle) ? "" : strThemeTitle) </strong> - From Cart to Comfort.</span>
+                    <span class="footer_hide-btn">view details <div class="arrows"></div></span>
+                </div>
+                <div class="footerlogo">
+                    <a href="/">
+                        @if (!String.IsNullOrEmpty(footerLogo))
+                        {
+                            <img class="img-fluid" src="@footerLogo">
+                        }
+                        &nbsp;
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="footer-content">
+                    @await Component.InvokeAsync("ContactAddress", true)
+
+                </div>
+
+            </div>
+            <div class="col-12 col-md-8 col-lg-5">
+                <div class="footer-aboutus">
+                    <div class="footer-link">
+                        <h6 class="footer-heading">More About us</h6>
+                        <ul>
+                            <li><a href="/about-us">About us</a></li>
+                            <li><a href="/how-it-works">How it works</a></li>
+                            <li><a href="/faq">FAQ & Support</a></li>
+                            <li><a href="/terms-conditions">Terms & Conditions</a></li>
+                            <li><a href="/privacy">Privacy Policy</a></li>
+                            <li><a href="/contact">Contact us</a></li>
+                            <li>
+                                <a href="/return-refund-policy">Return & Refund Policy</a>
+                            </li>
+                            @if (storegroupid < 1)
+                            {
+                                <li><a target="_blank" href="@(_configuration["PartnerSiteUrl"])">Become a seller</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="footer-heading">Our category</h6>
+                        <ul>
+                            @for (int i = 0; i <= categoriesMenu.MenuIterations; i++)
+                            {
+                                var categories = categoriesMenu.Categories.Take(6).ToList();
+                                @for (int j = 0; j < categories.Count() && catLoaded < 6; j++)
+                                {
+                                    catLoaded++;
+                                    <li><a href="@Retaline.Web.Service.Common.GenerateCategoryLink(categories[j])">@categories[j].CategoryName</a></li>
+                                }
+
+
+                            }
+                            <li class="f_more">
+                                <a href="/categorieslist">more...</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="app-section">
+                    <h6 class="footer-heading">Find our app on mobile</h6>
+                    <div class="payment-img">
+                        <div class="gpay">
+                            <a href="@androidUrl" target="_blank">
+                                <img src="~/images/gpay.png" class="img-fluid">
+                            </a>
+                        </div>
+                        <div class="applepay">
+                            <a href="@iosUrl" target="_blank">
+                                <img src="~/images/appstore.png" class="img-fluid">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-share-social footer_social_link">
+                        <span>Follow Us</span>
+                        @await Component.InvokeAsync("SocialMediaLinks")
+
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+    </div>
+    </div>
+    <div class="section_copyright">
+    <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="copyright">
+                        @await Component.InvokeAsync("Copyright", false)
+                        <p>Powered by <a href="https://www.grozeo.com" target="_blank">Grozeo.com</a></p>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+</footer>
+<script>
+    $(document).ready(() => {
+        $('.footer_hide-btn').click(function () {
+            $('footer').toggleClass('open_footer');
+        });
+
+    });
+</script>

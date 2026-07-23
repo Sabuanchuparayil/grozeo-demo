@@ -1,0 +1,30 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+ 
+}
+
+<div class="floting_cart cart-notification-sticky m-fixed-button mobileview hide">
+    <div class="cart-notification-items">
+        <div class="cart-notification-img">
+            <img id="cart-notification-sticky-img" class=" img-fluid" src="~/images/noimagefound.png">
+        </div>
+        <div id="cart-notification-sticky-btn" class="cart-notification-description">
+            <span class="itemscount">No items</span>
+            <span>in cart</span>
+        </div>
+    </div>
+    <div class="cart-notification-btn">
+        <form method="get" action="/cart">
+            <button class="btn btn-primary checkoutBTN viewcloader">View Cart</button>
+        </form>
+    </div>
+</div>
+<script>
+    $('.viewcloader').on("click", function (event) {
+        $('.viewcloader').addClass('processing')
+        setTimeout(() => {
+            $('.viewcloader').removeClass('processing')
+        },8000)
+    });
+   
+</script>

@@ -1,0 +1,67 @@
+name: finascop CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for hardcoded connection strings
+        run: |
+          if grep -rn "Password=\|Pwd=" --include="*.json" --include="*.cs" . 2>/dev/null | grep -v "appsettings.example\|//"; then
+            echo "WARNING: Possible hardcoded DB credentials found!"
+          fi
+          # Verify it reads from environment variable
+          if ! grep -rn "GetEnvironmentVariable.*dbconnection" DataEntry/ 2>/dev/null; then
+            echo "WARNING: dbconnection env var reference not found in DataService"
+          else
+            echo "Environment variable usage confirmed."
+          fi
+
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: security
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+      - name: Restore
+        run: dotnet restore DataEntry/DataEntry.csproj
+      - name: Build
+        run: dotnet build DataEntry/DataEntry.csproj -c Release --no-restore
+      - name: Publish
+        run: dotnet publish DataEntry/DataEntry.csproj -c Release -o ./publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: finascop-release
+          path: ./publish/
+
+  deploy:
+    name: Deploy to Azure Functions
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: finascop-release
+          path: ./publish
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: grozeo-finascop
+          package: ./publish
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}

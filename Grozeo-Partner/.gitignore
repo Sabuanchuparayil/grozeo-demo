@@ -1,0 +1,30 @@
+# Credentials & Secrets
+Web.config
+Web.Debug.config
+Web.Release.config
+appsettings.json
+appsettings.*.json
+*.pfx
+*.p12
+*.key
+secrets.json
+
+# Build Output
+[Bb]in/
+[Oo]bj/
+[Ll]ogs/
+*.user
+*.suo
+.vs/
+
+# NuGet
+packages/
+*.nupkg
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

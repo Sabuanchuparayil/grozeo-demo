@@ -1,0 +1,36 @@
+﻿@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@{
+    string strthemeLogo = "", strthemeLogoSmall = "";
+    if (tenant != null && tenant.Value != null)
+    {
+        if (!String.IsNullOrEmpty(tenant.Value.LogoImage))
+            strthemeLogo = tenant.Value.LogoImage;
+
+        if (!String.IsNullOrEmpty(tenant.Value.LogoSmall))
+            strthemeLogoSmall = tenant.Value.LogoSmall;
+    }
+
+}
+<div class="modal " id="PWAModal" role="dialog">
+    <div class="modal-dialog" style="max-width: 300px;">
+        <div class="modal-content  pb-4 pd20">
+            <div class=" col-md-12  col-sm-12">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="form-container" style=" text-align: center;">
+                    @*<h3 class="title pt-12" style="margin: 0px; font-size: 16px;">
+                            Add to Homescreen
+                        </h3>*@
+                    <div class="tab-content" style="padding: 0px 10px;">
+                        <div class="col-lg-12 ">
+                            <div class="loglabel" style="padding: 18px 5px;">
+                                <img src="@(String.IsNullOrEmpty(strthemeLogo) ? "/images/LOGO.svg": strthemeLogo)" style="width: 100px; height: auto;"><br /><br />
+                                <label>Add the App to your homescreen to get a better shopping experience</label>
+                            </div>
+                            <input type="button" value="Add to Homescreen" class="btn btn-primary" id="btnaddhomescreen" style="padding: 0px 11px;margin: 0px;height: 26px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

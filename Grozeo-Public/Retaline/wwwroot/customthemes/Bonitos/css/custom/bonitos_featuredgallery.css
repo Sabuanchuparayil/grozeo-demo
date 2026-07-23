@@ -1,0 +1,10 @@
+﻿/*featuredgallery*/
+.grz-featuredgallery {
+    margin: 0px;
+    padding: 5.5rem 0rem;
+    background-color: color-mix(in srgb, var(--theme-bg-secondary) 25%, white);
+    background-image: url(../images/featuredgallery_bg_img.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

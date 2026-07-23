@@ -1,0 +1,21 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/AgentMaster.Master" AutoEventWireup="true" CodeBehind="FleetMaster.master.cs" Inherits="RetalineProAgent.Fleet.FleetMaster" %>
+
+<%@ Register Src="~/Controls/ctrlMenuNavigation.ascx" TagPrefix="uc1" TagName="ctrlMenuNavigation" %>
+
+
+
+<asp:Content ContentPlaceHolderID="head" runat="server">
+    <asp:ContentPlaceHolder ID="cpNhead" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpHeaderNavigationAdmin" runat="server">
+    <uc1:ctrlMenuNavigation runat="server" ID="ctrlMenuNavigation" StartingNode="~/fleet" />
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpBreadcrumb" runat="server">
+    <asp:ContentPlaceHolder ID="cpNBreadcrumb" runat="server"><li class="breadcrumb-item"><a href="/">Home</a></li></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpTitle" runat="server">
+    <asp:ContentPlaceHolder ID="cpNTitle" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ContentPlaceHolderID="cpMainContent" runat="server">
+    <asp:ContentPlaceHolder ID="cpNMainContent" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>

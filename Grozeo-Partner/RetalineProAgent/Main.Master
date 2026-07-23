@@ -1,0 +1,130 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.master.cs" Inherits="RetalineProAgent.Main" %>
+<%@ Register Src="~/Controls/SideMenu.ascx" TagPrefix="uc1" TagName="SideMenu" %>
+<%@ Register Src="~/Controls/HeaderMessagesDropdown.ascx" TagPrefix="uc1" TagName="HeaderMessagesDropdown" %>
+<%@ Register Src="~/Controls/HeaderNotificationDropdown.ascx" TagPrefix="uc1" TagName="HeaderNotificationDropdown" %>
+<%@ Register Src="~/Controls/HeaderNavigation.ascx" TagPrefix="uc1" TagName="HeaderNavigation" %>
+<%@ Register Src="~/Controls/HeaderSearch.ascx" TagPrefix="uc1" TagName="HeaderSearch" %>
+<%@ Register Src="~/Controls/SideBarRightMenu.ascx" TagPrefix="uc1" TagName="SideBarRightMenu" %>
+<%@ Register Src="~/Controls/HeaderUser.ascx" TagPrefix="uc1" TagName="HeaderUser" %>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head runat="server">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Twitter -->
+    <meta name="twitter:site" content="@themepixels">
+    <meta name="twitter:creator" content="@themepixels">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Slim">
+    <meta name="twitter:description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="twitter:image" content="http://themepixels.me/slim/img/slim-social.png">
+
+    <!-- Facebook -->
+    <meta property="og:url" content="http://themepixels.me/slim">
+    <meta property="og:title" content="Slim">
+    <meta property="og:description" content="Premium Quality and Responsive UI for Dashboard.">
+
+    <meta property="og:image" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:secure_url" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="600">
+
+    <!-- Meta -->
+    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="author" content="ThemePixels">
+
+    <title>Partner - Retaline</title>
+
+    <!-- vendor css -->
+    <link href="/content/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/content/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+
+    <!-- Slim CSS -->
+    <link rel="stylesheet" href="/content/css/slim.css">
+      <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+  </head>
+  <body><form id="form1" runat="server">
+    <div class="slim-header">
+      <div class="container">
+        <div class="slim-header-left">
+          <h2 class="slim-logo"><a href="/"><%= this.CurrentUser.StoreGroupName %><span>.</span></a></h2>
+
+          <%--<div class="search-box">
+            <input type="text" class="form-control" placeholder="Search">
+            <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+          </div>--%><!-- search-box -->
+        </div><!-- slim-header-left -->
+        <div class="slim-header-right">
+
+          <div class="dropdown dropdown-b">
+            <a href="" class="header-notification" data-toggle="dropdown">
+              <i class="icon ion-ios-bell-outline"></i>
+              <span class="indicator"></span>
+            </a>
+            <div class="dropdown-menu">
+              <div class="dropdown-menu-header">
+                <h6 class="dropdown-menu-title">Notifications</h6>
+                <div>
+                  <a href="">Mark All as Read</a>
+                  <a href="">Settings</a>
+                </div>
+              </div><!-- dropdown-menu-header -->
+              <div class="dropdown-list">
+                <!-- loop starts here -->
+
+                <div class="dropdown-list-footer">
+                  <a href="page-notifications.html"><i class="fa fa-angle-down"></i> Show All Notifications</a>
+                </div>
+              </div><!-- dropdown-list -->
+            </div><!-- dropdown-menu-right -->
+          </div><!-- dropdown -->
+          <div class="dropdown dropdown-c">
+              <uc1:HeaderUser runat="server" id="HeaderUser1" />
+          </div><!-- dropdown -->
+        </div><!-- header-right -->
+      </div><!-- container -->
+    </div><!-- slim-header -->
+
+    <div class="slim-navbar">
+      <div class="container">
+          <uc1:HeaderNavigation runat="server" id="HeaderNavigation" />
+        
+      </div><!-- container -->
+    </div><!-- slim-navbar -->
+
+    <div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+            <asp:ContentPlaceHolder ID="cpBreadcrumb" runat="server">
+          <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <%--<li class="breadcrumb-item active" aria-current="page">Blank</li>--%>
+          </ol>
+          </asp:ContentPlaceHolder>
+          <asp:ContentPlaceHolder ID="cpTitle" runat="server"><h6 class="slim-pagetitle"></h6></asp:ContentPlaceHolder>
+        </div><!-- slim-pageheader -->
+          <asp:ContentPlaceHolder runat="server" ID="cpMainContent"></asp:ContentPlaceHolder>
+      </div><!-- container -->
+    </div><!-- slim-mainpanel -->
+
+    <div class="slim-footer">
+      <div class="container">
+        <p>Copyright 2021 &copy; All Rights Reserved. Velosit</p>
+        <p>Powered by: <a href="/">Velosit</a></p>
+      </div><!-- container -->
+    </div><!-- slim-footer -->
+      </form>
+    <script src="/content/lib/jquery/js/jquery.js"></script>
+    <script src="/content/lib/popper.js/js/popper.js"></script>
+    <script src="/content/lib/bootstrap/js/bootstrap.js"></script>
+
+    <script src="/content/js/slim.js"></script>
+  </body>
+</html>

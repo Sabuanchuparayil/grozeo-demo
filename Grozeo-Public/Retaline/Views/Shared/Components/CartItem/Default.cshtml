@@ -1,0 +1,144 @@
+﻿@using Retaline.Core.BusinessModel.Cart;
+@model Retaline.Web.Models.Cart.CartItem;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+@using Retaline.Core.BusinessModel.UserDetails;
+@{
+    var itemvariant = Model.Product.Item.ItemMaster.Where(i => i.StitID == Model.Product.CartProductId).FirstOrDefault();
+    double? mrp = 0, sellingprice = 0;
+    mrp = Model.Product.CartRetailPrice;
+    sellingprice = Model.Product.CartSalesPrice;
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    GuestData guestUser = HttpHelper.GuestUser;
+
+    bool IsDeliverable = Model.Product.BranchTypeId != 3 || (Model.Product.BranchMaxDeliveryDistance > Model.Product.Distance);
+
+}
+
+@if (mrp > 0 && Model.Product.StockAtBranch >= Model.Product.CartOrderQty && IsDeliverable)
+{
+    <div class="product-card cartItem item_deltype_@Model.DeliveryType" id="tr-product-@Model.Product.Id">
+        <a href="javascript:void(0)" rel="nofollow" title="Remove this item" class="btn-cart-remove" data-id="@Model.Product.Id">
+            <i class="fa-light fa-xmark"></i>
+        </a>
+        <div class="product-card_thumb">
+            <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", Model.Product.CartProductId, Model.Product.CartBranchId, Model.Product.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(Model.Product.Item.ItemName)? Model.Product.Item.Variant +"-" : Model.Product.Item.ItemName))">
+                <img src="@(itemvariant != null && itemvariant.MainImage.Count > 0 ? itemvariant.MainImage[0].ImageThumbUrl:"/images/p-no-image.png")" class=" img-fluid">
+            </a>
+
+        </div>
+        <div class="product-card_info">
+            <div class="action-icon">
+                <a href="javascript:void(0)" title="Add to Wishlist" class="label_wishlist move-to-wishlist" data-id="@Model.Product.Id">
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                </a>
+            </div>
+            <h4>
+                <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", Model.Product.CartProductId, Model.Product.CartBranchId, Model.Product.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(Model.Product.Item.ItemName)? Model.Product.Item.Variant+"-" : Model.Product.Item.ItemName))">
+                    @if (itemvariant != null && !String.IsNullOrEmpty(itemvariant.SKU))
+                    {
+                        @itemvariant.SKU
+
+                    }
+                    else if (String.IsNullOrEmpty(Model.Product.Item.ItemName))
+                    {
+                        @String.Format("{0} {1}", Model.Product.Item.BrandName, Model.Product.Item.Variant)
+                    }
+                    else
+                    {
+                        @Model.Product.Item.ItemName
+                    }
+                </a>
+            </h4>
+
+            <div class="product_btn_group">
+                <div class="product-price_wrap" id="cartitemsellingprice_@Model.Product.Id">
+                    <!-- <span class="product-price_info">Price Not Available</span> -->
+                    @if (mrp > 0 && sellingprice > 0)
+                    {
+                    <span class="product-price_discount">@(_configuration["CurrencySymbol"])@sellingprice x @Model.Product.CartOrderQty = @(_configuration["CurrencySymbol"])@Math.Round(Convert.ToDouble(sellingprice * Model.Product.CartOrderQty), 2)</span>
+                    <del class="product-price_regular">@(_configuration["CurrencySymbol"])@mrp</del>
+                    }
+                </div>
+                <div class="product-action addunit_infowrap">
+                    <div class="form-qty-block addunitWrap form-qty-full">
+                      @*   <button type="button" id="" class="btn btn-sm btn-minus">-</button>
+                        <input type="number" class="form-control form-qty" value="1" id="" placeholder="Add">
+                        <button type="button" id="" class="btn btn-sm btn-plus btn-add">+</button> *@
+
+                        <button type="button" class="btn btn-sm btn-minus minus" style="display:block;" data-productid="@Model.Product.CartProductId" data-groupid="@Model.Product.Item.FsiUid">-</button>
+                        <input type="number" class="form-control form-qty" step="1" min="0" max="@Model.Product.Item.ItemMaster[0].StockAvailable" name="qty" value="@Model.Product.CartOrderQty" size="4" inputmode="numeric" placeholder="Add" style="display:block;" id="product-qty-@Model.Product.CartProductId-@Model.Product.Item.FsiUid" data-groupid="@Model.Product.Item.FsiUid">
+                        <button type="button" class="btn btn-sm btn-plus btn-add" data-productid="@Model.Product.CartProductId" data-groupid="@Model.Product.Item.FsiUid">+</button>
+                    </div>
+                    <p id="pr_limit_reached_err" class="Error" style="display:none;">Order limit reached</p>
+
+                </div>
+            </div>
+            @if (Model.DeliveryType == 3 && Model.DeliveryProduct != null)
+            {
+                <div class="delivery-mode_button @(!isAuthenticated && (guestUser.GuestLatitude != null) ?"disabled":"" )">
+                    <label>Choose delivery type</label>
+                    <div class="form-check">
+                        <input class="form-check-input changedelivery me-1" type="radio" name="@String.Format("Delivery{0}",Model.Product.Id)" id="QuickDelivery" data-id="@Model.Product.Id" data-productid="@Model.DeliveryProduct.StitID" data-groupid="@Model.Product.Item.FsiUid" data-brid="@Model.DeliveryProduct.BranchId" data-brtypeid="3">
+                        <label class="form-check-label" for="Expressdelivery">
+                            Express delivery
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input changedelivery me-1" type="radio" name="@String.Format("Delivery{0}",Model.Product.Id)" id="CourierDelivery" checked="checked" data-id="@Model.Product.Id" data-productid="@Model.Product.CartProductId" data-groupid="@Model.Product.Item.FsiUid" data-brid="@Model.Product.CartBranchId" data-brtypeid="@Model.Product.BranchTypeId">
+                        <label class="form-check-label" for="CourierDelivery">
+                            Courier Delivery
+                        </label>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="product-card product_outofstock" id="tr-product-@Model.Product.Id">
+        <a href="javascript:void(0)" rel="nofollow" title="Remove this item" class="btn-cart-remove" data-id="@Model.Product.Id">
+            <i class="fa-light fa-xmark"></i>
+        </a>
+        <div class="product-card_thumb">
+            <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", Model.Product.CartProductId, Model.Product.CartBranchId, Model.Product.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(Model.Product.Item.ItemName)? Model.Product.Item.Variant + "-"  : Model.Product.Item.ItemName))">
+                <img src="@(itemvariant != null && itemvariant.MainImage.Count > 0 ? itemvariant.MainImage[0].ImageThumbUrl:"/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+            </a>
+        </div>
+        <div class="product-card_info">
+            <div class="action-icon">
+                <a href="javascript:void(0)" title="Add to Wishlist" class="label_wishlist">
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                </a>
+            </div>
+            <h4>
+                <a href="@String.Format("/pd/{0}/{1}/{2}/{3}", Model.Product.CartProductId, Model.Product.CartBranchId, Model.Product.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(Model.Product.Item.ItemName)? Model.Product.Item.Variant + "-" : Model.Product.Item.ItemName))">
+                    @if (itemvariant != null && !String.IsNullOrEmpty(itemvariant.SKU))
+                    {
+                        @itemvariant.SKU
+                    }
+                    else if (String.IsNullOrEmpty(Model.Product.Item.ItemName))
+                    {
+                        @String.Format("{0} {1}", Model.Product.Item.BrandName, Model.Product.Item.Variant)
+                    }
+                    else
+                    {
+                        @Model.Product.Item.ItemName
+                    }
+                </a>
+            </h4>
+
+            <div class="product_btn_group">
+                <div class="product-price_wrap">
+                    <span class="product-price_info">@(IsDeliverable ? "This item is out of stock" : "Undeliverable to location.")</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+

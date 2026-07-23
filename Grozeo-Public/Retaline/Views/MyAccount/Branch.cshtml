@@ -1,0 +1,295 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container">
+    <div class="modal " id="ADDRESS" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content  pb-4 pd20">
+                <div class=" col-md-12  col-sm-12">
+                    <a href="" data-dismiss="modal" class="close pt-2"><img src="~/images/cancel.png" class="imgclose"></a>
+                    
+                    <div class="form-container">
+                        <h3 class="title pt-2">
+                            ADD NEW ADDRESS
+                        </h3>
+                        <div class="tab-content">
+                            <form class="form-horizontal">
+                                <div class="row mt-3 mb-3">
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Name</label>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Street</label>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter street name
+                                             ">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>P.O Box</label>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter P.O Box number
+                                             ">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Landmark</label>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="Enter Landmark">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Region</label>
+                                            </div>
+                                            <select class="form-control" id="sel1">
+                                                <option>--- Select Region ---</option>
+                                                <option>Europe</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0">
+                                        <div class="col-lg-12">
+                                            <div class="form-group loglabel">
+                                                <label>Phone Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4  col-xs-2 w30">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-flag" aria-hidden="true"></i> </span>
+                                                </div>
+                                                <input type="text" class="form-control bleft" placeholder="+ 966
+                                                ">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8  col-xs-8 w60">
+                                            <div class="form-group form-group1">
+                                                <input type="text" class="form-control" placeholder="Phone Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 mt-3">
+                                        <p>
+                                            <label class="containerone">
+                                                Set as default address
+                                                <input type="checkbox" checked="checked">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 ">
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <button class="btn btn-dark h60 ">CANCEL</button>
+                                        <button class="btn btn-success h60 fright">
+                                            SAVE
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal " id="EDITADD" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content  pb-4 pd20">
+                <div class=" col-md-12  col-sm-12">
+                    <a href="" data-dismiss="modal" class="close pt-2"><img src="~/images/cancel.png" class="imgclose"></a>
+                    
+                    <div class="form-container">
+                        <h3 class="title pt-2">EDIT ADDRESS </h3>
+                        <div class="tab-content">
+                            <form class="form-horizontal">
+                                <div class="row mt-3 mb-3">
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Name</label>
+                                            </div>
+                                            <input type="text" class="form-control" value="Benedict Sen">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Street</label>
+                                            </div>
+                                            <input type="text" class="form-control" value="Al Naemia street ">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>P.O Box</label>
+                                            </div>
+                                            <input type="text" class="form-control" value="2211">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Landmark</label>
+                                            </div>
+                                            <input type="text" class="form-control" value="Near Al Naemia Juma">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group form-group1">
+                                            <div class="form-group loglabel">
+                                                <label>Region</label>
+                                            </div>
+                                            <select class="form-control" id="sel1">
+                                                <option>Al Namee</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row m-0">
+                                        <div class="col-lg-12">
+                                            <div class="form-group loglabel">
+                                                <label>Phone Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4  col-xs-2 w30">
+                                            <div class="input-group ">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-flag" aria-hidden="true"></i> </span>
+                                                </div>
+                                                <input type="text" class="form-control bleft" placeholder="+ 966
+                                                ">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-8  col-xs-8 w60">
+                                            <div class="form-group form-group1">
+                                                <input type="text" class="form-control" value="7489328930
+                                                ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 mt-3">
+                                        <p>
+                                            <label class="containerone">
+                                                Set as default address
+                                                <input type="checkbox" checked="checked">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 ">
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <button class="btn btn-dark h60  ">CANCEL</button>
+                                        <button class="btn btn-success h60 fright">
+                                            SAVE
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="content" class="bg-light page-cart pagecheck">
+    <div class="container">
+        <div class="row ">
+            <div id="breadcrumbs " class="mres15 mt-5 bearcham">
+                <p>
+                    <a href="/">Home</a> <i class="fa fa-long-arrow-right" aria-hidden="true"></i>  My account <span>
+                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Customer branch
+                    </span>
+                </p>
+            </div>
+            <div class="col-lg-12 mt-4 mb-4 mres15">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6   p-0">
+                        <h4 class="mb-2">CUSTOMER BRANCH </h4>
+                    </div>
+                    <div class="col-xs-6 col-md-6  ">
+                        <button type="button" class="btn btn-success btnnormal fright fribut" data-toggle="modal" data-target="#ADDRESS">Add New Branch</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 p-0 mres15 mb-2">
+                <div class="myorderul">
+                    <ul>
+                        <li><a href="/account">My Orders </a></li>
+                        <li class="active"><a href="/branch">Branches</a></li>
+                        <li><a href="/Address">Address</a></li>
+                        <li><a href="/wishlist">My Wishlist</a></li>
+                        @*<li><a href="">Edit profile </a></li>*@
+                        <li><a onclick="master.clearForm()" data-toggle="modal" data-target="#ContactUs" class="dropdown-toggle" href="#">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="text-left boxcheck ">
+                    <div class="row">
+                        <div class="col-lg-7 branchadd">
+                            <p>Branch Name <b> : WERTAF BRANCH</b></p>
+                            <p>Contact Person Name  : John Mathew</p>
+                            <p>Email  :  johnmathew123@gmail.com</p>
+                            <p>Phone  : 966 34221 4564 22</p>
+                        </div>
+                        <div class="col-lg-5">
+                            <p class="  fright mb-52">
+                                <span class="tooltip1">
+                                    <a href="#" class="addemail"><img src="~/images/add-email.png"></a>
+                                    <span class="tooltiptext">Sent login pemissions to Branch</span>
+                                </span>
+                                <a href="#" class="bookdelete btn btn-danger padrmo"> Remove</a>
+                                <a href="#" class="editemil" data-toggle="modal" data-target="#EDITADD"><img src="~/images/edit2.png"></a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <p><a href="#" class="bookdelete btn btn-success fright"> ADD ADDRESS</a></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-7 branchadd">
+                            <p>Branch Name <b> : WERTAF BRANCH</b></p>
+                            <p>Contact Person Name  : John Mathew</p>
+                            <p>Email  :  johnmathew123@gmail.com</p>
+                            <p>Phone  : 966 34221 4564 22</p>
+                        </div>
+                        <div class="col-lg-5">
+                            <p class="  fright mb-52">
+                                <span class="tooltip1">
+                                    <a href="#" class="addemail"><img src="~/images/add-email.png"></a>
+                                    <span class="tooltiptext">Sent login pemissions to Branch</span>
+                                </span>
+                                <a href="#" class="bookdelete btn btn-danger padrmo"> Remove</a>
+                                <a href="#" class="editemil" data-toggle="modal" data-target="#EDITADD"><img src="~/images/edit2.png"></a>
+                            </p>
+                            <div class="clearfix"></div>
+                            <p><a href="#" class="bookdelete btn btn-success fright"> ADD ADDRESS</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

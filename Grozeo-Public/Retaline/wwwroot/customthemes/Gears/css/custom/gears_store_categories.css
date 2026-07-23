@@ -1,0 +1,13 @@
+.topmainnav {
+    margin-top: 10px;
+    background: none;
+}
+.main-nav-wrap {
+    border: 1px solid var(--bs-border-color);
+}
+
+@media (max-width: 767px) {
+    .topmainnav {
+        margin-top: 5px;
+    }
+}

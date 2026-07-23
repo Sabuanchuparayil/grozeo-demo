@@ -1,0 +1,89 @@
+﻿@using Retaline.Core.BusinessModel.Catalog;
+
+
+@inject Retaline.Core.Services.HelperServices.IHttpHelperService HttpHelper
+
+@model List<CategoryData>;
+@*
+<section class="PopularSearchSec d-none d-lg-block">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="titlewrap"><h2 class="text-capitalize">Browse by Category</h2></div>
+                @if (Model == null || Model.Count <= 0)
+                {
+                    <h5 class="Showing_all_title">No category found</h5>
+                }
+                <ul class="PopularSearchWrap">
+                    @if (Model != null)
+                    {
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            if (Model[i].IsVirtualCategory == 1)
+                            {
+                                <li><a href="@String.Format("{2}/vc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else if (Model[i].Categorylevel == 2)
+                            {
+                                <li><a href="@String.Format("{3}/pc/{0}/{1}/{2}", Model[i].ParentCategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else if (Model[i].Categorylevel == 3)
+                            {
+                                <li><a href="@String.Format("{4}/pc/{0}/{1}/{2}/{3}", Model[i].ParentCategoryId, Model[i].CategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@String.Format("{2}/pc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                        }
+                    }
+                </ul>
+            </div><!--col-12-->
+        </div><!--row-->
+    </div><!--container-->
+</section><!--PopularSearchSec-->
+ *@
+<div class="row  mb-0">
+    <div class="col-12">
+        <div class="sec_card">
+            <div class="titlewrap">
+                <h2>Browse by Category</h2>
+            </div>
+            <div class="browse-category-list">
+                @if (Model == null || Model.Count <= 0)
+                {
+                    <h5 class="Showing_all_title">No category found</h5>
+                }
+                else
+                {
+                    <ul>
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            if (Model[i].IsVirtualCategory == 1)
+                            {
+                                <li><a href="@String.Format("{2}/vc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else if (Model[i].Categorylevel == 2)
+                            {
+                                <li><a href="@String.Format("{3}/pc/{0}/{1}/{2}", Model[i].ParentCategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else if (Model[i].Categorylevel == 3)
+                            {
+                                <li><a href="@String.Format("{4}/pc/{0}/{1}/{2}/{3}", Model[i].ParentCategoryId, Model[i].CategoryId, Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@String.Format("{2}/pc/{0}/{1}", Model[i].Id, Model[i].CategoryName,ViewBag.UrlType)">@Model[i].CategoryName</a></li>
+                            }
+                        }
+                    </ul>
+
+
+                }
+
+
+                </ul>
+            </div>
+        </div>
+    </div><!--row-->
+</div><!--row-->

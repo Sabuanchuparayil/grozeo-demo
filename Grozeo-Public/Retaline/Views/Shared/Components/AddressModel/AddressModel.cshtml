@@ -1,0 +1,251 @@
+﻿@model int;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+
+@{
+    Retaline.Core.BusinessModel.UserDetails.User curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    try
+    {
+        curUser = customAuthService.GetUserFromClaims();
+
+        if (curUser == null)
+        {
+            curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+        }
+    }
+    catch
+    {
+        curUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    bool loggedIn = (curUser != null && !string.IsNullOrEmpty(curUser.Name) ? true : false);
+
+}
+<!-- NewAddress-modal modal popup start-->
+<div class="modal fade" id="address-modal" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="address-modalLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h5 class="modal-title" id="delivery_adress-popupLabel">Add New Address</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="AdressSearchWrap" class="newaddress_wrap">
+
+                    <form id="frmaddaddress" class="needs-validation">
+                        <div class="address-location-map row">
+                            <h6>Find or Get Location in Map</h6>
+
+                            <div class="col-12">
+
+                                <div class="locationmap_wrap">
+                                    <div id="map" class="locationsmap mb-4">
+                                    </div>
+                                    <div class="flotingl_location_input">
+                                        <div class="input-field form-floating inputlocationform">
+                                            <input type="text" id="txt-location" class="pac-target-input form-control floating-input" name="txt-location" placeholder="Enter a location" autocomplete="off">
+                                            <label for="txt-location" class="form-label">Enter a location</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-field input-field-small curt_locationwrap floting_get_location">
+                                        <span class="your_location">
+                                            <i class="locationcross">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+                                                    <circle cx="10.25" cy="10.7149" r="6.99419" stroke="black" stroke-width="1.5" />
+                                                    <path d="M10.25 1.25V5.98256" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M10.25 15.0176V19.7501" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M19.5 10.5L14.7674 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                                                    <path d="M5.73242 10.5L0.999864 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+                                                    <circle cx="10.2503" cy="10.7152" r="2.5814" fill="black" />
+                                                </svg>
+                                            </i>
+                                            <span>Get Location</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-12">
+                                <div class="btn-field">
+                                    <button id="" class="btn btn-primary savenewaddres btn-more-address">Add more address details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row address-details hide">
+                            @* <div class="col-12">
+                            <div class="header_adress">
+                            <div class="yourlocation delivery_adress_triger" data-bs-toggle="modal" data-bs-target="#adressDropdown">
+                            <i class="fa-thin fa-location-dot" aria-hidden="true"></i>
+                            <span class="typelocation populate-autoselection-primary">office</span>
+                            <span class="locationaddrees populate-autoselection-secondary">C15, Thiruvananthapuram</span>
+                            </div>
+                            <div>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary btn-more-address">Change</a>
+                            </div>
+                            </div>
+
+                            </div> *@
+
+                            <div class="col-12">
+                                <div class="address-details_wrap">
+                                    <div class="yourlocation">
+                                        <i class="location_pin_icons">
+                                            <svg width="44" height="71" viewBox="0 0 44 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <ellipse cx="22" cy="64" rx="15" ry="7" fill="#1196FF" />
+                                                <path d="M22 0C34.1503 0 44 9.84974 44 22C44 33.1325 35.7309 42.3316 25 43.7949V59C25 60.6569 23.6569 62 22 62C20.3431 62 19 60.6569 19 59V43.7949C8.26909 42.3316 0 33.1325 0 22C0 9.84974 9.84974 0 22 0ZM22 13C17.0294 13 13 17.0294 13 22C13 26.9706 17.0294 31 22 31C26.9706 31 31 26.9706 31 22C31 17.0294 26.9706 13 22 13Z" fill="#292D30" />
+                                            </svg>
+                                        </i>
+                                        <div class="address-location_poit">
+                                            <span class="typelocation populate-autoselection-primary"></span>
+                                            <span class="locationaddrees populate-autoselection-secondary"></span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-field">
+                                        <a href="javascript:void(0)" class="btn btn-sm btn-outline-primary btn-more-address">Change</a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="form-group form-floating">
+                                    <input id="txt-house-number" type="text" class="form-control floating-input" placeholder="House Number" required="">
+                                    <label for="House-Number">House Number</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-8">
+                                <div class="form-group form-floating">
+                                    <input id="txt-street-name" type="text" class="form-control floating-input" placeholder="Street Name / Number" required="">
+                                    <label for="Street-Name">Street Name / Number</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-group form-floating">
+                                    <input type="text" class="form-control floating-input" id="txt-addressline-one" name=">Address-line-one" value="" placeholder="ddress line one" required="">
+                                    <label for="Address-one">Address line one</label>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group form-floating">
+                                    <input type="text" class="form-control floating-input" id="txt-addressline-two" name=">Address-line-two" value="" placeholder="Address line two">
+                                    <label for="Address-two">Address line two</label>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="form-group select-field form-floating">
+
+                                    <select id="txt-state" class="required form-select w-100 floating-select" required name="state-name">
+                                        <option value="">Select a State</option>
+                                    </select>
+                                    <label for="inputCity" class="">Select a State</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group select-field form-floating">
+
+                                    <select id="txt-district" class="required form-select w-100 floating-select" required name="house-number-name">
+                                        <option value="">Select a City/District</option>
+                                    </select>
+                                    <label for="inputCity" class="">Select a City/District</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-floating">
+                                    <input type="text" class="form-control floating-input" placeholder="Post Code" id="txt-post-code">
+                                    <label for="inputZip" class="">Post Code</label>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="adress_two_field row ">
+                                    <div class="col-12 col-md-4">
+                                        <label for="AddressType" class="mb-2">Save address as</label>
+                                        <div class="form-group mb-0">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input address-type" type="radio" name="RadioAddressType" id="home" value="home" checked="">
+                                                <label class="form-check-label" for="home">Home</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input address-type" type="radio" name="RadioAddressType" id="office" value="office">
+                                                <label class="form-check-label" for="office">Office</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input address-type othertype" type="radio" name="RadioAddressType" id="other" value="other">
+                                                <label class="form-check-label" for="other">Other</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-12 col-md-8 other-address-Type hide">
+                                        <div class="form-group form-floating">
+                                            <input type="text" id="txt-other-type" name="other-textfield" value="" placeholder="Enter address name" class="form-control floating-input">
+                                            <label for="other-textfield" class="">Enter address name</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 @(curUser.PrimaryAddress == null?"hide":"")">
+                                <div class="form-group form-floating">
+                                    <input type="text" class="form-control floating-input" id="txt-addr-username" name=">Address-line-one" value="" placeholder="" required="">
+                                    <label for="txt-addr-username">Contact Name at location</label>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6 dynamicDeliveryNumberlabel  @(curUser.PrimaryAddress == null ? "hide" : "")">
+                                <div class="form-group form-floating">
+                                    <input type="text"
+                                           class="form-control floating-input"
+                                           id="txt-addr-phoneNumber"
+                                           name="txt-addr-phoneNumber"
+                                           value="@curUser.Mobile"
+                                           placeholder=""
+                                           maxlength="15"
+                                           required
+                                           disabled=""
+                                           oninput="this.value = this.value.replace(/[^0-9+]/g, '')">
+                                    <label for="txt-addr-phoneNumber">Phone (with country code)</label>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute end-0 top-50 translate-middle-y me-2 changeDeliveryNumber">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </button>
+
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            @* 	<div class="col-12 col-md-6 hide dynamicDeliveryNumber">
+                            <div id="phone-adr-create" class="form-group">
+                            <input id="txt-mobile-adr-create" class="form-control intl_tele_input" type="tel" maxlength="" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" name="mobile-validation" required value="" autofocus="" autocomplete="off">
+                            <button type="button" class="btn btn-sm btn-outline-secondary position-absolute end-0 top-50 translate-middle-y me-2 changeDeliveryNumber">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                            <div class="invalid-feedback">Please enter a valid mobile number.</div>
+                            </div>
+
+                            </div> *@
+                            <div class="col-12">
+                                <div class="btn-field">
+                                    <button id="btn-add-address" class="btn btn-primary savenewaddres">Save For Delivery</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- NewAddress-modal modal popup end-->
+<script>
+    var username = "@curUser.Name";
+
+    var loggedIn = "@loggedIn"
+    if (loggedIn == "True") {
+        $('#txt-addr-username').val(username)
+    }
+</script>

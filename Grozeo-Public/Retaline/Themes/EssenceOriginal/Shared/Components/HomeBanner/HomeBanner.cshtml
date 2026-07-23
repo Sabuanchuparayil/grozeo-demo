@@ -1,0 +1,106 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@{
+    int homeBannersAdded = 0;
+}
+@for (int i = 0; i < Model.Count; i++)
+{
+    @if (Model[i].AdZoneName == "Home Top Banner" && Model[i].AdZoneDetails.Count > 0)
+    {
+        <div class="section-grz_banner_figure">
+            <div class="container-fluid">
+                <figure class="figure-banner">
+                    <div class="container-fluid">
+                        <div class="row row_mb ">
+                            <div class="col-12">
+                                <div class="mainbanner">
+                                    <div class="swiper mainbanner_one">
+                                        <div class="swiper-wrapper">
+
+                                            @for (int j = 0; j < Model[i].AdZoneDetails.Count; j++)
+                                            {
+
+                                                @if (tenant.Value.OwnBannerOnly && Model[i].AdZoneDetails.Any(a => a.StoreGroupId > 0) && Model[i].AdZoneDetails[j].StoreGroupId <= 0)
+                                                    continue;
+                                                <a href="@Retaline.Web.Service.Common.OfferUrl(Model[i].AdZoneDetails[j])" class="swiper-slide">
+                                                    <img src="@(Model[i].AdZoneDetails[j].AdvImageUrl)" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+                                                </a>
+                                                homeBannersAdded++;
+                                            }
+                                        </div>
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="paginationwrap">
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        </div>
+
+    }
+
+}
+@if (homeBannersAdded <= 0)
+{
+    <div class="section-grz_banner_figure">
+        <div class="container-fluid">
+            <figure class="figure-banner">
+                <div class="container-fluid">
+                    <div class="row row_mb ">
+                        <div class="col-12">
+                            <div class="mainbanner">
+                                <div class="swiper mainbanner_one">
+                                    <div class="swiper-wrapper">
+                                        <a href="" class="swiper-slide">
+                                            <img src="~/customthemes/Essence/images/banner_1.png" alt="" onerror="this.src='~/customthemes/Essence/images/p-no-image.png'" class=" img-fluid">
+                                        </a>
+                                    </div>
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="paginationwrap">
+                                        <div class="swiper-pagination"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </figure>
+        </div>
+    </div>
+
+}
+<script>
+    const mainbanner_one = new Swiper(".mainbanner_one", {
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        autoplay: {
+            delay: 3000,
+        },
+    });
+    @*   const mainbanner_two = new Swiper(".mainbanner_two", {
+        navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        },
+        autoplay: {
+        delay: 3000,
+        },
+        }); *@
+</script>

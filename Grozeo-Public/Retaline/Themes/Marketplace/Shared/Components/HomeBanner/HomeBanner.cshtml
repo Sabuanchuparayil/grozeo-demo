@@ -1,0 +1,103 @@
+﻿@using Retaline.Core.BusinessModel.Home
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model List<HomeValue>
+@{
+    int homeBannersAdded = 0;
+}
+@for (int i = 0; i < Model.Count; i++)
+{
+    @if (Model[i].AdZoneName == "Home Top Banner" && Model[i].AdZoneDetails.Count > 0)
+    {
+        <div class="section-grz_banner_figure">
+            <div class="container">
+                <div class="row" style="margin-bottom: 15px; margin-top: -10px;">
+                    <div class="col-12">
+                        <div class="mainbanner">
+                            <div class="swiper mainbanner_one">
+                                <div class="swiper-wrapper">
+                                    @for (int j = 0; j < Model[i].AdZoneDetails.Count; j++)
+                                    {
+
+                                        @if (tenant.Value.OwnBannerOnly && Model[i].AdZoneDetails.Any(a => a.StoreGroupId > 0) && Model[i].AdZoneDetails[j].StoreGroupId <= 0)
+                                            continue;
+                                        <a href="@Retaline.Web.Service.Common.OfferUrl(Model[i].AdZoneDetails[j])" class="swiper-slide">
+                                            <picture>
+                                                <source srcset="@(!string.IsNullOrEmpty(Model[i].AdZoneDetails[j].AdvMobileImageUrl)
+                                            ? Model[i].AdZoneDetails[j].AdvMobileImageUrl
+                                            : Model[i].AdZoneDetails[j].AdvImageUrl)" media="(max-width: 767px)">
+                                                <source srcset="@(Model[i].AdZoneDetails[j].AdvImageUrl)">
+                                                <img class="img-fluid" src="@(Model[i].AdZoneDetails[j].AdvImageUrl)" alt="banner" onerror="this.src='/images/banner-no-image.jpg'">
+                                            </picture>
+                                        </a>
+                                        homeBannersAdded++;
+                                    }
+
+                                </div>
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="paginationwrap">
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+@if (false && homeBannersAdded <= 0)
+{
+     <div class="section-grz_banner_figure">
+        <div class="container">
+            <div class="row" style="margin-bottom: 15px; margin-top: -10px;">
+                <div class="col-12">
+                    <div class="mainbanner">
+                        <div class="swiper mainbanner_one">
+                            <div class="swiper-wrapper">
+                                <a href="" class="swiper-slide">
+                                    <picture>
+                                        <source srcset="" media="(max-width: 767px)">
+                                        <source srcset="">
+                                        <img class="img-fluid" src="" alt="banner" onerror="this.src='/images/banner-no-image.jpg'">
+                                    </picture>
+                                </a>
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="paginationwrap">
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    const mainbanner_one = new Swiper(".mainbanner_one", {
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+    @*   const mainbanner_two = new Swiper(".mainbanner_two", {
+        navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+        },
+        autoplay: {
+        delay: 3000,
+        },
+        }); *@
+</script>

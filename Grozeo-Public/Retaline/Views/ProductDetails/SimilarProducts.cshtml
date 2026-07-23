@@ -1,0 +1,147 @@
+﻿@model Retaline.Core.BusinessModel.ProductDetails.ProductDetailsModel;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@{
+    Layout = "";
+    string productUrl = "";
+}
+@if (Model.SimilarItems.Count > 0)
+{
+	<div class="product-recommended_wrap similar-products">
+		<div class="product-recommended_title">
+			<h6>Similar Products</h6>
+		</div>
+		<ul class="product-recommended_list">
+			@foreach (var imgItem in Model.SimilarItems)
+			{
+			
+					productUrl = string.Format("/pd/{0}/{1}/{2}/{3}", imgItem.StitId, imgItem.BranchId, imgItem.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(imgItem.SKU) ? imgItem.PackageName + "-" + imgItem.Quantity : imgItem.SKU));
+
+					<li>
+						<div class="product-card">
+							<div class="product-card_thumb">
+							<a href="@productUrl">
+									<img src="@(imgItem.MainImage.Length > 0 ? imgItem.MainImage[0].ImageUrl : "/images/p-no-image.png")" alt="" onerror="this.src='/images/p-no-image.png'" class=" img-fluid">
+								</a>
+							</div>
+							<div class="product-card_info">
+								<h4>
+									<a href="@productUrl">
+										@(string.IsNullOrEmpty(imgItem.SKU) ? imgItem.PackageName + imgItem.Quantity : imgItem.SKU)
+									</a>
+								</h4>
+								<div class="product_btn_group">
+									<div class="product-price_wrap">
+										@if (imgItem.SellingPrice > 0)
+										{
+											<span class="product-price_discount">@(_configuration["CurrencySymbol"])@imgItem.SellingPrice</span>
+
+										}
+										@if (imgItem.MRP > imgItem.SellingPrice)
+										{
+											<del class="product-price_regular">@(_configuration["CurrencySymbol"])@imgItem.MRP</del>
+
+										}
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</li><!--li-->
+				
+			}
+		</ul><!--ul-->
+	</div>
+
+	<!--product-recommended_wrap-->
+}
+else
+{
+	<div class="product-recommended_wrap similar-products">
+		<div class="product-recommended_title">
+			<h6>Similar Products</h6>
+		</div>
+		<ul class="product-recommended_list">
+
+			<li>
+				<div class="product-card">
+					<div class="preloder">
+						<span class="preloder_content">Nothing Found</span>
+						<span class="loader_anim"></span>
+					</div>
+				</div>
+			</li><!--li-->
+		</ul><!--ul-->
+	</div>
+}
+@if (Model.CategoryProducts != null && Model.CategoryProducts.Products != null && Model.CategoryProducts.Products.Count > 0)
+{
+	<div class="product-recommended_wrap similar-products">
+		<div class="product-recommended_title">
+			<h6>You might like</h6>
+		</div>
+		<ul class="product-recommended_list">
+			@foreach (var catProdItem in Model.CategoryProducts.Products)
+			{
+				productUrl = string.Format("/pd/{0}/{1}/{2}/{3}", catProdItem.StitId, catProdItem.BranchId, catProdItem.BranchTypeId, Retaline.Web.Service.Common.EncodeUrl(String.IsNullOrEmpty(catProdItem.SKU) ? catProdItem.PackageName + "-" + catProdItem.Quantity : catProdItem.SKU));
+
+				<li>
+					<div class="product-card">
+						<div class="product-card_thumb">
+							<a href="@productUrl">
+								<img src="@(catProdItem.MainImage != null && catProdItem.MainImage.Length > 0 ? catProdItem.MainImage[0].ImageUrl : "/images/p-no-image.png")" class="img-fluid">
+							</a>
+						</div>
+						<div class="product-card_info">
+							<h4>
+								<a href="@productUrl">
+									@(string.IsNullOrEmpty(catProdItem.SKU) ? string.Format("{0} {1} {2}", catProdItem.SKU, catProdItem.PackageName, catProdItem.Quantity) : catProdItem.SKU)
+								</a>
+							</h4>
+							<div class="product_btn_group">
+								<div class="product-price_wrap">
+									@if (catProdItem.SellingPrice > 0)
+									{
+										<span class="product-price_discount">@(_configuration["CurrencySymbol"])@catProdItem.SellingPrice</span>
+
+									}
+									@if (catProdItem.MRP > catProdItem.SellingPrice)
+									{
+										<del class="product-price_regular">@(_configuration["CurrencySymbol"])@catProdItem.MRP</del>
+
+									}
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<!--li-->
+			}
+
+		</ul><!--ul-->
+	</div>
+
+	<!--product-recommended_wrap-->
+}
+else
+{
+	<div class="product-recommended_wrap you-might-like">
+		<div class="product-recommended_title">
+			<h6>You might like</h6>
+		</div>
+		<ul class="product-recommended_list">
+			<li>
+				<div class="product-card">
+					<span class="noitems_found">
+						<img class="noitens_icons" src="~/images/empty_cart.svg" style="width:70px">
+					</span>
+				</div>
+			</li>
+		</ul><!--ul-->
+	</div>
+	
+
+
+	<!--li-->
+}

@@ -1,0 +1,62 @@
+
+/*Main Banner*/
+
+.mainbanner, .addsbanner {
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+    .mainbanner .swiper-slide img, .mainbanner img, .addsbanner .swiper-slide img, .addsbanner img {
+        max-width: 100%;
+    }
+
+.swiper-button-next, .swiper-button-prev {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.paginationwrap {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.catogery-slider-wrap .swiper-button-next, .catogery-slider-wrap .swiper-button-prev {
+    color: #000;
+    background-color: rgb(255, 255, 255);
+}
+
+.mainbanner .paginationwrap .swiper-pagination, .addsbanner .paginationwrap .swiper-pagination {
+    position: relative;
+    bottom: 0px;
+    width: auto;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50px;
+    padding: 5px 10px;
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainbanner .swiper-pagination-bullet-active, .addsbanner .swiper-pagination-bullet-active {
+    background: white;
+}
+
+.swiper-pagination.swiper-pagination-lock {
+    display: none !important;
+}
+/* Addbanner */
+
+/* preferred_banner */
+.preferred_banner + .prefered_listswrap {
+    margin-top: 1.85rem;
+}

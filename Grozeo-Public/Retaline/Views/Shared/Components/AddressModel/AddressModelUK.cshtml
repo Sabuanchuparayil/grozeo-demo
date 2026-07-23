@@ -1,0 +1,291 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@model int;
+@{
+}
+<div class="modal fade" id="address-modal" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="address-modalLabel" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="d-flex justify-content-between align-items-center w-100">
+					<h5 class="modal-title" id="delivery_adress-popupLabel">Add New Address</h5>
+				</div>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="editadresswrap">
+					@* <h3>Search Address or <a href="javascript:void(0)" style="cursor:text;">Enter your address in full</a></h3> *@
+					@* <h3>Find or Get Location in Map</h3> *@
+					<div class="row">
+						<div class="col-auto">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="Delivery1" id="withinUk" checked="">
+								<label class="form-check-label" for="QuickDelivery1">
+									Address within UK
+								</label>
+							</div>
+						</div>
+						<div class="col-auto">
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="Delivery1" id="outsideUk">
+								<label class="form-check-label" for="CourierDelivery1">
+									Address outside UK
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="AdressSearchWrap" class="newaddress_wrap">
+					<h6>Find or Get Location in Map</h6>
+					<form id="frmaddaddress" class="row needs-validation">
+						<div class="col-12">
+							<div class="input-group d-flex flex-nowrap">
+								<div class="input-field form-floating col postcode_lookup_wrap">
+									<div class="d-flex align-items-end searchaddressfilde input-field " id="postcode_lookup">
+										<span class="position-absolute  end-0 addr-not-listed hide" id="addr-not-listed">
+											My address not listing here
+										</span>
+									</div>
+								</div>
+								<div class="input-field form-floating col hide" id="map-location-field">
+									<input type="text" id="txt-location" class="pac-target-input form-control floating-input" name="txt-location" placeholder="Enter a location" autocomplete="off">
+
+									<label for="txt-location" class="form-label">Enter a location</label>
+								</div>
+								<div class="input-field input-field-small curt_locationwrap col-auto hide">
+									<span class="your_location w-100 px-3 d-flex align-items-center justify-content-center">
+										<i class="locationcross">
+											<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+												<circle cx="10.25" cy="10.7149" r="6.99419" stroke="black" stroke-width="1.5" />
+												<path d="M10.25 1.25V5.98256" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+												<path d="M10.25 15.0176V19.7501" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+												<path d="M19.5 10.5L14.7674 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+												<path d="M5.73242 10.5L0.999864 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" />
+												<circle cx="10.2503" cy="10.7152" r="2.5814" fill="black" />
+											</svg>
+										</i>
+										<span>Get Location</span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div id="map" class="locationsmap">
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="form-group form-floating">
+								<input id="txt-house-number" type="text" class="form-control floating-input" placeholder="House Number" required="">
+								<label for="House-Number">Door No/ House No/ Building Name</label>
+							</div>
+						</div>
+							
+						<div class="col-12">
+							<div class="form-group form-floating">
+								<input id="txt-street-name" type="text" class="form-control floating-input" placeholder="Street Name / Number" required="">
+								<label for="Street-Name">Street No/ Street Name/ Location</label>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="form-group form-floating">
+								<input type="text" class="form-control floating-input" id="txt-addressline-one" name=">Address-line-one" value="" placeholder="ddress line one">
+								<label for="Address-one">Additional Address Line</label>
+								<div class="invalid-feedback">This field is required</div>
+								<input type="text" id="txt-addressline-two" name=">Address-line-two" value="" style="display:none;" >
+							</div>
+						</div>
+
+
+					@* 	<div class="col-md-4">
+							<div class="form-group select-field form-floating">
+
+								<select id="txt-state" class="required form-select w-100 floating-select" required name="state-name">
+									<option value="">Select a State</option>
+								</select>
+								<label for="inputCity" class="">Select a State</label>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group select-field form-floating">
+
+								<select id="txt-district" class="required form-select w-100 floating-select" required name="house-number-name">
+									<option value="">Select a City/District</option>
+								</select>
+								<label for="inputCity" class="">Select a City/District</label>
+							</div>
+						</div> *@
+						<div class="col-md-4">
+							<div class="form-group select-field form-floating">
+							<select id="txt-state" class="required form-select w-100" required name="state-name" onchange="address.onStateChange()">
+								<option value="">Select a County/Region</option>
+							</select>
+								<label for="inputCity" class="">County/Region</label>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group select-field form-floating">
+
+							<select id="txt-district" class="required form-select w-100" required name="house-number-name" onchange="address.onDistrictChange()">
+								<option value="">Select a City/District</option>
+
+							</select>
+								<label for="inputCity" class="">City / District</label>
+							</div>
+						</div>
+
+
+						<div class="col-md-4">
+							<div class="form-group form-floating">
+								<input type="text" class="form-control floating-input" placeholder="Post Code" id="txt-post-code">
+								<label for="inputZip" class="">Post Code</label>
+								<div class="invalid-feedback">This field is required</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="adress_two_field row ">
+								<div class="col-12 col-md-4">
+									<label for="AddressType" class="">Select type</label>
+									<div class="form-group mb-2">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input address-type" type="radio" name="RadioAddressType" id="home" value="home" checked="">
+											<label class="form-check-label" for="home">Home</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input address-type" type="radio" name="RadioAddressType" id="office" value="office">
+											<label class="form-check-label" for="office">Office</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input address-type othertype" type="radio" name="RadioAddressType" id="other" value="other">
+											<label class="form-check-label" for="other">Other</label>
+										</div>
+									</div>
+
+								</div>
+								<div class="col-12 col-md-8 other-address-Type hide">
+									<div class="form-group form-floating">
+										<input type="text" id="txt-other-type" name="other-textfield" value="" placeholder="Enter address name" class="form-control floating-input">
+										<label for="other-textfield" class="">Enter address name</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="btn-field">
+								<button id="btn-add-address" class="btn btn-primary savenewaddres">Save For Delivery</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- NewAddress-modal modal popup end-->
+<script src="https://cdn.getaddress.io/scripts/getaddress-find-2.0.0.min.js"></script>
+<style>
+    .sel-wt-150{
+        width: calc(100% - 240px);
+    }
+    .postcode-input{
+        margin-right: 10px;
+        min-width: 155px;
+    }
+
+    .postcode-button{
+        margin-right: 10px;
+        height: 35px;
+        padding: 10px 16px;
+        font-size: 16px;
+        line-height: 100%;
+    }
+</style>
+<script>
+    getAddress.find(
+        'postcode_lookup',
+        '@(_configuration["GetAddressIOAPIKey"])',
+        {
+            input: {
+                id: 'getaddress_input',  /* The id of the textbox' */
+
+                name: 'getaddress_input',  /* The name of the textbox' */
+				class: 'postcode-input form-control floating-input',  /* The class of the textbox' */
+                label: 'Enter your Postcode'  /* The label of the textbox' */
+            },
+            button: {
+                id: 'getaddress_button',  /* The id of the botton' */
+                class: 'btn btn-primary postcode-button',  /* The class of the botton' */
+                label: 'Find',  /* The label of the botton' */
+                disabled_message: 'Find'  /* The disabled message of the botton' */
+            },
+            dropdown: {
+                id: 'getaddress_dropdown',  /* The id of the dropdown' */
+                class: 'form-select sel-wt-150',  /* The class of the dropdown' */
+                select_message: 'Select your Address',  /* The select message of the dropdown' */
+                template: ''  /* The suggestion template of the dropdown' (see Autocomplete API)*/
+            },
+        }
+
+    );
+	$(document).on('change', '#getaddress_dropdown', function () {
+		if ($(this).val() === 'open') {
+		address.initializeMap()
+		}
+	});
+    document.addEventListener("getaddress-find-address-selected", function (e) {
+		const addr = e.address;
+
+		$("#txt-house-number").val(addr.line_1 || "");
+		$("#txt-street-name").val(addr.line_2 || "");
+		$("#txt-addressline-one").val(addr.line_3); // addr.line_3
+		$("#txt-addressline-two").val(addr.line_4);
+		$("#txt-post-code").val(addr.postcode || "");
+
+		$("#txt-state").attr('selst', addr.country || "");
+		$('#txt-state').find('option:contains(' + addr.country + ')').prop("selected", true);
+
+		$('#txt-district').find('option:contains(' + addr.county + ')').prop("selected", true);
+		$("#txt-district").attr('seldist', addr.county || "");
+		address.onStateChange();
+
+		$("#hidLat").val(addr.latitude || "");
+		$("#hidLong").val(addr.longitude || "");
+
+	        const result = [
+			addr.line_1,
+			addr.line_2,
+            addr.line_3,
+            addr.district,
+        ].filter((elem) => elem !== "").join(", ");
+
+        var txtAddrSearch = $('#getaddress_dropdown option:selected').text();
+        if(txtAddrSearch == '')
+            txtAddrSearch = result;
+        $("#txt-location").val(txtAddrSearch);
+		
+        address.fillInFindAddress(txtAddrSearch, e.address.latitude, e.address.longitude, e.address.district, e.address.postcode, e.address.district, e.address.county);
+    });
+
+    // // Add the span element labelled address not listed using jQuery
+    $(function () {
+        // Function to show the addr-not-listed span
+        function showAddrNotListed() {
+            $('#addr-not-listed').removeClass('hide');
+        }
+
+        // Check if the getaddress_dropdown element exists initially
+        if ($('#getaddress_dropdown').length > 0) {
+            showAddrNotListed();
+        }
+
+        // Listen for changes in the DOM
+        $(document).on('DOMNodeInserted', function (e) {
+            // Check if the inserted node is the getaddress_dropdown element
+            if ($(e.target).is('#getaddress_dropdown')) {
+                showAddrNotListed();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,124 @@
+name: Grozeo-Bizapi CI/CD
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Security Scan ──────────────────────────────────────────
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for exposed secrets
+        run: |
+          # Fail if any real credentials are found in committed files
+          if grep -rn "AKIAQFHKOLNKPKGGCJN6\|mypharmacydev\|ZfDwOaOfDSUi\|fhGpLLpsjaQW\|Password_123" \
+            --include="*.php" --include="*.json" --include="*.env" . 2>/dev/null; then
+            echo "CRITICAL: Exposed credentials found in commit!"
+            exit 1
+          fi
+          echo "No exposed credentials found."
+
+      - name: PHP Security Checker
+        uses: symfonycorp/security-checker-action@v5
+        with:
+          lock: composer.lock
+        continue-on-error: true
+
+  # ── PHP Lint ───────────────────────────────────────────────
+  lint:
+    name: PHP Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, redis, mbstring, xml, curl, gd, zip, bcmath, intl
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
+      - name: PHP Lint
+        run: find app routes config -name "*.php" -exec php -l {} \; | grep -v "^No syntax errors"
+
+  # ── Tests ──────────────────────────────────────────────────
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test_password
+          MYSQL_DATABASE: grozeo_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, redis, mbstring, xml, curl, bcmath, intl
+
+      - name: Install dependencies
+        run: composer install --no-interaction
+
+      - name: Setup test environment
+        run: |
+          cp .env.example .env
+          sed -i 's/REPLACE_WITH_DB_HOST/127.0.0.1/' .env
+          sed -i 's/REPLACE_WITH_DB_NAME/grozeo_test/' .env
+          sed -i 's/REPLACE_WITH_DB_USER/root/' .env
+          sed -i 's/REPLACE_WITH_NEW_STRONG_PASSWORD/test_password/' .env
+          sed -i 's/REPLACE_WITH_REDIS_HOST/127.0.0.1/' .env
+          sed -i 's/REPLACE_WITH_REDIS_PASSWORD//' .env
+          php artisan key:generate
+          php artisan jwt:secret
+
+      - name: Run migrations
+        run: php artisan migrate --force
+
+      - name: Run tests
+        run: php artisan test
+
+  # ── Deploy to Railway (main branch only) ──────────────────
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: [security, test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: railway up --service grozeo-bizapi --detach
+
+      - name: Notify deployment
+        run: echo "Grozeo-Bizapi deployed to Railway successfully"

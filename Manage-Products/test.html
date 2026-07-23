@@ -1,0 +1,916 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<table width="100%" border="0" cellspacing="10" cellpadding="10">
+  <tr>
+    <td><div class="humanColumnContents" style="padding-bottom: 286px; transform: translateX(0px); width: 95%; margin:0 auto">
+
+  <!-- Name -->
+  <h1 class="humanColumnApiName">
+    Qugeo    </h1>
+  <!-- /Name -->
+
+  <div class="humanColumnSection humanColumnContentsIntroduction"><div class="humanColumnSection humanColumnSectionIntroduction">
+
+  <!-- Title --><!-- /Title -->
+
+  <!-- Description -->
+      <div class="humanColumnApiDescription markdown formalTheme">
+      <p>&nbsp;</p>
+
+<h2>CaregoAPI Standards</h2>
+
+<p><b>CaregoAPI</b> is a REST api service provider for CaregoAPP, Qugeo and Carego Backoffice. The following are the procedural rules/standards for api consumers. <br>
+<br>
+<br>
+<b>Method Supported</b><br>
+GET - Select<br>
+POST - Add New<br>
+PUT - Update<br>
+DELETE - Delete<br>
+<br>
+<br>
+<b>Status</b><br>
+For all CaregoAPI interactions, the service would respond with one of the following status code
+<br>
+<b>200</b> - OK<br>
+<b>401</b> - Unauthorised(Invalid API Key)<br>
+<b>404</b> - Not Found<br>
+<b>405</b> - Method Not Allowed<br>
+<b>500</b> - Internal Server Error<br>
+<br>
+<br>
+<b>REQUEST</b><br>
+1. Every request, other than authentication request, should include <b>apikey</b>(string) as a parameter. The apikey parameter is not explicitly specified in every api specification. <br>
+2. The POST method accepts '<i>application/x-www-form-urlencoded</i>' content types only.<br> 
+<br>
+<br>
+<b>RESPONSE</b><br>
+Every successful(200-OK) response would be a <b>json</b> object and every object would have the following values <br>
+<b>success:true/false</b> (boolean)<br>
+<b>msg:"______________"</b> (string)<br>
+<b>Data:{}</b> (Json Object)<br>
+Any caregoapi response without the said keys should be considered as malformed and the client should handle the error graciously. Further, the client should upload the endpoint, request  parameters and response through caregoapi error logger service.<br>
+1.A 'true' value for '<b>success</b>' key indicates that the request was processed and the expected action has been completed successfully.<br>
+2.A 'false' value for '<b>success</b>' key indicates that the request was not processed or the expected action failed. This should be treated as an exception and the string in the <b>'msg'</b> key should be displayed to the user<br>
+3.Response headers are <i>Cache-Control: no-cache, no-store, must-revalidate</i>,<i>Pragma: no-cache</i>,<i>Expires: 0</i>,<i>HTTP/1.1 STATUSCODE STATUSTEXT</i><br>
+4.All response values are  element of <b>Data</b> object, eg. for <b>Get API Key</b> the full reponse will be<br>
+{<br>
+   "success": true,<br>
+   "msg": "API Key Generated",<br>
+   "Data": {<br>
+      "apikey": "31b45884ae9d6daa5f5fc461e8d225d6cbfc6a56"<br>
+    }<br>
+}
+<br>
+<br>
+<strong>Keywords used in the document</strong><br>
+1."api" - CaregoAPI.<br>
+2."Client" - Any Client application like Webapplication, IOS/Android application.<br>
+3."User" - User of the application, eg Driver using Quego application, Branch manger using Carego Back Office.<br>
+4."Customer" - The Consignor or Consignee of a Booking.<br></p>
+
+<h2>PUSH Messaging</h2>
+
+<p>CaregoScheduler push order details to the client for the User to accept. The data pushed is in JSON format. By default every push  will have a message key and client's current apikey. The client should check if the apikey in the push message is same as the current apikey, if they are differnt the push message data, actual apikey should be uploaded through caregoapi  error logger service. </p>
+
+<h3>New Order</h3>
+
+<p>The new order is pushed to the client. The push message has a <b>Data</b> object, which has the following elments <br>
+<br><br>
+<b>yourapikey</b> - the current apikey. If this is not same as the clients apikey then an error should be uploaded.<br>
+<b>msgid</b> - The push message id, every push message will have an id.<br>
+<b>msgtype</b> - New. A new order will have msgtype as NEW<br>
+<b>orderid</b> - The order id<br>
+<b>ispickuporder</b> - true, if the order is pickup. false, for delivery orders.<br>
+<b>pickupdetails</b> - The pickup order details has the details of the geocoords,distancetobranch etc.<br>
+<b>onlytobranch</b> - true, If the pickup can be delivered to branch only.<br>
+<b>geocoords</b> - The geocordinates of source, destination and branch.<br>
+<b>disttobr</b> - The distance from pickup to branch.<br>
+<b>disttodest</b> - The distance from pickup to delivery location. Is applicable if <b>onlytobranch</b> is false <br>
+<br>
+<b>SAMPLE</b><br>
+data:{<br>
+   "yourapikey": "31b45884ae9d6daa5f5fc461e8d225d6cbfc6a56"<br>
+   "msgid": "45831b8c461e4ae9d6da25d2d6ca5f5f8bfc6a56",<br>
+   "msgtype": NEW,<br>
+   "orderid":"09619a56490274a4f66de203717d82401cb47d02",<br>
+   "ispickuporder":true,<br>
+   "pickupdetails": {<br>
+        "onlytobranch": false,<br>
+        "geocoords": {<br>
+            pickup:  { "latitude":8.5207295, "longitude":76.9422873},<br>
+            dest:  { "latitude":8.5207295, "longitude":76.9422873},<br>
+            branch:  { "latitude":8.5207295, "longitude":76.9422873},<br>
+        }<br>
+        "disttobr": "12 KM",
+        "disttodest": "31 KM"
+    }<br>
+}<br></p>
+
+<h3>Order Closed</h3>
+
+<p>The missed order will be in swappable position, till a new 'Order Closed' push message received. The push message's msgid will be same as the "New Order' msgid, so can be used as reference key.  <br>
+<br><br>
+<b>yourapikey</b> - the current apikey. If this is not same as the clients apikey then an error should be uploaded.<br>
+<b>msgid</b> - The push message id, every push message will have an id.<br>
+<b>msgtype</b> - CLOSED. The <br>
+<br>
+<b>SAMPLE</b><br>
+data:{<br>
+   "yourapikey": "31b45884ae9d6daa5f5fc461e8d225d6cbfc6a56"<br>
+   "msgid": "45831b8c461e4ae9d6da25d2d6ca5f5f8bfc6a56",<br>
+   "msgtype": CLOSED<br>
+}<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <div class="humanColumnSection humanColumnContentsReference"><div class="humanColumnSection humanColumnSectionReference">
+
+  <!-- Title -->
+  <div class="humanColumnTitle">
+    <h3 class="humanColumnTitleText">Reference</h3>
+  </div>
+  <!-- /Title -->
+
+<div class="resourceGroups">
+<div class="resourceGroup">
+
+  <!-- Name -->
+    <!-- /Name -->
+
+  <!-- Description -->
+    <!-- /Description -->
+
+  <!-- Resources -->
+  <div class="resources"><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Login - Authentication  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>Other than Authentication request, CaregoAPI requires that every request to have <b>apikey</b> as parameter and the value of this parameter should be the valid key provided on successfully authentication.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action get">
+
+  <!-- Invitation -->
+  <div class="actionInvitation get">
+          <a class="actionInvitationRow" href="/reference/0/login-authentication/get-api-key">
+                  <div class="actionTag get"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Get API Key      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p>For login the application get a valid apikey. <br>
+<br><br>
+<b>REQUEST</b><br>
+<b>gcmregisterationid</b> - The Google cloud messaging registration id <br>
+<b>imeinumber</b> - The IMEI number of the phone<br>
+<b>usertype</b> - <b><i>2</i></b>  The usertype of Qugeo is 2<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<br>
+<b>RESPONSE</b><br>
+<b>apikey</b> - The api key to be used for all  api calls<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Login - Last Vehicle Used  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>For getting the list of vehicles last used. Since this being the first request after authentication, the api would request for previous trips details from the user if he had not logged out.
+If so, the client should collect the information from the user and invoke the api request again.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action get">
+
+  <!-- Invitation -->
+  <div class="actionInvitation get">
+          <a class="actionInvitationRow" href="/reference/0/login-last-vehicle-used/get-last-vehicle-used">
+                  <div class="actionTag get"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Get Last Vehicle used      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>prevlogoutinfo</b> - When logging in after client authentication, the parameter should be blank. If invoking the api again after collecting previous trip details the parameter should contain a JSON object.<br>
+<b>apikey</b> - Valid APIKey<br>
+<br>
+<b>RESPONSE</b><br>
+<b>cleanlogout</b> - true, if the user had logged out. If false, the client should collect the previous trip details and call this api again<br>
+<b>vehiclesused</b> - JSON array of string. Would contain array of Vhecile registration number<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Login - List of Company Owned vehicles  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>If the vehicle is not in the list of 'last used vehicles' the user should enter the last few digits of the allocated vehicle. The api would respond with list of matching vehicle numbers.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action get">
+
+  <!-- Invitation -->
+  <div class="actionInvitation get">
+          <a class="actionInvitationRow" href="/reference/0/login-list-of-company-owned-vehicles/get-own-vehicle-list">
+                  <div class="actionTag get"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Get Own Vehicle List      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>allotedvehicle</b> - last few digits of the alloted vehicle<br>
+<b>apikey</b> - Valid APIKey<br>
+<br>
+<b>RESPONSE</b><br>
+<b>availablevehicles</b> - JSON array of string. Would contain array of Vhecile registration number</p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Login - Selected Vehicle  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>Once, the user selects the company owned or hired vehicle, the details are posted. The api responds with  dashboard details. The details are to be displayed as it is on to the dashboard.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/login-selected-vehicle/selected-vehicle">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Selected Vehicle      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>ishired</b>  - true, if the vehicle is hired. <br>
+<b>vehicleregno</b>  - the registration number of the selected vehicle.<br>
+<b>vehicletype</b> - the id of the selected vehicle type.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br><br>
+<b>RESPONSE</b><br>
+<b>dashboarddetails</b> - JSON array of objects. Would contain the details to be displayed on the dashboard.<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Accept Order - Pickup/Delivery  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>The client is prompted to accept a pickup or delivery request. If user accepts the request, he needs to select the delivery location.  The details are then posted to caregpapi.
+The api responds with new map route coordinates(if applicable), and the next pickup/delivery details.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/accept-order-pickupdelivery/post-the-user-reponse">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Post the user reponse      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>orderid</b>  - order id.  <br>
+<b>hasaccepted</b>  - if false, then rejected by user. <br>
+<b>delivertobranch</b> - false, if the user will deliver to the destination. <br>
+<b>geocoords</b> -  JSON. The geo co-ordinates of current location <br> 
+<b>apikey</b> - Valid APIKey<br>
+<br><br>
+<b>RESPONSE</b><br>
+<b>istriprerouted</b> - true, if the current destination is to be reworked. Will be false if the user has rejected the order or if this order is not the next to be handled. <br>
+<b>mapdetails</b> - Json object. If <b>istriprerouted</b> is true, then the new destination's map details will be provided. Else the parameter will be blank. <br>
+<b>nextorderdetails</b> - Json object. If <b>istriprerouted</b> is true, the next order details will be provided. Else the parameter will be blank. <br>
+<b>cashtobecollected</b> - The Amount to be collected from the Customer. <br>
+<b>noofboxes</b> - Number of boxes to be pickedup or delivered. <br>
+<b>weight</b> - The Total weight of all the boxes.</p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Deal Order - Cross Milestones  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>The client should invoke the api when the vehicle reaches within the pre-fixed distance milestone from the order's location.
+If the new order is within the pre-fixed milestone then the apis should be invoked sequentially.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/deal-order-cross-milestones/post-the-milestone">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Post the milestone      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>milestone</b>  - The pre-fixed distance milestone. Current valid values are 500, 200 ,50. <br>
+<b>orderid</b>  - current order's id.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Deal Order - Request Another OTP  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>The client can request the api for OTP to a different number, by posting the new mobile number.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/deal-order-request-another-otp/post-the-milestone">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Post the milestone      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>mobno</b>  - The new mobilenumber to which OTP is to be send. <br>
+<b>orderid</b>  - current order's id.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Deal Order - Consignment Details  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>On submitting a valid OTP, the api would return the consignement details. If the user has edited the consignment details, the edited consignement has to be  posted to the api.
+If there is any change in the booking amount, the new booking amount including charges weight will be returned.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action get">
+
+  <!-- Invitation -->
+  <div class="actionInvitation get">
+          <a class="actionInvitationRow" href="/reference/0/deal-order-consignment-details/get-the-consingment">
+                  <div class="actionTag get"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Get the Consingment      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>orderid</b>  - order id. <br>
+<b>otp</b>  - the OTP provided by the Customer.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br>
+<b>RESPONSE</b><br>
+<b>consignment</b> - JSON, contains the details of the order.<br></p>    </div>
+    <!-- /Description -->
+
+</div><div class="action put">
+
+  <!-- Invitation -->
+  <div class="actionInvitation put">
+          <a class="actionInvitationRow" href="/reference/0/deal-order-consignment-details/put-the-consignment">
+                  <div class="actionTag put"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Put the Consignment      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>orderid</b>  - order id. <br>
+<b>consignment</b> - JSON, contains the details of the order that has been edited.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br>
+<b>RESPONSE</b><br>
+<b>consignment</b> - JSON, contains the details of the order.<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Deal Order - Conclude  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>The client on successful pickup/delivery of the order or failing to pickup/deliver the order, submits the details and the api would return the next order's  consignment details, its geo location details
+ if there is an order in queue for the user.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/deal-order-conclude/post-the-wrap-up-details">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        Post the wrap up details      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+      <div class="actionDescription markdown formalTheme">
+      <p><br><br>
+<b>REQUEST</b><br>
+<b>orderid</b>  - current order's id.<br>
+<b>failed</b>  - true. If the order was <b>NOT</b> picked up or delivered.<br>
+<b>failedreasonid</b>  - the failed reason master's id<br>
+<b>confirmationdetails</b>  - JSON. confirmation details.<br>
+<b>geocoords</b> - JSON. The geo co-ordinates of current location <br>
+<b>apikey</b> - Valid APIKey<br>
+<br>
+<b>RESPONSE</b><br>
+<b>istriprerouted</b> - true, if the current destination is to be reworked. Will be false if the user has rejected the order or if this order is not the next to be handled. <br>
+<b>mapdetails</b> - Json object. If <b>istriprerouted</b> is true, then the new destination's map details will be provided. Else the parameter will be blank. <br>
+<b>nextorderdetails</b> - Json object. If <b>istriprerouted</b> is true, the next order details will be provided. Else the parameter will be blank. <br>
+<b>cashtobecollected</b> - The Amount to be collected from the Customer. <br>
+<b>noofboxes</b> - Number of boxes to be pickedup or delivered. <br>
+<b>weight</b> - The Total weight of all the boxes.<br></p>    </div>
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div><div class="resource">
+
+  <!-- Name -->
+  <h2 class="resourceName">
+    Logout  </h2>
+  <!-- /Name -->
+
+  <!-- Parameters -->
+  <div class="row resourceParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Attributes -->
+  <div class="row resourceAttributes hidden">
+    <div class="row attributesTitle">
+      <h3 class="row attributesTitleText">Attributes</h3>
+    </div>
+
+    <div class="row attributes"></div>
+    <div class="row attributesKit hidden"></div>
+  </div>
+  <!-- /Attributes -->
+
+  <!-- Description -->
+      <div class="resourceDescription markdown formalTheme">
+      <p>The client on submitting for logout, would get a successful response if the user has concluded all his queued orders.</p>    </div>
+    <!-- /Description -->
+
+  <!-- Actions -->
+  <div class="resourceActions"><div class="action post">
+
+  <!-- Invitation -->
+  <div class="actionInvitation post">
+          <a class="actionInvitationRow" href="/reference/0/logout/post-logout">
+                  <div class="actionTag post"></div>
+      
+      <!-- Name -->
+      <h4 class="actionName">
+        POST Logout      </h4>
+      <!-- /Name -->
+
+      <!-- Icon -->
+      <div class="actionInvitationIcon"></div>
+      <!-- /Icon -->
+
+          </a>
+      </div>
+  <!-- Invitation -->
+
+  <!-- Relation -->
+    <!-- /Relation -->
+
+  <!-- Parameters -->
+  <div class="row actionParameters hidden"></div>
+  <!-- /Parameters -->
+
+  <!-- Description -->
+    <!-- /Description -->
+
+</div></div>
+  <!-- /Actions -->
+
+</div></div>
+  <!-- /Resources -->
+
+</div></div></div></div>
+  <div class="humanColumnSection humanColumnContentsDataStructures"></div>
+
+</div></td>
+  </tr>
+</table>
+
+</body>
+</html>

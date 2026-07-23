@@ -1,0 +1,116 @@
+﻿@using Retaline.Core.BusinessModel.UserDetails;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@model List<Address>;
+@using Newtonsoft.Json
+
+@{
+    Retaline.Core.BusinessModel.UserDetails.User odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    try
+    {
+        odoUser = customAuthService.GetUserFromClaims();
+        if (odoUser == null)
+            odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    catch
+    {
+        odoUser = new Retaline.Core.BusinessModel.UserDetails.User();
+    }
+    string strDeliveryMethod = _httpContextAccessor.HttpContext.Session.GetString("DELIVERYMETHOD");
+    var addressList = Model;
+    var grouped = addressList
+    .Where(a => !string.IsNullOrWhiteSpace(a.Type))
+    .GroupBy(a => a.Type.Trim(), StringComparer.OrdinalIgnoreCase)
+    .OrderBy(g => g.Key.ToLower()); // Sort groups by Type
+    var groupedaddress = JsonConvert.SerializeObject(grouped);
+}
+<div class="container">
+    <div class="row">
+        @await Component.InvokeAsync("MyAccountSideMenu", "Address")
+
+        <div class="col-12 col-lg-9">
+
+            <div class="titlewrap title_group manage-address-title">
+                <div>
+                    <h2>Manage Address</h2>
+                    <p>Click on your desired address to make it default</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary add_new_delvadress" data-bs-target="#address-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Add new address</button>
+                </div>
+            </div>
+
+            <div class="manag-address-card">
+                @foreach (var group in Model
+                .Where(a => !string.IsNullOrWhiteSpace(a.Type))
+                .GroupBy(a => a.Type.Trim(), StringComparer.OrdinalIgnoreCase)
+                .OrderByDescending(g => g.Any(a => a.IsPrimary == 1))
+                .ThenBy(g => g.Key.ToLower()))
+                {
+                    <div class="delivery_adress_sec">
+                        <h6>@(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(group.Key))</h6>
+                        <ul class="delivery_adress_wap">
+                            @foreach (var addr in group)
+                            {
+                                <li class="delivery_adress_list @(addr.IsPrimary==1?"active":"")">
+                                    <div class="delivery_location delivery_adress" data-addrid="@addr.Id" data-primary="@addr.IsPrimary">
+                                        <span class="loc_address w-100 lh-sm">
+                                            @addr.HouseNumber  @addr.HouseName
+                                            @if (!string.IsNullOrEmpty(addr.DeliveryAddress))
+                                            {
+                                                <br />
+                                                @addr.DeliveryAddress
+                                                <br />
+                                            }
+                                            @addr.City, @addr.State
+                                        </span>
+                                    </div>
+                                    @if (addr.IsPrimary == 1)
+                                    {
+                                        <div class="delivery_status">
+
+                                            <span class="success_adress">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </span>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="delivery_status remove_adress">
+
+                                            <span class="delete_adress" title="Delete Adress">
+                                                <i class="fa-light fa-trash-can"></i>
+                                            </span>
+                                        </div>
+                                    }
+
+                                </li>
+                            }
+                        </ul><!--ul-->
+                    </div>
+
+                }
+
+            </div>
+
+        </div><!--col-lg-9-->
+    </div>
+</div>
+
+
+
+<script>
+    cart.url.addToCart = '@Url.Action("AddToCart", "Cart")';
+</script>
+@if (_httpContextAccessor.HttpContext.Request.Query.Any(q => q.Key == "add"))
+{
+    <script>
+        $(document).ready(function () {
+            address.triggerAddAddress();
+            //$('.btn-show-address-popup').trigger('click');
+            //$("#ADDRESS").modal('show');
+        });
+    </script>
+}

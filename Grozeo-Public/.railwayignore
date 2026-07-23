@@ -1,0 +1,7 @@
+.git/
+.github/
+.do/
+Retaline.Web.Selenium.Tests/
+*.md
+bin/
+obj/

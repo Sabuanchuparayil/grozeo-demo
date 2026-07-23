@@ -1,0 +1,329 @@
+.footer {
+    background-color: var(--theme-bg-secondary);
+    padding: 30px 0;
+}
+
+    .footer p {
+        margin-bottom: 0px;
+        line-height: 2;
+    }
+
+.footer-heading {
+    font-weight: 600;
+    font-size: var(--footer-head-font-size);
+}
+
+.footer-content p {
+    color: color-mix(in srgb, var(--bs-body-color) 65%, white);
+}
+
+.footer ul {
+    padding-inline-start: 0;
+}
+
+.footer li {
+    list-style-type: none;
+    line-height: 2.5;
+}
+
+.footer a {
+    text-decoration: none;
+    color: var(--bs-body-color);
+}
+
+.footer-aboutus {
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-section {
+    float: inline-end;
+}
+
+.gpay, .applepay {
+    margin-top: 10px;
+}
+
+    .gpay, .applepay img {
+        width: 200px;
+    }
+
+.copyright {
+    display: flex;
+    font-size: 12px;
+    justify-content: space-between;
+    margin-top: 30px;
+    color: color-mix(in srgb, var(--bs-body-color) 65%, white);
+}
+
+    .copyright a {
+        color: var(--bs-primary);
+    }
+
+.footerlogo {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    max-height: 40px;
+    max-width: 200px;
+}
+
+    .footerlogo img {
+        max-height: 40px;
+        max-width: 200px;
+    }
+
+/* Cookies */
+.eu-cookie-bar-notification {
+    position: fixed;
+    z-index: 99999;
+    bottom: 50px;
+    inset-inline-end: -370px;
+    max-width: 345px;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px 20px 20px;
+    transition: right 0.3s ease;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
+}
+
+    .eu-cookie-bar-notification.show {
+        inset-inline-end: 20px;
+    }
+
+.cookie-header {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    margin-bottom: 10px;
+}
+
+    .cookie-header i {
+        color: var(--bs-primary);
+        font-size: 26px;
+    }
+
+    .cookie-header h4 {
+        font-size: 1.3rem;
+        color: var(--bs-primary);
+        font-weight: 500;
+        margin: 0;
+    }
+
+.cookie-content p {
+    margin: 0px;
+    color: var(var(--bs-text-secondary));
+}
+
+.cookie-buttons {
+    width: 100%;
+    display: flex;
+    margin-top: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .cookie-buttons .btn {
+        padding: 8px 0;
+        width: calc(100% / 2 - 10px);
+    }
+
+.cookie-inner-color {
+    fill: var(--bs-primary);
+}
+.footer_social_link {
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+@media (min-width: 991.99px) {
+    .footer_hide-wrap {
+        display: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .footer {
+        padding-bottom: 90px;
+    }
+
+    .footer-aboutus, .app-section {
+        margin-top: 30px;
+    }
+
+    .footer_hide-wrap {
+        margin-bottom: 0;
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 15px;
+    }
+
+        .footer_hide-wrap strong {
+            font-weight: 500;
+        }
+
+    .footer_hide-btn i {
+        margin-inline-start: 2px;
+    }
+
+    .footer_hide-wrap .fa-chevron-up {
+        display: none;
+    }
+
+    .footer_hide-btn {
+        cursor: pointer;
+        font-style: italic;
+        position: relative;
+        padding-inline-end: 24px;
+    }
+
+    .footer_hide-wrap {
+        line-height: 140%;
+    }
+
+    .footerlogo, .footer-content, .footer-aboutus, .app-section, .copyright {
+        display: none !important;
+    }
+
+    footer.open_footer .footer-content, footer.open_footer .app-section {
+        display: block !important;
+    }
+
+    footer.open_footer .footer-aboutus, footer.open_footer .copyright {
+        display: flex !important;
+    }
+
+    footer.open_footer .footer_hide-wrap .fa-chevron-up {
+        display: inline-block;
+    }
+
+    footer.open_footer .footer_hide-wrap .fa-chevron-down {
+        display: none;
+    }
+
+    .footer-content h6.footer-heading {
+        display: none;
+    }
+
+    .footer_hide-btn .arrows {
+        position: absolute;
+        top: 2px;
+        inset-inline-end: 0;
+        margin: auto;
+        width: 16px;
+        height: 16px;
+    }
+
+    .open_footer .footer_hide-btn .arrows {
+        transform: rotate(180deg);
+    }
+
+    .footer_hide-btn .arrows:before {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-inline-start: 2px solid rgba(0, 0, 0, 0.7);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.7);
+        transform: translate(0px, 0px) rotate(-45deg);
+        animation: arrows 3s linear infinite;
+    }
+
+    .footer_hide-btn .arrows:after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-inline-start: 2px solid rgba(0, 0, 0, 0.7);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.7);
+        transform: translate(0px, 0px) rotate(-45deg);
+        animation: arrows 3s linear infinite -1.5s;
+    }
+
+    @keyframes arrows {
+        0% {
+            border-inline-start: 2px solid rgba(0, 0, 0, 0);
+            border-bottom: 2px solid rgba(0, 0, 0, 0);
+            /* The y value here controls the top of the animation. We've reduced the absolute value. */
+            transform: translate(0px, -10px) rotate(-45deg);
+        }
+
+        10%, 90% {
+            border-inline-start: 2px solid rgba(0, 0, 0, 0);
+            border-bottom: 2px solid rgba(0, 0, 0, 0);
+        }
+
+        50% {
+            border-inline-start: 2px solid rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.7);
+            transform: translate(0px, 0px) rotate(-45deg);
+        }
+
+        100% {
+            border-inline-start: 2px solid rgba(0, 0, 0, 0);
+            border-bottom: 2px solid rgba(0, 0, 0, 0);
+            /* The y value here controls the bottom of the animation. We've reduced the absolute value. */
+            transform: translate(0px, 10px) rotate(-45deg);
+        }
+    }
+
+    .eu-cookie-bar-notification {
+        bottom: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-section {
+        float: inline-start;
+    }
+
+    .payment-img {
+        display: flex;
+        gap: 10px;
+    }
+
+    .footer-aboutus {
+        margin-top: 30px;
+    }
+
+    .app-section {
+        margin-top: 20px;
+    }
+
+    .eu-cookie-bar-notification {
+        max-width: 330px;
+        inset-inline-end: 10px !important;
+        padding: 10px;
+    }
+
+    .cookie-header {
+        margin: 0;
+    }
+
+        .cookie-header h4, .cookie-header i {
+            font-size: 1.2rem;
+        }
+
+    .cookie-buttons {
+        margin-top: 10px;
+    }
+
+        .cookie-buttons .btn {
+            padding: 5px 0;
+        }
+}
+
+@media (max-width: 576px) {
+    .copyright {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-aboutus {
+        display: flex;
+        flex-direction: column;
+    }
+}

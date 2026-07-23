@@ -1,0 +1,123 @@
+﻿.processing_loader {
+    position: relative;
+}
+
+    .processing_loader::before {
+        content: '';
+        position: absolute;
+        border: 5px solid #FFF;
+        border-top: 5px solid #257A59;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        top: -50%;
+        bottom: -50%;
+        margin: auto;
+        left: -50%;
+        right: -50%;
+        z-index: 1;
+        -webkit-animation: spin 1s linear infinite; /* Safari */
+        animation: spin 1s linear infinite;
+    }
+
+    .processing_loader .btn, .btn.processing_loader {
+        opacity: .65;
+        color: rgba(255, 255, 255, 0.5);
+        pointer-events: none;
+    }
+/* Safari */
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+.select2-container {
+    width: 100% !important;
+}
+
+.upload_qrqcode_wrap {
+    width: 115px;
+    height: auto;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #FFF;
+    border: 2px dotted #000;
+    border-radius: 10px;
+}
+
+.upload_btnicon, .qrqcode_btnicon {
+    width: 90px;
+    background: #ececec;
+}
+
+.qrqcode_btnicon {
+    background: #FFF;
+}
+
+.upload_qrqcode_wrap img {
+    max-width: 100%;
+}
+
+.upload_list li i {
+    cursor: pointer;
+}
+
+.upload_btnicon {
+    cursor: pointer;
+}
+
+canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.pageNumber {
+    text-align: center;
+    background: #f4f4f4;
+}
+
+#docPreview_wap {
+    width: 100% !important
+}
+
+input[type="file"] {
+    cursor: pointer;
+}
+
+.uplodbtm {
+    cursor: pointer;
+    height: 38px;
+}
+
+.addtext {
+    pointer-events: none;
+}
+
+#upload_viewSection {
+    width: 100%;
+    max-height: 400px;
+    overflow-x: auto;
+    border: 1px solid #ced4da;
+    padding: 10px;
+}

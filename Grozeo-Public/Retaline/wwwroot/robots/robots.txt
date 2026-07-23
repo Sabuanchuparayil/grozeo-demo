@@ -1,0 +1,4 @@
+﻿User-agent: *
+Allow: /
+Disallow: /customthemes/
+Disallow: /.well-known/

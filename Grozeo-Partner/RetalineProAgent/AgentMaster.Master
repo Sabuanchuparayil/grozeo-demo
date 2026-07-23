@@ -1,0 +1,264 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AgentMaster.master.cs" Inherits="RetalineProAgent.AgentMaster" %>
+
+<%@ Register Src="~/Controls/HeaderNavigation.ascx" TagPrefix="uc1" TagName="HeaderNavigation" %>
+<%@ Register Src="~/Controls/HeaderSearch.ascx" TagPrefix="uc1" TagName="HeaderSearch" %>
+<%@ Register Src="~/Controls/PopupAlert.ascx" TagPrefix="uc1" TagName="PopupAlert" %>
+<%@ Register Src="~/Controls/ctrlEmailverification.ascx" TagPrefix="uc1" TagName="ctrlEmailverification" %>
+<%@ Register Src="~/AdminControls/HeaderNavigationAdmin.ascx" TagPrefix="uc1" TagName="HeaderNavigationAdmin" %>
+<%@ Register Src="~/Controls/ctrlSupport.ascx" TagPrefix="uc1" TagName="ctrlSupport" %>
+<%@ Register Src="~/Controls/ctrlMenuNavigation.ascx" TagPrefix="uc1" TagName="ctrlMenuNavigation" %>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head runat="server">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Twitter -->
+    <meta name="twitter:site" content="@themepixels">
+    <meta name="twitter:creator" content="@themepixels">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Slim">
+    <meta name="twitter:description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="twitter:image" content="http://themepixels.me/slim/img/slim-social.png">
+
+    <!-- Facebook -->
+    <meta property="og:url" content="http://themepixels.me/slim">
+    <meta property="og:title" content="Slim">
+    <meta property="og:description" content="Premium Quality and Responsive UI for Dashboard.">
+
+    <meta property="og:image" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:secure_url" content="http://themepixels.me/slim/img/slim-social.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="600">
+
+    <!-- Meta -->
+    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="author" content="ThemePixels">
+    <link runat="server" id="lnkFavIco" rel="shortcut icon" type="image/x-icon" />
+
+    <title>Partner - Grozeo</title>
+
+    <!-- vendor css -->
+    <link href="/content/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+      <link href="/content/css/custom/font-awesomepro.css" rel="stylesheet">
+    <link href="/content/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/Content/css/toastify.css" />     
+          <script src="/content/lib/jquery/js/jquery.js"></script>
+    <script src="/content/lib/popper.js/js/popper.js"></script>
+    <script src="/content/lib/bootstrap/js/bootstrap.js"></script>
+
+    <script src="/content/js/slim.js"></script>
+<script src="/content/js/toastify.js"></script>
+        <link href="/Content/lib/SpinKit/css/spinkit.css" rel="stylesheet">
+<script src="<%= String.Format("https://www.google.com/recaptcha/api.js?badge=bottomleft&render={0}", ConfigurationManager.AppSettings.Get("Recaptcha.Key")) %>"></script>
+
+<script src="/Content/js/custom/master.js"></script>
+
+      <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <!-- Slim CSS -->
+    <link rel="stylesheet" href="/content/css/slim.css">
+       <link rel="stylesheet" href="/Content/css/custom/intlTelInput.css">
+      <script src="/Content/js/custom/intlTelInput-jquery.min.js"></script>
+<link rel="stylesheet" href="/content/css/custom/agent.css" />
+
+      <script type="text/javascript">
+
+          $(document).ready(function () {
+              $("#<%= form1.ClientID%>").on('submit', function () {
+                  var obj = $(this).find('input[type=submit][clicked=true]');
+                  if (!obj && $(this).attr('childobj') != '')
+                      obj = $('#' + $(this).attr('childobj'));
+
+                  if (obj) {
+                      if (Page_IsValid) {
+                          var objdiv = $(obj).closest('div');
+                          $(objdiv).addClass('processing_loader');
+                          setTimeout(function () {
+                              $(objdiv).removeClass('processing_loader');
+                          }, 7000);
+                      }
+                  }
+              });
+              $("#<%= form1.ClientID%>").find("input[type=submit]").click(function () {
+                  $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+                  $(this).attr("clicked", "true");
+              });
+              $(".closepopover").click(function () {
+                  $(".url_popover").hide();
+              });
+
+          });
+          retMaster.properties.captchaKey = '<%= ConfigurationManager.AppSettings.Get("Recaptcha.Key") %>';
+          retMaster.properties.countrycode ='<%= ConfigurationManager.AppSettings["CountryCode"] %>'
+
+      </script>
+      
+        <asp:ContentPlaceHolder ID="matomoSite" runat="server"></asp:ContentPlaceHolder>
+<asp:PlaceHolder ID="plsHeaderPostcoder" Visible="false" runat="server">
+    <script>
+        (function (w, t, c, p, s, e) {
+            p = new Promise(function (r) {
+                w[c] = {
+                    client: function () {
+                        if (!s) {
+                            s = document.createElement(t); s.src = 'https://js.cobrowse.io/CobrowseIO.js'; s.async = 1;
+                            e = document.getElementsByTagName(t)[0]; e.parentNode.insertBefore(s, e); s.onload = function () { r(w[c]); };
+                        } return p;
+                    }
+                };
+            });
+        })(window, 'script', 'CobrowseIO');
+        CobrowseIO.license = "<%= ConfigurationManager.AppSettings.Get("CoBrowserkey") %>";
+        CobrowseIO.customData = {
+            user_id: "<%= (Page.User.Identity.IsAuthenticated ? $"{this.CurrentUser.StoreGroupName} - {this.CurrentUser.APIStoreId}" : "") %>",
+            user_name: "<%= (Page.User.Identity.IsAuthenticated ? this.CurrentUser.StoreGroupName : "Guest")%>",
+            user_email: "<%= (Page.User.Identity.IsAuthenticated ? this.CurrentUser.Email : "") %>",
+            device_id: "<%= $"{Request.UserHostName}" %>",
+            device_name: "<%= $"{Request.UserHostAddress}" %>"
+        };
+        CobrowseIO.client().then(function () {
+            CobrowseIO.start();
+        });
+    </script>
+</asp:PlaceHolder>      
+  </head>
+  <body id="agentBody" runat="server" class="ribbon_version slim-full-width slim-sticky-header slim-sticky-sidebar"><form id="form1" runat="server" aria-autocomplete="none" autocomplete="off"><input autocomplete="false" name="hidden" type="text" style="display:none;">
+    <div class="slim-header with-sidebar">
+      <div class="container-fluid">
+          <asp:ContentPlaceHolder ID="cntRibbonTopRight" runat="server"></asp:ContentPlaceHolder>
+
+        <div class="slim-header-left">
+          <div class="MainLogo slim-logo">
+              <a href="/">
+              <asp:ContentPlaceHolder ID="cphAdmin" runat="server"><%= String.IsNullOrEmpty(this.CurrentUser.FullName) ? "My Business" : this.CurrentUser.FullName %></asp:ContentPlaceHolder>
+              </a>
+
+          </div>
+            <a href="" id="slimSidebarMenu" class="slim-sidebar-menu slimSidebarMenu slimSidebarMenuMobile"><span></span></a>
+            
+            <uc1:HeaderSearch Visible="false" runat="server" />
+            <!-- search-box -->
+        </div><!-- slim-header-left -->
+        <div class="slim-header-right">
+<asp:ContentPlaceHolder ID="cntSwitchTenant" runat="server">
+</asp:ContentPlaceHolder>
+            <%-- Temporary hide notifications --%>
+          <div class="dropdown dropdown-b" runat="server" visible="false">
+            <a href="" class="header-notification" title="Alerts / Notifications" data-toggle="dropdown"><i class="icon ion-ios-bell-outline"></i><span class="indicator"></span></a>
+            <div class="dropdown-menu">
+              <div class="dropdown-menu-header">
+                <h6 class="dropdown-menu-title">Notifications</h6>
+                <div>
+                  <a href="">Mark All as Read</a>
+                  <a href="">Settings</a>
+                </div>
+              </div><!-- dropdown-menu-header -->
+              <div class="dropdown-list">
+                <!-- loop starts here -->
+
+                <div class="dropdown-list-footer">
+                  <a href="page-notifications.html"><i class="fa fa-angle-down"></i> Show All Notifications</a>
+                </div>
+              </div><!-- dropdown-list -->
+            </div><!-- dropdown-menu-right -->
+          </div><!-- dropdown -->
+          <div class="dropdown dropdown-c">
+              <asp:ContentPlaceHolder ID="cntUserHead" runat="server">
+                   
+                   <a href="#" class="logged-user" data-toggle="dropdown">
+              <img src="/Content/images/userImage.png" alt="User">
+              <span><%= (Page.User.Identity.IsAuthenticated ? this.CurrentUser?.FullName : "") %> </span>
+              <i class="fa fa-angle-down"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <nav class="nav">
+                  <asp:ContentPlaceHolder ID="cntProfileNav" runat="server"><a href="/profile" class="nav-link"><i class="fa-thin fa-user-vneck mr-2"></i> View Profile</a></asp:ContentPlaceHolder>
+                  <asp:LoginStatus CssClass="nav-link" LogoutText="<i class='fa-thin fa-right-from-bracket mr-2'></i> Sign Out" runat="server"  />
+              </nav>
+            </div><!-- dropdown-menu -->
+              </asp:ContentPlaceHolder>
+              
+          </div><!-- dropdown -->
+        </div><!-- header-right -->
+      </div><!-- container -->
+    </div><!-- slim-header -->
+
+      <div class="slim-body">
+          <div class="slim-sidebar">
+
+              <!-- <label class="sidebar-label">Navigation</label> -->
+              <asp:ContentPlaceHolder ID="cpHeaderNavigationAdmin" runat="server">
+                  <%--<uc1:HeaderNavigationAdmin runat="server" ID="HeaderNavigationAdmin" />--%>
+                  <uc1:ctrlMenuNavigation runat="server" ID="ctrlMenuNavigation" />
+              </asp:ContentPlaceHolder>
+          </div>
+          <!--slim-sidebar-->
+
+          <div class="slim-mainpanel <%= (!this.CurrentUser.HasVerifiedEmail || this.CurrentUser.PasswordFormat==RetalineProAgent.Service.PasswordFormat.Temporary) ? "verifystrip" : "" %>">
+              
+
+              <% if (Page.User.Identity.IsAuthenticated && (!this.CurrentUser.HasVerifiedEmail || this.CurrentUser.PasswordFormat==RetalineProAgent.Service.PasswordFormat.Temporary))
+                 { %>
+                       <uc1:ctrlEmailverification runat="server" ID="ctrlEmailverification" />
+
+                <% } %>
+
+              <div class="container">
+                  <asp:ContentPlaceHolder ID="cntHeaderContainer" runat="server">
+                <div class="slim-pageheader align-items-center justify-content-between">
+                    <div>
+                        <asp:ContentPlaceHolder ID="cpTitle" runat="server"><h6 class="slim-pagetitle m-0"><%= Page.Title %></h6></asp:ContentPlaceHolder>
+                    </div>
+                  <ol class="breadcrumb slim-breadcrumb">
+                    <asp:ContentPlaceHolder ID="cpBreadcrumb" runat="server">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <%--<li class="breadcrumb-item active" aria-current="page">Blank</li>--%>
+                  </asp:ContentPlaceHolder>
+                  </ol>
+                </div><!-- slim-pageheader -->
+                </asp:ContentPlaceHolder>
+                  <asp:ContentPlaceHolder runat="server" ID="cpMainContent"></asp:ContentPlaceHolder>
+              </div><!-- container -->
+              <div class="slim-footer">
+                  <div class="container">
+                    <%--<p>Copyright 2023 &copy; All Rights Reserved. Grozeo</p>--%>
+                    <p id="copyright"></p>
+                    <p>Powered by: <a target="_blank" href="https://www.grozeo.com">Grozeo</a></p>
+                  </div><!-- container -->
+                </div><!-- slim-footer -->
+            </div><!-- slim-mainpanel -->
+      </div><!--slim-body-->
+      <script type="text/javascript">
+          var currentYear = new Date().getFullYear();
+          document.getElementById("copyright").innerHTML = "Copyright " + currentYear + " &copy; All Rights Reserved. Grozeo";
+      </script>    
+
+      <uc1:ctrlSupport runat="server" ID="ctrlSupport1" />
+
+      </form>
+
+      <uc1:PopupAlert runat="server" id="PopupAlert" />
+
+      <!-- UserBack -->
+    <% if (ConfigurationManager.AppSettings.Get("IsDemo") == "1")
+                { %>
+    <script>
+        window.Userback = window.Userback || {};
+        Userback.access_token = '41998|85496|GAnHcg4tFrcRIYaIUsmqroTSu';
+        (function (d) {
+            var s = d.createElement('script'); s.async = true;
+            s.src = 'https://static.userback.io/widget/v1.js';
+            (d.head || d.body).appendChild(s);
+        })(document);
+    </script>
+    <% } %>
+    <!-- End UserBack Code -->
+
+  </body>
+</html>

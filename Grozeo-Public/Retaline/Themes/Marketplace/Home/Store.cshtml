@@ -1,0 +1,134 @@
+﻿@using Retaline.Core.ViewModel.Home;
+@using Retaline.Core.BusinessModel.Home;
+@using Microsoft.AspNetCore.Http;
+@inject Retaline.Core.Services.Home.IHomePageService _homeService;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService _customAuthenticationService;
+@inject IHttpContextAccessor _httpContextAccessor
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@model Retaline.Core.BusinessModel.UserDetails.Store;
+
+@{
+    var categories = await catalogService.GetCategoryMenuListFiltered();
+    int categoriesListed = 0;
+    List<HomeValue> banners = new List<HomeValue>();
+    if (!String.IsNullOrEmpty(Model.Banner1))
+        banners.Add(new HomeValue { AdZoneName = "Home Top Banner", AdZoneDetails = new List<Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo> { new Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo { StoreGroupId = Model.StoreGroup, AdvImageUrl = Model.Banner1, AdvId = -1 } } });
+    if (!String.IsNullOrEmpty(Model.Banner2))
+        banners.Add(new HomeValue { AdZoneName = "Home Top Banner", AdZoneDetails = new List<Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo> { new Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo { StoreGroupId = Model.StoreGroup, AdvImageUrl = Model.Banner2, AdvId = -1 } } });
+    if (banners.Count <= 0)
+        banners.Add(new HomeValue { AdZoneName = "Home Top Banner", AdZoneDetails = new List<Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo> { new Retaline.Core.BusinessModel.Home.Advertisement.AdZoneInfo { StoreGroupId = Model.StoreGroup, AdvImageUrl = "/images/banner/defaultbannerimg.jpg", AdvId = -1 } } });
+
+}
+
+<div class="section-grz_catogeryslider">
+    <div class="container">
+
+        <div class="row row_mb">
+            <div class="col-12">
+                @* <div class="titlewrap">
+                <h2>Top categories</h2>
+                </div> *@
+                <div class="catogery-slider-wrap catogery-slider__home">
+                    <div class="horizontal_scroll-catogery">
+                        <div class="scroll-content">
+
+                            @foreach (var category in categories.Where(c => c.isVirtualCategory == 1).OrderBy(c=> c.DisplayOrder).ToList())
+                            {
+                                if (categoriesListed >= 12)
+                                    break;
+
+                                categoriesListed += 1;
+
+                                <a href="@($"/br{ViewBag.UrlTypeId}/vc/{category.CatId}/{category.Catname}")" class="catogery-slider__items swiper-slide">
+                                    <div class="catogery-slider__img">
+                                        <img alt="category img" src="@(category.CatImg??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                    </div>
+                                    <div class="catogery-slider__title">@category.Catname</div>
+                                </a>
+
+
+                            }
+                            @if (categoriesListed < 12)
+                            {
+                                foreach (var category in categories?.Where(c => c.isVirtualCategory != 1).Select(c => new { catid = c.DepartmenId, catname = c.DepartmentName, catimg = c.DepartmentImg }).Distinct().ToList())
+                                {
+                                    if (categoriesListed >= 12)
+                                        break;
+                                    categoriesListed += 1;
+                                    <a href="@($"/br{ViewBag.UrlTypeId}/pc/{category.catid}/{category.catname}")" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__img">
+                                            <img alt="category img" src="@(category.catimg??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                        <div class="catogery-slider__title">@category.catname</div>
+                                    </a>
+                                }
+                            }
+                            @if (categoriesListed < 12)
+                            {
+                                foreach (var category in categories?.Where(c => c.isVirtualCategory != 1).Select(c => new { catid = c.ParentId, catname = c.ParentName, catimg = c.ParentImg, parentid = c.DepartmenId }).Distinct().ToList())
+                                {
+                                    if (categoriesListed >= 12)
+                                        break;
+                                    categoriesListed += 1;
+                                    <a href="@($"/br{ViewBag.UrlTypeId}/pc/{category.parentid}/{category.catid}/{category.catname}")" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__img">
+                                            <img alt="category img" src="@(category.catimg??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                        <div class="catogery-slider__title">@category.catname</div>
+                                    </a>
+                                }
+                            }
+                            @if (categoriesListed < 12)
+                            {
+                                foreach (var category in categories?.Where(c => c.isVirtualCategory != 1).Select(c => new { catid = c.CatId, catname = c.Catname, catimg = c.CatImg, parentid = c.ParentId, deptid = c.DepartmenId }).Distinct().ToList())
+                                {
+                                    if (categoriesListed >= 12)
+                                        break;
+                                    categoriesListed += 1;
+                                    <a href="@($"/br{ViewBag.UrlTypeId}/pc/{category.deptid}/{category.parentid}/{category.catid}/{category.catname}")" class="catogery-slider__items swiper-slide">
+                                        <div class="catogery-slider__img">
+                                            <img alt="category img" src="@(category.catimg??"/images/p-no-image.png")" onerror="this.src='/images/p-no-image.png'">
+                                        </div>
+                                        <div class="catogery-slider__title">@category.catname</div>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div><!--container-->
+</div><!--HomeCategorySlider-->
+@await Component.InvokeAsync("HomeBanner", banners)
+
+<div class="section-grz_catogeryslider">
+    <div class="container">
+        @{
+            int bstypeid = -1, rttypeid = -1;
+            if (ViewBag.UrlType == "/rc")
+            {
+                string strrttypeid = ViewBag.UrlTypeId ?? "";
+                try { bstypeid = Convert.ToInt32(strrttypeid.Replace("/", "")); } catch { bstypeid = -1; }
+            }
+            else if (ViewBag.UrlType == "/bt")
+            {
+                string strbstypeid = ViewBag.BTypeId ?? "";
+                try { rttypeid = Convert.ToInt32(strbstypeid.Replace("/", "")); } catch { rttypeid = -1; }
+            }
+            string loadMoreUrl = $"/br/loadmoreoffers{ViewBag.UrlTypeId}/1";
+        }
+        <div class="row pb-0">
+            <div class="col-12">
+                <div class="itemsListingWrap dealoftheday_list">
+                    <div class="product-itemview">
+                        <div class="btnautoloadmore product-card" navlink="@loadMoreUrl" contenttype="2" pagenum="1" subcatId="-1" brandid="-1" catlevel="-1" searchkey="">Load more..</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

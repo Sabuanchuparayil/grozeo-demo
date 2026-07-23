@@ -1,0 +1,193 @@
+﻿@*@using Retaline.Core.ViewModel.Home;*@
+@using Microsoft.AspNetCore.Http;
+@* @inject IHeaderAndFooterHandlerService headerAndfooterService; *@
+@inject Retaline.Core.Services.Authentication.ICustomAuthenticationService customAuthService;
+@inject SaasKit.Multitenancy.ITenant<Retaline.Core.ViewModel.Tenant.AppTenant> tenant;
+@inject IHttpContextAccessor _httpContextAccessor;
+@inject Retaline.Core.Services.Catalog.ICatalogService catalogService;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@inject Retaline.Core.Services.Home.IHomePageService _homePageService;
+@model Retaline.Core.BusinessModel.UserDetails.User;
+@{
+    //var homeContent = headerAndfooterService.GetHeaderAndFooterContent().Result;
+    var curUser = Model;
+
+    string strTitle = "Grozeo";
+    string strTheme = "";
+    string favIco = "";
+    string analyticsId = "1";
+    string captchaKey = _configuration["Recaptcha:Key"];
+    string captchaVerificationUrl = _configuration["Recaptcha:VerificationUrl"];
+    string captchaUrl = $"https://www.google.com/recaptcha/api.js?render={captchaKey}";
+    string matomoUrl = _configuration["MatomoURL"];
+    if (String.IsNullOrEmpty(matomoUrl))
+        matomoUrl = "//matomo.velosit.in/";
+    string countryCode = string.IsNullOrEmpty(_configuration["CountryCode"]) ? "IN" : _configuration["CountryCode"];
+    string addressKey = _configuration["PostalCodeAPIKey"];
+    if (tenant != null && tenant.Value != null && !String.IsNullOrEmpty(tenant.Value.Name))
+    {
+        strTitle = tenant?.Value?.Name;
+        strTheme = tenant?.Value?.Theme;
+        if (!String.IsNullOrEmpty(tenant?.Value?.FavIcoImage))
+            favIco = tenant?.Value?.FavIcoImage;
+
+        analyticsId = tenant?.Value?.AnalyticsId;
+        if (String.IsNullOrEmpty(analyticsId))
+            analyticsId = "1";
+    }
+
+    // Logic that enables to select address while a user logs in
+    bool showAddrAlert = false;
+    try
+    {
+        if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.Session != null)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+
+                _httpContextAccessor.HttpContext.Session.Remove("SHOWADDRALERT");
+            }
+            else
+            {
+                if (String.IsNullOrEmpty(_httpContextAccessor.HttpContext.Session.GetString("SHOWADDRALERT")) || _httpContextAccessor.HttpContext.Session.GetString("SHOWADDRALERT") == "TRUE")
+                {
+                    showAddrAlert = true;
+                    _httpContextAccessor.HttpContext.Session.SetString("SHOWADDRALERT", "FALSE");
+                }
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        showAddrAlert = false;
+    }
+
+    int releaseStage = 0; try { if (!String.IsNullOrEmpty(_configuration["ReleaseStage"])) releaseStage = Convert.ToInt32(_configuration["ReleaseStage"]); } catch { releaseStage = 0; }
+
+    bool isCaptchaEnabled = true; try { isCaptchaEnabled = Convert.ToBoolean(_configuration["isCaptchaEnabled"]); } catch { isCaptchaEnabled = true; }
+
+    string metaTitle = "", metaDesc = "", metaKeys = "";
+    IList<Retaline.Core.BusinessModel.Home.RetalinePlugin> _tenantPlugins = _homePageService.GetTenantPlugins(tenant.Value.Id).Result;
+    if (_tenantPlugins != null && _tenantPlugins.Count > 0 && _tenantPlugins.Any(p => p.Key == "SEOTools"))
+    {
+        Retaline.Core.BusinessModel.Home.RetalinePlugin seoConfig = _tenantPlugins.Where(p => p.Key == "SEOTools").FirstOrDefault();
+
+        try { metaTitle = seoConfig.TenantPlugins.Where(p => p.Name == "SEOMETATAG").FirstOrDefault().Value; } catch { metaTitle = ""; }
+        try { metaDesc = seoConfig.TenantPlugins.Where(p => p.Name == "SEOMETADESC").FirstOrDefault().Value; } catch { metaDesc = ""; }
+        try { metaKeys = seoConfig.TenantPlugins.Where(p => p.Name == "SEOMETAKEY").FirstOrDefault().Value; } catch { metaKeys = ""; }
+    }
+
+}
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1" />
+
+    <title>@(string.IsNullOrEmpty(metaTitle) ? strTitle : metaTitle)</title>
+    @if (!string.IsNullOrEmpty(metaDesc))
+    {
+        <meta name="description" content="@metaDesc">
+    }
+    @if (!string.IsNullOrEmpty(metaKeys))
+    {
+        <meta name="keywords" content="@metaKeys">
+    }
+    @if (releaseStage != 5) //All other domains except production
+    {
+        <meta name="robots" content="noindex">
+    }
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1" />
+    <!-- <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- them css -->
+    <link rel="stylesheet" href="~/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/css/intlTelInput.min.css">
+    <link rel="stylesheet" href="~/css/all.min.css">
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+
+
+    <!-- Javascript -->
+    @if (isCaptchaEnabled && (curUser.EmailVerified == 0 || curUser.PhoneVerified == 0))
+    {
+        <script src="@captchaUrl"></script>
+    }
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.62/jquery.inputmask.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js" integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/intlTelInputWithUtils.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.19/libphonenumber-js.min.js"></script>
+    <script>
+        function mapdummyfn() { }
+        window.mapdummyfn = mapdummyfn;
+    </script>
+    @*<script src="https://maps.googleapis.com/maps/api/js?key=@(_configuration["GoogleAPI"])&libraries=places&v=weekly&callback=mapdummyfn"></script>*@
+    <script src="/api/maps/js?libraries=places"></script>
+
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/custom/master.js" asp-append-version="true"></script>
+    <script src="~/js/custom/authentication.js" asp-append-version="true"></script>
+    @*<script src="~/js/address-finder-bundled@4.js"></script>*@
+
+    <script src="~/js/custom/address.js" asp-append-version="true"></script>
+    <script src="~/js/custom/cart.js" asp-append-version="true"></script>
+    <script src="~/js/custom/checkout.js" asp-append-version="true"></script>
+    <script src="~/js/custom/wishlist.js" type="text/javascript" asp-append-version="true"></script>
+    @if (!isCaptchaEnabled)
+    {
+        <script type="text/javascript">authentication.properties.isCaptchaEnabled = false;</script>
+    }
+    <script type="text/javascript" src="~/js/custom/home.js" asp-append-version="true"></script>
+
+    @if (!String.IsNullOrEmpty(favIco))
+    {
+        <link rel="shortcut icon" href="@favIco">
+    }
+    else
+    {
+        <link rel="shortcut icon" href="~/images/favicon.ico">
+    }
+    @*
+    @if (String.IsNullOrEmpty(strTheme))
+    {
+    <link href="~/manifest.json" rel="manifest" />
+    }
+    else
+    {
+    <link href="~/themes/@strTheme/manifest.json" rel="manifest" />
+    }
+    *@
+    <link href="/manifest" rel="manifest" />
+
+    @await Component.InvokeAsync("ThemedCss")
+
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "@matomoUrl";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '@analyticsId']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+    @await Component.InvokeAsync("TagManager", true)
+
+</head>

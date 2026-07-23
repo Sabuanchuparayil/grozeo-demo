@@ -1,0 +1,281 @@
+﻿@using Retaline.Core.BusinessModel.Home;
+@using Retaline.Web.Service;
+@inject Microsoft.Extensions.Configuration.IConfiguration _configuration;
+@model List<HomeValue>
+@{
+
+}
+@if (Model != null && Model.Count > 0)
+{
+    <div class="row pb-2 pt-2">
+        <div class="col-12">
+
+            <div class="EveryDayOfferWrap pb-0 border-0">
+
+                <div class="swiper EveryDayOfferSlider d-none d-lg-block">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+
+                            <div class="gridsliderWrap">
+                                <div class="adds_Verticalwrap">
+                                    <div class="adds_Vertical">
+                                        <div class="adds_image">
+                                            @if (Model[0].AdZoneDetails.Count > 0)
+                                            {
+                                                <a href="@Common.OfferUrl(Model[0].AdZoneDetails[0])">
+                                                    <img title="@(Model[0].AdZoneDetails[0].AdvTitle)" src="@(Model[0].AdZoneDetails[0].AdvImageUrl)">
+                                                </a>
+
+                                            }
+                                        </div>
+                                    </div><!--adds_Vertical-->
+                                    @if (Model.Count > 1)
+                                    {
+                                        <div class="adds_Vertical">
+                                            <div class="adds_image">
+                                                @if (Model[1].AdZoneDetails.Count > 0)
+                                                {
+                                                    <a href="@Common.OfferUrl(Model[1].AdZoneDetails[0])">
+                                                        <img title="@(Model[1].AdZoneDetails[0].AdvTitle)" src="@(Model[1].AdZoneDetails[0].AdvImageUrl)">
+                                                    </a>
+                                                }
+                                            </div>
+                                            @if (Model.Count > 2 && Model[2].AdZoneDetails.Count > 0)
+                                            {
+                                                <div class="adds_image">
+                                                    <a href="@Common.OfferUrl(Model[2].AdZoneDetails[0])">
+                                                        <img title="@(Model[2].AdZoneDetails[0].AdvTitle)" src="@(Model[2].AdZoneDetails[0].AdvImageUrl)">
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <!--adds_Vertical-->
+                                    }
+                                </div><!--adds_Verticalwrap-->
+                                @if (Model.Count > 3 && Model[3].AdZoneDetails.Count > 0)
+                                {
+                                    <div class="adds_horsondal">
+                                        <div class="adds_image">
+                                            <a href="@Common.OfferUrl(Model[3].AdZoneDetails[0])">
+                                                <img title="@(Model[3].AdZoneDetails[0].AdvTitle)" src="@(Model[3].AdZoneDetails[0].AdvImageUrl)">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!--adds_horsondal-->
+                                }
+                            </div><!--gridsliderWrap-->
+
+                        </div><!--swiper-slide-->
+                        @*<div class="swiper-slide">
+
+                    <div class="gridsliderWrap">
+
+                    <div class="adds_horsondal">
+                    <div class="adds_image">
+                    <a href="#">
+                    <img src="/images/offerslider_images/offer_Add_04.png">
+                    </a>
+                    </div>
+                    </div><!--adds_horsondal-->
+
+                    <div class="adds_Verticalwrap">
+                    <div class="adds_Vertical">
+                    <div class="adds_image">
+                    <a href="#">
+                    <img src="/images/offerslider_images/offer_Add_02.png">
+                    </a>
+                    </div>
+                    <div class="adds_image">
+                    <a href="#">
+                    <img src="/images/offerslider_images/offer_Add_03.png">
+                    </a>
+                    </div>
+                    </div><!--adds_Vertical-->
+
+                    <div class="adds_Vertical">
+                    <div class="adds_image">
+                    <a href="#">
+                    <img src="/images/offerslider_images/offer_Add_01.png">
+                    </a>
+                    </div>
+                    </div><!--adds_Vertical-->
+                    </div><!--adds_Verticalwrap-->
+
+                    </div>
+
+
+                    <!--gridsliderWrap-->
+
+                    </div>*@
+
+
+                        <!--swiper-slide-->
+
+                    </div><!--swiper-wrapper-->
+                </div><!--EveryDayOfferSlider-->
+                <!--mobileEveryDayOffer-->
+
+                <div class="mobileEveryDayOfferWrap d-md-block d-lg-none">
+                    <div class="swiper mobileofferslider">
+                        <div class="swiper-wrapper">
+                            @foreach (var ad in Model)
+                            {
+                                @if (ad.AdZoneDetails.Count > 1)
+                                {
+                                    <div class="swiper-slide">
+                                        <div class="adds_image">
+                                            <a href="@Common.OfferUrl(ad.AdZoneDetails[1])">
+                                                <img title="@(ad.AdZoneDetails[1].AdvTitle)" src="@(ad.AdZoneDetails[1].AdvImageUrl)">
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            <!--swiper-slide-->
+
+                        </div>
+                    </div><!--mobile-EveryDayOfferSlider-->
+                </div><!--mobile-EveryDayOfferWrap-->
+
+            </div><!--EveryDayOfferWrap-->
+
+        </div><!--col-12-->
+    </div>
+
+    <!--row-->
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="titlewrap">
+            <h2 class="text-capitalize">Suggested stores near your location - <span></span>
+                @if(User.Identity.IsAuthenticated){
+                    <label class="change_store open-delivery-address">Change</label>
+                }
+                else
+                {
+                    <label class="change_store" data-bs-toggle="modal" data-bs-target="#search-address-modal">Change</label>
+                }
+            </h2>
+        </div>
+        <div class="store_list_wrap_sec d-flex flex-wrap row g-3 dvnearestbranch">
+        </div>
+    </div>
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var cnfdeflatitude = '@_configuration["DefLatitude"]';
+            var cnfdeflongitude = '@_configuration["DefLongitude"]';
+            if (address.properties.deflatitude && address.properties.deflongitude && address.properties.deflatitude != cnfdeflatitude && address.properties.deflongitude != cnfdeflongitude
+                && address.properties.deflatitude != '' && address.properties.deflongitude != '') {
+                address.loadNearestStores(address.properties.deflatitude, address.properties.deflongitude);
+            }
+            else {
+                address.loadNearestStores('-1', '-1');
+            }
+
+        });
+    </script>
+}
+else
+{
+
+    <!-- Change location model-->
+
+    <div class="modal fade address-modal-popup" id="search-address-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addressLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="closepopup" data-bs-dismiss="modal" aria-label="Close"><img src="/images/icons/close.svg"></div>
+
+                    <div class="editaddresspopupwrap">
+                        <div class="editaddresswrapcard">
+                            <div class="titlewrap">
+                                <h4>Find Store</h4>
+                            </div>
+                            <div class="editadresswrap">
+                                <h3>Search Address or <a href="#search-type_full_address">Type out address in full</a></h3>
+                                <div class="adresssearchwrap">
+                                        <div class="form-group">
+                                            <div class="input-field">
+                                                <label for="txt-location" class="form-label">Enter a location</label>
+                                            <input type="text" id="search-txt-location" value="">
+                                            </div>
+
+                                            <div class="addressmap">
+                                            <div id="searchmap"></div>
+                                            </div>
+
+                                            <div class="type_full_address" id="search-type_full_address">
+                                                <div class="selectfilde lable-selectfilde d-flex justify-content-between flex-wrap flex-sm-nowrap">
+                                                    <div class="input-btn text-end m-0 d-flex align-items-end ">
+                                                        <button id="btn-search-address" class="btn SaveForDelivery" type="submit">Submit</button>
+                                                    </div>
+                                                </div><!--lable-selectfilde-->
+                                            </div>
+
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--editaddresspopupwrap-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- End of Change location model-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var cnfdeflatitude = '@_configuration["DefLatitude"]';
+            var cnfdeflongitude = '@_configuration["DefLongitude"]';
+            if (address.properties.deflatitude && address.properties.deflongitude && address.properties.deflatitude != cnfdeflatitude && address.properties.deflongitude != cnfdeflongitude
+                && address.properties.deflatitude != '' && address.properties.deflongitude != '') {
+                address.loadNearestStores(address.properties.deflatitude, address.properties.deflongitude);
+            }
+            else {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    $('.dvnearestbranch').html("<p>Your location is not accessible. Please use the change location button above to find the stores nearby.</p>");
+                }
+            }
+        });
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            address.loadNearestStores(latitude, longitude);
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                //document.getElementById("demo").innerHTML = "User denied the request for Geolocation."
+                //break;
+                case error.POSITION_UNAVAILABLE:
+                //document.getElementById("demo").innerHTML = "Location information is unavailable."
+                //break;
+                case error.TIMEOUT:
+                //document.getElementById("demo").innerHTML = "The request to get user location timed out."
+                //break;
+                case error.UNKNOWN_ERROR:
+                    //document.getElementById("demo").innerHTML = "An unknown error occurred."
+                    $('.dvnearestbranch').html("<p>Your location is not accessible. Please use the change location button above to find the stores nearby.</p>");
+                    break;
+            }
+        }
+    </script>
+
+}
+

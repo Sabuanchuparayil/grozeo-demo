@@ -26,8 +26,7 @@ $captcha_image = "./captcha.php";
     <link rel="stylesheet" href="./resources/custom_files/custom.css">
 
 
-    <script src="./resources/custom_files/bootstrap.js"></script>
-
+    <!-- Bootstrap JS removed: requires jQuery which is not loaded; all interactivity uses ExtJS -->
 
     <script type="text/javascript" src="./ext-3.4.0/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="./ext-3.4.0/ext-all.js"></script>

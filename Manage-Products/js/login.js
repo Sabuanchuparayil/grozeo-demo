@@ -33,7 +33,7 @@ Login = function () {
             },
             success: function (res) {
 
-                eval('var tmp=' + res.responseText);
+                var tmp = JSON.parse(res.responseText);
 
                 if (tmp.success !== undefined && tmp.success === true) {
                     window.location = success_url;
@@ -58,9 +58,6 @@ Login = function () {
                 Ext.Msg.alert('Warning!', 'Authentication server is unreachable, please try later  ');
             }
         });
-        Ext.Ajax.defaultHeaders = {
-            'Powered-By': 'Ext'
-        };
 
         //Prevenet the Form from normal submission
         return false;
@@ -68,7 +65,9 @@ Login = function () {
 
     return {
         init: function () {
-            //Ext.QuickTips.init();
+            Ext.Ajax.defaultHeaders = {
+                'Powered-By': 'Ext'
+            };
 
             //Set focus to the UserName field on Load
             Ext.get('loginUsername').focus();

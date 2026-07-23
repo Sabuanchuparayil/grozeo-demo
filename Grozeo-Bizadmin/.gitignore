@@ -36,8 +36,8 @@ node_modules/
 bower_components/
 
 # === Compiled & Build ===
-*.min.js
-*.min.css
+# NOTE: Do NOT ignore *.min.js / *.min.css — this legacy PHP app
+# relies on pre-built vendor assets (Bootstrap, jQuery, etc.)
 *.map
 
 # === Logs ===

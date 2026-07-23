@@ -9,28 +9,8 @@
  */
 //session_name("TMU"); 
 $GLOBALS['NotCarego'] = true;
-// set the session cookie parameters before starting the session
-$sessionCookieParams = [
-    'lifetime' => 0,
-    'path' => dirname($_SERVER['PHP_SELF']),
-    'domain' => $_SERVER['SERVER_NAME'],
-    'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
-    'httponly' => true,
-    'samesite' => 'Strict',
-];
-if (PHP_VERSION_ID >= 70300) {
-    session_set_cookie_params($sessionCookieParams);
-} elseif (function_exists('session_set_cookie_params')) {
-    session_set_cookie_params(0, $sessionCookieParams['path'] . '; samesite=Strict', $sessionCookieParams['domain'], $sessionCookieParams['secure'], true);
-} elseif (function_exists('ini_set')) {
-    ini_set('session.cookie_lifetime', '0');
-    ini_set('session.cookie_path', dirname($_SERVER['PHP_SELF']));
-    ini_set('session.cookie_domain', $_SERVER['SERVER_NAME']);
-    ini_set('session.cookie_httponly', '1');
-    ini_set('session.cookie_secure', $sessionCookieParams['secure'] ? '1' : '0');
-}
-session_start();
-session_regenerate_id(true);
+require_once __DIR__ . '/includes/session_init.php';
+grozeoStartSession(true);
 
 /** Set Include Path * */
 set_include_path(get_include_path() . PATH_SEPARATOR . "./includes");

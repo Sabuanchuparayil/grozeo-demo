@@ -1,0 +1,53 @@
+/*
+ * Login page specific overrides for Manage-Products
+ * Complements main.css login styles (.container-login100, .wrap-login100, etc.)
+ */
+
+/* Ensure ExtJS CSS doesn't override login form styles */
+.container-login100 .input100 {
+    font-family: Poppins-Medium, sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: #666666 !important;
+    background: #fff !important;
+    height: 50px !important;
+    border-radius: 25px !important;
+    padding: 0 30px 0 68px !important;
+    border: none !important;
+}
+
+.container-login100 .login100-form-btn {
+    font-family: Montserrat-Bold, sans-serif !important;
+    cursor: pointer;
+}
+
+/* Captcha image sizing */
+.wrap-input46 img#imgcaptcha {
+    height: 50px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 25px 0 0 25px;
+}
+
+/* Fix checkbox styling */
+.container-login100 input[type="checkbox"] {
+    width: auto;
+    height: auto;
+}
+
+/* Remember me label */
+.container-login100 .txt2 {
+    cursor: pointer;
+}
+
+/* Override ext-all.css body reset */
+body.x-body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure login form is above ext overlays */
+.limiter {
+    position: relative;
+    z-index: 1;
+}

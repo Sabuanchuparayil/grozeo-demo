@@ -184,7 +184,7 @@
                                                                                             </div>
                                                                                             <div class="wrap-input54 validate-input" data-validate = "Enter Captcha">
                                                                                                 <input class="input100 input54" name="loginCaptcha" autocomplete="off" type="text" id="loginCaptcha" size="5" maxlength="2" tabindex='3'  placeholder="">
-                                                                                                    <input type="hidden" autocomplete="off" class="userlog-field-small" name="captcha_total" id="captcha_total" value="<?php echo $_SESSION['rand_code']; ?>"/>
+                                                                                                    <input type="hidden" autocomplete="off" class="userlog-field-small" name="captcha_total" id="captcha_total" value="<?php echo $_SESSION['rand_code'] ?? ''; ?>"/>
 
                                                                                             </div>
                                                                                             <div class="container-login100-form-btn">

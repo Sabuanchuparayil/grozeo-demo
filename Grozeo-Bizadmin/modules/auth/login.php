@@ -172,7 +172,7 @@ $captcha_image = "./captcha.php";
                                     </div>
                                     <div class="input-group mb-0 inputcode-answer">
                                         <input type="text" id="loginCaptcha" name="loginCaptcha" autocomplete="off" class="form-control" required="" value="" tabindex='3'>
-                                        <input type="hidden" autocomplete="off" class="userlog-field-small" name="captcha_total" id="captcha_total" value="<?php echo $_SESSION['rand_code']; ?>" />
+                                        <input type="hidden" autocomplete="off" class="userlog-field-small" name="captcha_total" id="captcha_total" value="<?php echo $_SESSION['rand_code'] ?? ''; ?>" />
                                     </div>
 
                                     <div class="formtbtn col d-flex justify-content-end ml-3 mr-0 pr-0">

@@ -10,7 +10,7 @@
 //session_name("TMU"); 
 $GLOBALS['NotCarego'] = true;
 require_once __DIR__ . '/includes/session_init.php';
-grozeoStartSession($_SERVER['REQUEST_METHOD'] !== 'POST');
+grozeoStartSession(false);
 
 /** Set Include Path * */
 set_include_path(get_include_path() . PATH_SEPARATOR . "./includes");

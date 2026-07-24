@@ -1,33 +1,24 @@
 <?php
+@ini_set('display_errors', '0');
 
-//session_name("TMU");
-session_start();
-session_regenerate_id();
-
-// $_SESSION['rand_code'] = $tmprandcode;
-//Define the root path
 define('ROOT', dirname(__FILE__));
-
-//Define Includes Path for further Use
 define('INCLUDE_PATH', "./includes");
 
-//Include Main Libraries
+require_once ROOT . '/includes/session_init.php';
+grozeoStartSession(false);
+
 include(INCLUDE_PATH . "/config.php");
-//require_once(EXTERNAL_LIBRARY_PATH);
 require_once(ROOT . '/finascop_config/lib.php');
 require_once(ROOT . '/finascop_config/config.php');
 include(INCLUDE_PATH . "/lib.php");
 
-//include(INCLUDE_PATH . "/functions.php");
-//Create DB Object
-
 $db = new sqlDb(DSN);
-$s3upload = new cgoS3FileHandler();
+try { $s3upload = new cgoS3FileHandler(); } catch (\Throwable $e) { $s3upload = null; }
 //identify the url
 define('WEB_URL', substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], basename(__FILE__)) - 1));
 
 //Get Operation Todo
-$TODO = $_GET['TODO'];
+$TODO = $_GET['TODO'] ?? '';
 
 #===============================================================================
 /* Load the Initial data into JS that needs to be populated
@@ -35,9 +26,12 @@ $TODO = $_GET['TODO'];
  * This will be executed only based specific Request/Condition
  */
 if ($TODO == 'initdata') {
-    $tostatus = $db->getMultipleData("SELECT fstos_status FROM finascop_stock_transfer_order_status");
-    $statusnames = $db->getMultipleData("SELECT admin_description FROM retaline_customer_order_status where status_id > 2");
-    $statuOptions = $db->getMultipleData("SELECT admin_description FROM retaline_customer_order_status ");
+    try { $tostatus = $db->getMultipleData("SELECT fstos_status FROM finascop_stock_transfer_order_status"); } catch (\Throwable $e) { $tostatus = []; }
+    try { $statusnames = $db->getMultipleData("SELECT admin_description FROM retaline_customer_order_status where status_id > 2"); } catch (\Throwable $e) { $statusnames = []; }
+    try { $statuOptions = $db->getMultipleData("SELECT admin_description FROM retaline_customer_order_status "); } catch (\Throwable $e) { $statuOptions = []; }
+    if (!$tostatus) $tostatus = [];
+    if (!$statusnames) $statusnames = [];
+    if (!$statuOptions) $statuOptions = [];
     header("Content-type: text/javascript; charset: UTF-8");
     header("Cache-Control: must-revalidate");
     $offset = 60 * 60;
@@ -74,7 +68,8 @@ if ($TODO == 'initdata') {
 /* Set UserID From Session if thorugh Webserver
  * If the request is thorugh CLI (For caching files based on permission), index.php will set UserID
  */
-if ($_SESSION['admin']->UserId != "") {
+$userID = 0;
+if (isset($_SESSION['admin']) && !empty($_SESSION['admin']->UserId)) {
     $userID = $_SESSION['admin']->UserId;
 }
 
@@ -95,7 +90,7 @@ $web_path = WEB_URL . CACHE_PATH . '/' . $file_name;
 //Create DB Object
 //$db = new sqlDb(DSN);
 //ConfigManager::setConfiguration($db);
-$JSCacheFileTime = $db->getItemFromDB('select JSCacheTime from ' . FINASCOP_DB . 'finascop_usr_master where UserId = ' . $userID);
+try { $JSCacheFileTime = $db->getItemFromDB('select JSCacheTime from ' . FINASCOP_DB . 'finascop_usr_master where UserId = ' . (int)$userID); } catch (\Throwable $e) { $JSCacheFileTime = ''; }
 //echo "File exists " . file_exists($cache_file) . " OP " . $op . " filemtime " . filemtime($cache_file) . " JSCacheTime " .  $JSCacheFileTime;
 //exit;
 

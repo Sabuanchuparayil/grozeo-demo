@@ -10,7 +10,21 @@
 //session_name("TMU"); 
 $GLOBALS['NotCarego'] = true;
 require_once __DIR__ . '/includes/session_init.php';
-grozeoStartSession($_SERVER['REQUEST_METHOD'] !== 'POST');
+// #region agent log
+$_dbg_sid_before = session_id();
+$_dbg_cookie_sid = $_COOKIE[session_name()] ?? '(none)';
+// #endregion
+grozeoStartSession(false);
+// #region agent log
+$_dbg_sid_after = session_id();
+error_log('[DEBUG-31830d][H5] index.php: method=' . $_SERVER['REQUEST_METHOD'] 
+    . ' cookie_sid=' . $_dbg_cookie_sid 
+    . ' sid_before=' . $_dbg_sid_before 
+    . ' sid_after=' . $_dbg_sid_after 
+    . ' session_admin_set=' . (isset($_SESSION['admin']) ? 'YES' : 'NO')
+    . ' session_keys=' . implode(',', array_keys($_SESSION ?? []))
+);
+// #endregion
 
 /** Set Include Path * */
 set_include_path(get_include_path() . PATH_SEPARATOR . "./includes");

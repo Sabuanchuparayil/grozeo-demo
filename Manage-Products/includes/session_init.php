@@ -52,7 +52,19 @@ function grozeoStartSession(bool $regenerate = false): void
 
     session_start();
 
+    // #region agent log
+    error_log('[DEBUG-31830d][H5] session_init: after session_start, sid=' . session_id() 
+        . ' admin_set=' . (isset($_SESSION['admin']) ? 'YES' : 'NO')
+        . ' regenerate=' . ($regenerate ? 'true' : 'false')
+    );
+    // #endregion
+
     if ($regenerate) {
         session_regenerate_id(true);
+        // #region agent log
+        error_log('[DEBUG-31830d][H5] session_init: after regenerate, new_sid=' . session_id() 
+            . ' admin_set=' . (isset($_SESSION['admin']) ? 'YES' : 'NO')
+        );
+        // #endregion
     }
 }

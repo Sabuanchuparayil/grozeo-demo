@@ -95,7 +95,7 @@ function blocked_capabilities($accountID) {
 
     $qry = "select group_concat(SysModOpId SEPARATOR ';') as Capability from usr_blocked_capability where UserId='" . $accountID . "'";
     $blocked_capabilities = $db->getItemFromDB($qry);
-    $blocked_capabilities = explode(PERM_SEPERATOR, $blocked_capabilities);
+    $blocked_capabilities = explode(PERM_SEPERATOR, (string)($blocked_capabilities ?? ''));
     $blocked_menus = array();
 
     if (count($blocked_capabilities) > 0)
@@ -985,7 +985,7 @@ class Activity {
         return self::getIpBehindProxy();
     }
 
-    private function getIpBehindProxy() {
+    private static function getIpBehindProxy() {
         global $_SERVER;
         $remote = array($_SERVER["REMOTE_ADDR"]);
         $comes_from = array("HTTP_VIA", "HTTP_X_COMING_FROM", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_COMING_FROM", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED");

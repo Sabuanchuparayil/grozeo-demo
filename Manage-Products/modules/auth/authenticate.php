@@ -1,4 +1,6 @@
 <?php
+// Suppress display of warnings/deprecations so auth always returns clean JSON
+@ini_set('display_errors', '0');
 
 /*
  * Created on 23-Jul-08
@@ -96,8 +98,18 @@ if ($rd === false || empty($rd)) {
 
             //unset($TMPSESSION['admin']->typId);
 
-            $roleName = $db->getItemFromDB('select RoleName from sys_role where RoleId = ' . $TMPSESSION['admin']->RoleId);
-            ($roleName == 'Super User') ? $TMPSESSION['isSuperUser'] = true : $TMPSESSION['isSuperUser'] = false;
+            // #region agent log
+            error_log('[DEBUG-31830d][H1] Post-login session build START for user=' . $TMPSESSION['admin']->UserId);
+            // #endregion
+            if ($TMPSESSION['admin']->IsSuperUser == 'Yes') {
+                $TMPSESSION['isSuperUser'] = true;
+            } else {
+                $roleName = $db->getItemFromDB('select RoleName from sys_role where RoleId = ' . (int) $TMPSESSION['admin']->RoleId);
+                $TMPSESSION['isSuperUser'] = ($roleName == 'Super User');
+            }
+            // #region agent log
+            error_log('[DEBUG-31830d][H1] Role resolved, isSuperUser=' . ($TMPSESSION['isSuperUser'] ? 'true' : 'false'));
+            // #endregion
 
             //Get the Permissions Allowed to this User and store it in a session
             $qry = "select group_concat(distinct r.SysModOpId SEPARATOR ';') as role_perms,"
@@ -106,8 +118,11 @@ if ($rd === false || empty($rd)) {
                     . "left join usr_capability c on (c.UserId=u.UserId) where u.UserId='" . $TMPSESSION['admin']->UserId . "'";
 
             $rd = $db->getFromDB($qry, true);
-            $rd['role_perms'] = explode(PERM_SEPERATOR, $rd['role_perms']);
-            $rd['user_perms'] = explode(PERM_SEPERATOR, $rd['user_perms']);
+            if ($rd === false || !is_array($rd)) {
+                $rd = ['role_perms' => '', 'user_perms' => ''];
+            }
+            $rd['role_perms'] = explode(PERM_SEPERATOR, $rd['role_perms'] ?? '');
+            $rd['user_perms'] = explode(PERM_SEPERATOR, $rd['user_perms'] ?? '');
 
 
             $TMPSESSION['admin']->perms = array_values(array_unique(array_merge($rd['role_perms'], $rd['user_perms'])));
@@ -124,25 +139,36 @@ if ($rd === false || empty($rd)) {
              * ON 06-Oct-2009
              */
             //START
-            $tmpmcEnabled = $db->mcEnabled;
-            $db->mcEnabled = false;
-            //Get the permitted modules for the user
+            $tmpmcEnabled = $db->mcEnabled ?? false;
+            if (property_exists($db, 'mcEnabled')) { $db->mcEnabled = false; }
+            //Get the permitted modules for the user — set session admin so getPermittedMenus() can read it
+            $_SESSION['admin'] = $TMPSESSION['admin'];
             include(ROOT . "/modules/ui/functions.php");
-            $permitted_menus = implode(',', getPermittedMenus());
-            $db->mcEnabled = $tmpmcEnabled;
+            $permittedMenus = getPermittedMenus();
+            $permitted_menus = is_array($permittedMenus) ? implode(',', $permittedMenus) : '';
+            // #region agent log
+            error_log('[DEBUG-31830d][H2] permittedMenus type=' . gettype($permittedMenus) . ' permitted_menus="' . $permitted_menus . '"');
+            // #endregion
+            if (property_exists($db, 'mcEnabled')) { $db->mcEnabled = $tmpmcEnabled; }
             unset($tmpmcEnabled);
 
             //$TMPSESSION['admin']->DefaultView = $default_view;
             //get the menu id corresponding to the logged in user's role
 
+            $mod_con = '';
             if (strlen($permitted_menus) > 0) {
                 $mod_con = " AND b.MenuId in ($permitted_menus) ";
             }
-            //$permitted_menus = strlen($permitted_menus) > 0 ? $permitted_menus : '';
-            $qry = "select InitFunction from sys_module_operation a,sys_menu b "
-                    . "where b.IsEnabled='Yes' and /*a.ModuleName = '$default_module' AND*/ b.ParentMenuId = 0 "
+            // #region agent log
+            error_log('[DEBUG-31830d][H1] About to run InitFunction query, mod_con="' . $mod_con . '"');
+            // #endregion
+            $qry = "select a.InitFunction from sys_module_operation a,sys_menu b "
+                    . "where b.IsEnabled='Yes' and b.ParentMenuId = 0 "
                     . "AND a.MenuId = b.MenuId {$mod_con} ";
             $menu_init_function = $db->getItemFromDB($qry);
+            // #region agent log
+            error_log('[DEBUG-31830d][H1] InitFunction query OK, result=' . var_export($menu_init_function, true));
+            // #endregion
 
             //if(user_access("tickets"))
             //$TMPSESSION['admin']->init_function = 'Application.Documents.init();';
@@ -151,8 +177,20 @@ if ($rd === false || empty($rd)) {
 
             $UserId = $TMPSESSION['admin']->UserId;
             $typeId = $TMPSESSION['admin']->finascop_typId;
+            // #region agent log
+            error_log('[DEBUG-31830d][H3] About to call additionalLoginActions');
+            // #endregion
             $user = new \finascop\User();
-            $user->additionalLoginActions($TMPSESSION['admin'], false, $UserId, $TMPSESSION['admin']->finascop_typId);
+            try {
+                $user->additionalLoginActions($TMPSESSION['admin'], false, $UserId, $TMPSESSION['admin']->finascop_typId);
+                // #region agent log
+                error_log('[DEBUG-31830d][H3] additionalLoginActions completed OK');
+                // #endregion
+            } catch (\Throwable $loginActionError) {
+                // #region agent log
+                error_log('[DEBUG-31830d][H3] additionalLoginActions CAUGHT: ' . $loginActionError->getMessage());
+                // #endregion
+            }
             unset($TMPSESSION['admin']->typId);
             /* Modified by sreeram on 5/4/2010
              * reason - Introduced encryption for cookie value
@@ -170,11 +208,17 @@ if ($rd === false || empty($rd)) {
                 setcookie("remember_uidnr_admin", $cookie_val, (time() + (365 * 24 * 60 * 60)));
             }
 
+            // #region agent log
+            error_log('[DEBUG-31830d][H4] About to set session and return success JSON');
+            // #endregion
             if ($remember == 1) {
                 header("Location: /");
             } else {
                 $TMPSESSION['admin']->IsApplicationLogin = 0;
                 $_SESSION = $TMPSESSION;
+                // #region agent log
+                error_log('[DEBUG-31830d][H4] Session set, returning success JSON now');
+                // #endregion
                 authJsonResponse(['success' => true]);
             }
         }

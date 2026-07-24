@@ -10,6 +10,7 @@ define('INCLUDE_PATH', ROOT . '/includes');
 require INCLUDE_PATH . '/config.php';
 require INCLUDE_PATH . '/lib.php';
 require ROOT . '/finascop_config/config.php';
+require __DIR__ . '/seed_bootstrap.php';
 
 $username = getenv('SEED_ADMIN_USERNAME') ?: 'retaline';
 $password = getenv('SEED_ADMIN_PASSWORD') ?: '123456';
@@ -31,18 +32,7 @@ if ($existing !== false && !empty($existing)) {
     exit(0);
 }
 
-$roleId = $db->getItemFromDB("SELECT RoleId FROM sys_role WHERE RoleName = 'Super User' LIMIT 1");
-if (empty($roleId)) {
-    $roleId = $db->getItemFromDB('SELECT RoleId FROM sys_role WHERE IsEnabled = "Yes" ORDER BY RoleId ASC LIMIT 1');
-}
-if (empty($roleId)) {
-    $db->perform('sys_role', [
-        'RoleName' => 'Super User',
-        'IsEnabled' => 'Yes',
-    ]);
-    $roleId = $db->insert_id();
-}
-
+$roleId = seedResolveRoleId($db);
 if (empty($roleId)) {
     fwrite(STDERR, "Seed failed: unable to resolve sys_role RoleId.\n");
     exit(1);
@@ -75,7 +65,9 @@ $profileOk = $db->perform(FINASCOP_DB . 'finascop_usr_profile', [
     'UserId' => $userId,
     'FirstName' => $firstName,
     'LastName' => $lastName,
-    'typId' => 1,
+    'Address' => '',
+    'Telephone' => '',
+    'typId' => 0,
     'CreatedOn' => date('Y-m-d H:i:s'),
 ]);
 

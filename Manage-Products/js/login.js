@@ -33,10 +33,17 @@ Login = function () {
             },
             success: function (res) {
 
+                // #region agent log
+                fetch('http://127.0.0.1:7545/ingest/667979b6-67e0-4fc2-a9dd-33b8187a3dac',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31830d'},body:JSON.stringify({sessionId:'31830d',location:'login.js:success',message:'Raw auth response',data:{status:res.status,responseText:res.responseText.substring(0,2000),contentType:res.getResponseHeader&&res.getResponseHeader('Content-Type')},timestamp:Date.now(),hypothesisId:'H1-H4'})}).catch(function(){});
+                // #endregion
+
                 var tmp;
                 try {
                     tmp = JSON.parse(res.responseText);
                 } catch (e) {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7545/ingest/667979b6-67e0-4fc2-a9dd-33b8187a3dac',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31830d'},body:JSON.stringify({sessionId:'31830d',location:'login.js:parse-error',message:'JSON parse failed',data:{error:e.message,responseText:res.responseText.substring(0,2000)},timestamp:Date.now(),hypothesisId:'H1-H4'})}).catch(function(){});
+                    // #endregion
                     Ext.MessageBox.show({
                         title: 'Error!',
                         msg: 'Unexpected server response. Please try again.',
